@@ -1,9 +1,11 @@
 import { Button, Form, Input, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { Redirect, Link } from "react-router-dom";
+import React, { useState } from "react";
+
+import axios from "axios";
+import { BASE_URL } from "@/src/constants/api";
+import { useRouter } from "next/navigation";
 
 const formItemLayout = {
   labelCol: {
@@ -16,81 +18,32 @@ const formItemLayout = {
   },
 };
 
-export default function Signup(props) {
-  // const { fakeActionAuth, signUpAction } = props;
+export default function Signup() {
+  const { push } = useRouter();
   const [form] = Form.useForm();
-
   const [submit, setSubmit] = useState(false);
-  // const [redirect, setRedirect] = useState(false);
-
-  // const SignUpRes = useSelector((state) => state.Auth.SignUpResponse || {});
-
-  const checkWidth = () => {
-    // return window.innerWidth;
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", (e) => {
-      checkWidth();
-    });
-    return () => {
-      window.removeEventListener("resize", () => {});
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   if (SignUpRes?.status === true) {
-  //     message?.destroy();
-  //     message.success(SignUpRes?.message || "User Added");
-  //     localStorage.setItem("user", JSON.stringify(SignUpRes?.data?.user_data));
-  //     localStorage.setItem("token", SignUpRes?.data?.auth_token);
-  //     localStorage.setItem("userType", SignUpRes?.data?.user_data?.u_type);
-  //     setTimeout(() => {
-  //       setRedirect(true);
-  //     }, 500);
-  //     setSubmit(false);
-  //     fakeActionAuth();
-  //   } else if (SignUpRes?.status === false) {
-  //     message?.destroy();
-  //     setSubmit(false);
-  //     if (SignUpRes?.error || SignUpRes?.error_data) {
-  //       message.warning(
-  //         Object.values(SignUpRes?.error || SignUpRes?.error_data)?.[0]?.[0] ||
-  //         SignUpRes?.message ||
-  //         "Something Went Wrong."
-  //       );
-  //     } else {
-  //       message.warning("Something Went Wrong.");
-  //     }
-  //     fakeActionAuth();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [SignUpRes]);
 
   const onFinish = (values) => {
-    console.log(values);
-    // message.destroy();
-    // setSubmit(true);
-    // signUpAction(values);
-  };
+    setSubmit(true);
 
-  // if (localStorage.getItem("userType") || redirect) {
-  //   return (
-  //     <Redirect
-  //       to={
-  //         localStorage.getItem("userType") == 1
-  //           ? `/users`
-  //           : `/sales-analytics/sales`
-  //       }
-  //     />
-  //   );
-  // }
+    axios
+      .post(`${BASE_URL}/sign-up`, values)
+      .then((res) => {
+        setSubmit(false);
+        if (res.data.status) {
+          message.success(res.data.message);
+          push("/home");
+        } else {
+          message.error(res.data.message);
+        }
+      })
+      .catch((err) => message.error(err));
+  };
 
   return (
     <div style={{ height: "100%" }}>
       <div className="row" style={{ height: "100%" }}>
         <div
-          id="div1"
           style={{ background: "#eff3fe", overflow: "auto" }}
           className="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6  flex-column d-flex"
         >
@@ -117,17 +70,13 @@ export default function Signup(props) {
           </div>
         </div>
         <div
-          id="div2"
           style={{ background: "#fff", height: "800px" }}
           className="d-flex flex-column col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
         >
           <div className="d-flex flex-column flex-lg-row-fluid py-10">
             <div className="d-flex flex-center flex-column flex-column-fluid">
               <div className="w-lg-500px mx-auto">
-                <div
-                  className="form w-100 fv-plugins-bootstrap5 fv-plugins-framework"
-                  id="kt_sign_up_form"
-                >
+                <div className="form w-100 fv-plugins-bootstrap5 fv-plugins-framework">
                   <div className="mb-10 text-center">
                     <h1
                       className="text-dark fw-bold mb-3"
@@ -137,11 +86,7 @@ export default function Signup(props) {
                     </h1>
                     <div className="text-gray-400 fw-bold fs-4">
                       Already have an account?&nbsp;
-                      <Link
-                        href="/login"
-                        id={Math.random()}
-                        className="link-primary fw-bolder"
-                      >
+                      <Link href="/login" className="link-primary fw-bolder">
                         Sign in here
                       </Link>
                     </div>
@@ -152,7 +97,7 @@ export default function Signup(props) {
                     form={form}
                     name="register"
                     onFinish={onFinish}
-                    style={{ width: checkWidth() <= 576 ? "75%" : "100%" }}
+                    className='signup-form'
                   >
                     <div className="row">
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -168,7 +113,7 @@ export default function Signup(props) {
                           ]}
                           hasFeedback
                         >
-                          <Input size="large" autoFocus autocomplete="off" />
+                          <Input size="large" autoFocus autoComplete="off" />
                         </Form.Item>
                       </div>
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -188,7 +133,7 @@ export default function Signup(props) {
                           ]}
                           hasFeedback
                         >
-                          <Input size="large" autocomplete="off" />
+                          <Input size="large" autoComplete="off" />
                         </Form.Item>
                       </div>
                     </div>
@@ -203,7 +148,7 @@ export default function Signup(props) {
                       ]}
                       hasFeedback
                     >
-                      <Input size="large" autocomplete="off" />
+                      <Input size="large" autoComplete="off" />
                     </Form.Item>
                     <Form.Item
                       name="u_password"
@@ -218,7 +163,7 @@ export default function Signup(props) {
                     >
                       <Input.Password
                         size="large"
-                        autocomplete="new-password"
+                        autoComplete="new-password"
                       />
                     </Form.Item>
 
@@ -249,7 +194,7 @@ export default function Signup(props) {
                         }),
                       ]}
                     >
-                      <Input.Password autocomplete="off" size="large" />
+                      <Input.Password autoComplete="off" size="large" />
                     </Form.Item>
                     <div className="fv-row mb-10 fv-plugins-icon-container fv-plugins-bootstrap5-row-valid">
                       <label className="form-check form-check-custom form-check-solid form-check-inline">

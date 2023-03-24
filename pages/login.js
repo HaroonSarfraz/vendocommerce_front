@@ -1,10 +1,41 @@
-import Link from "next/link";
-import { Input } from "antd";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { Input, message } from "antd";
+import axios from "axios";
+import { BASE_URL } from "@/src/constants/api";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const { push } = useRouter();
+  const [username, setUserName] = useState("darren_saul@gmail.com");
+  const [password, setPassword] = useState("12345678");
+  const [sending, setSending] = useState(false);
+
+  const onLogin = (e) => {
+    e.preventDefault();
+    setSending(true);
+    let body = {
+      username,
+      password,
+    };
+
+    axios
+      .post(`${BASE_URL}/login`, body)
+      .then((res) => {
+        setSending(false);
+        if (res.data.status) {
+          message.success(res.data.message);
+          push("/home");
+        } else {
+          message.error(res.data.message);
+        }
+      })
+      .catch((err) => message.error(err));
+  };
+
   return (
-    <div style={{ height: '100%' }}>
+    <div style={{ height: "100%" }}>
       <div
         className="d-flex flex-column flex-root h-100vh"
         style={{ height: "100%" }}
@@ -41,18 +72,14 @@ export default function Login() {
               </div>
             </div>
           </div>
-  
+
           <div
-            style={{ background: "#fff", height: '800px' }}
+            style={{ background: "#fff", height: "800px" }}
             className="d-flex flex-column col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
           >
             <div className="d-flex flex-center flex-column flex-column-fluid">
               <div className="w-lg-500px p-10 p-lg-15 mx-auto">
-                <form
-                  className="form w-100"
-                  noValidate="novalidate"
-                  id="kt_sign_in_form"
-                >
+                <form className="form w-100" noValidate="novalidate">
                   <div className="text-center mb-10">
                     <h1 className="text-dark fw-bold mb-3">
                       Sign In to <b className="fw-boldest">Vendo</b>
@@ -76,8 +103,8 @@ export default function Login() {
                       placeholder="Enter Email"
                       type="email"
                       size="large"
-                      // value={username}
-                      // onChange={(e) => setUserName(e.target.value)}
+                      value={username}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
                   <div className="fv-row mb-10">
@@ -90,21 +117,21 @@ export default function Login() {
                       </p>
                     </div>
                     <Input
-                      placeholder="Enter Email"
+                      placeholder="Enter Password"
                       type="password"
                       size="large"
-                      // value={password}
-                      // onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <div className="text-center">
                     <button
                       type="submit"
-                      // disabled={username && password && !sending ? false : true}
+                      disabled={username && password && !sending ? false : true}
                       className="btn btn-lg btn-primary w-100 mb-5"
-                      // onClick={onLogin}
+                      onClick={onLogin}
                     >
-                      {false ? (
+                      {sending ? (
                         <span>
                           Please wait...
                           <span className="spinner-border spinner-border-sm align-middle ms-2" />

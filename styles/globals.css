@@ -56016,3 +56016,14 @@ body {
     background-color: #fff;
     border: 0
 }
+
+.signup-form {
+  width: 100%;
+}
+
+@media only screen and (max-width: 576px) {
+  .signup-form {
+    width: 75%;
+    margin-left: 10%;
+  }
+}
