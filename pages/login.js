@@ -25,8 +25,9 @@ export default function Login() {
       .then((res) => {
         setSending(false);
         if (res.data.status) {
+          localStorage.setItem("token", res.data.data.auth_token);
           message.success(res.data.message);
-          push("/home");
+          push("/sales-analytics/sales");
         } else {
           message.error(res.data.message);
         }
