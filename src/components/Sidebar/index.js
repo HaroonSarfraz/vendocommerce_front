@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
 import Wrapper from "./style";
 
@@ -88,7 +90,6 @@ export default function Sidebar(props) {
           >
             <Link href="/">
               <Image
-                alt="Logo"
                 src={collapsed ? "/favicon.png" : "/images/logo-main.png"}
                 width={collapsed ? 45 : 165}
                 className="logo shimmer"
@@ -96,6 +97,8 @@ export default function Sidebar(props) {
                 style={{
                   transition: "width 0.4s, 0.4s",
                 }}
+                alt="Logo"
+                priority
               />
             </Link>
           </div>
@@ -114,6 +117,7 @@ export default function Sidebar(props) {
                   transition: "width 0.4s, 0.4s",
                 }}
                 alt="avatar"
+                priority
               />
               {collapsed && (
                 <Tooltip
@@ -132,10 +136,11 @@ export default function Sidebar(props) {
                   }
                   placement="right"
                 >
-                  <i
+                  <FontAwesomeIcon
+                    icon={faCircleInfo}
+                    color="#A1A5B7"
                     style={{ marginTop: "20px" }}
-                    className="fa-solid fa-circle-info"
-                  ></i>
+                  />
                 </Tooltip>
               )}
             </div>
@@ -193,8 +198,8 @@ export default function Sidebar(props) {
             collapsed ? "mx-3" : "mx-0"
           }`}
           style={{
-            // backgroundImage: "linear-gradient(45deg,#000000,#3e3e3e)",
-            // color: "#FFF",
+              // backgroundImage: "linear-gradient(45deg,#000000,#3e3e3e)",
+              // color: "#FFF",
           }}
           id="btnLogout"
           onClick={() => {
