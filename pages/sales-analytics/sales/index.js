@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { message } from 'antd'
+import {
+  fetchSalesByWeekData,
+  fetchSalesGraphData,
+  fetchSalesReportCallOuts,
+} from "@/src/api/sales.api";
 import {
   TopBarFilter,
   SalesByWeek,
@@ -11,80 +17,49 @@ import {
   SalesBySKU,
 } from "@/src/components/sales-analytics/sales";
 
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { BASE_URL } from "@/src/constants/api";
-
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
 });
 
-const getSalesGraphDataAction = (data, setData, push) => {
-  const path = `get-sales-graph-data?search_year=${data?.search_year || ''}&search_week=${data?.search_week || ''}`;
-  const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
-
-  axios
-    .get(`${BASE_URL}/${path}`, { headers: headers })
+const getSalesGraphDataAction = (data, setData) => {
+  fetchSalesGraphData(data)
     .then((res) => {
       if (res.data.status) {
-        setData(res.data)
+        setData(res.data);
       } else {
         message.error(res.data.message);
       }
     })
     .catch((err) => {
-      if (err?.response?.status === 401) {
-        localStorage.clear();
-        push("/login");
-      } else {
-        message.error(err?.response?.message || "Something Went Wrong.")
-      }
+      message.error(err?.response?.message || "Something Went Wrong.");
     });
 };
 
-const getSalesReportCallOutsAction = (data, setData, push) => {
-  const path = `get-sales-report-call-outs?search_year=${data?.search_year || ''}&search_week=${data?.search_week || ''}`;
-  const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
-
-  axios
-    .get(`${BASE_URL}/${path}`, {headers: headers})
+const getSalesReportCallOutsAction = (data, setData) => {
+  fetchSalesReportCallOuts(data)
     .then((res) => {
       if (res.data.status) {
-        setData(res.data)
+        setData(res.data);
       } else {
         message.error(res.data.message);
       }
     })
     .catch((err) => {
-      if (err?.response?.status === 401) {
-        localStorage.clear();
-        push("/login");
-      } else {
-        message.error(err?.response?.message || "Something Went Wrong.")
-      }
+      message.error(err?.response?.message || "Something Went Wrong.");
     });
 };
 
-const getSalesByWeekDataAction = (data, setData, push) => {
-  const path = `get-sales-by-week-data?search_year=${data?.search_year || ""}&search_week=${data?.search_week || ""}`;
-  const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` };
-
-  axios
-    .get(`${BASE_URL}/${path}`, {headers: headers})
+const getSalesByWeekDataAction = (data, setData) => {
+  fetchSalesByWeekData(data)
     .then((res) => {
       if (res.data.status) {
-        setData(res.data)
+        setData(res.data);
       } else {
         message.error(res.data.message);
       }
     })
     .catch((err) => {
-      if (err?.response?.status === 401) {
-        localStorage.clear();
-        push("/login");
-      } else {
-        message.error(err?.response?.message || "Something Went Wrong.")
-      }
+      message.error(err?.response?.message || "Something Went Wrong.");
     });
 };
 

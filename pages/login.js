@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
 import { Input, message } from "antd";
-import axios from "axios";
-import { BASE_URL } from "@/src/constants/api";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
+import { signInRequest } from "@/src/api/auth.api";
 
 export default function Login() {
-  const { push } = useRouter();
+  const router = useRouter();
   const [username, setUserName] = useState("darren_saul@gmail.com");
   const [password, setPassword] = useState("12345678");
   const [sending, setSending] = useState(false);
@@ -20,15 +19,13 @@ export default function Login() {
       password,
     };
 
-    axios
-      .post(`${BASE_URL}/login`, body)
+    signInRequest(body)
       .then((res) => {
         setSending(false);
         if (res.data.status) {
-          localStorage.setItem("token", res.data.data.auth_token);
           localStorage.setItem("user", JSON.stringify(res.data.data));
+          router.push("/sales-analytics/sales");
           message.success(res.data.message);
-          push("/sales-analytics/sales");
         } else {
           message.error(res.data.message);
         }

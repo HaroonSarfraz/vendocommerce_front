@@ -1,11 +1,9 @@
-import { Button, Form, Input, message } from "antd";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-
-import axios from "axios";
-import { BASE_URL } from "@/src/constants/api";
-import { useRouter } from "next/navigation";
+import { Button, Form, Input, message } from "antd";
+import { signUpRequest } from "@/src/api/auth.api";
 
 const formItemLayout = {
   labelCol: {
@@ -19,22 +17,20 @@ const formItemLayout = {
 };
 
 export default function Signup() {
-  const { push } = useRouter();
+  const router = useRouter();
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
 
   const onFinish = (values) => {
     setSubmit(true);
 
-    axios
-      .post(`${BASE_URL}/sign-up`, values)
+    signUpRequest(values)
       .then((res) => {
         setSubmit(false);
         if (res.data.status) {
-          localStorage.setItem("token", res.data.data.auth_token);
           localStorage.setItem("user", JSON.stringify(res.data.data));
+          router.push("/sales-analytics/sales");
           message.success(res.data.message);
-          push("/sales-analytics/sales");
         } else {
           message.error(res.data.message);
         }
