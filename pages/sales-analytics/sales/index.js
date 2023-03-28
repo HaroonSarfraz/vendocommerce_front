@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { message } from 'antd'
 import {
-  LSales,
+  TopBarFilter,
+  SalesByWeek,
   ReportCallOuts,
+  LSales,
   RSales,
   SalesBySKU,
-  SalesByWeek,
-  TopBarFilter,
-} from "./lib";
+} from "@/src/components/sales-analytics/sales";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
