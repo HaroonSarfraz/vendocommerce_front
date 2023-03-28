@@ -1,4 +1,4 @@
-import Icons from "../components/icons";
+import Icons from "@/src/assets/icons";
 
 function getItem(label, key, icon, children, parent = "") {
   return {

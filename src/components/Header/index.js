@@ -2,7 +2,7 @@ import { message } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { nameObject } from "@/src/helpers/header.helper";
-import Icons from "../icons";
+import Icons from "@/src/assets/icons";
 import Wrapper from "./style";
 
 export default function Header(props) {
