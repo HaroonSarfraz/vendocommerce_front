@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from 'react-redux';
 import dynamic from "next/dynamic";
-import { message } from 'antd'
 import {
-  fetchSalesByWeekData,
-  fetchSalesGraphData,
-  fetchSalesReportCallOuts,
-} from "@/src/api/sales.api";
+  getSalesGraphData,
+  getSalesByWeekData,
+  getSalesReportCallOuts,
+} from "@/src/services/sales.services";
 import {
   TopBarFilter,
   SalesByWeek,
@@ -21,53 +20,11 @@ const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
 });
 
-const getSalesGraphDataAction = (data, setData) => {
-  fetchSalesGraphData(data)
-    .then((res) => {
-      if (res.data.status) {
-        setData(res.data);
-      } else {
-        message.error(res.data.message);
-      }
-    })
-    .catch((err) => {
-      message.error(err?.response?.message || "Something Went Wrong.");
-    });
-};
-
-const getSalesReportCallOutsAction = (data, setData) => {
-  fetchSalesReportCallOuts(data)
-    .then((res) => {
-      if (res.data.status) {
-        setData(res.data);
-      } else {
-        message.error(res.data.message);
-      }
-    })
-    .catch((err) => {
-      message.error(err?.response?.message || "Something Went Wrong.");
-    });
-};
-
-const getSalesByWeekDataAction = (data, setData) => {
-  fetchSalesByWeekData(data)
-    .then((res) => {
-      if (res.data.status) {
-        setData(res.data);
-      } else {
-        message.error(res.data.message);
-      }
-    })
-    .catch((err) => {
-      message.error(err?.response?.message || "Something Went Wrong.");
-    });
-};
-
 export default function Sales() {
-  const { push } = useRouter();
-  const [GetSalesGraphDataRes, setGetSalesGraphDataRes] = useState({});
-  const [GetSalesByWeekDataRes, setGetSalesByWeekDataRes] = useState({});
-  const [GetSalesReportCallOutsRes, setGetSalesReportCallOutsRes] = useState({});
+  const dispatch = useDispatch();
+  const salesGraphData = useSelector((state) => state.sales.salesGraphData);
+  const salesByWeekData = useSelector((state) => state.sales.salesByWeekData);
+  const salesReportCallOuts = useSelector((state) => state.sales.salesReportCallOuts);
 
   const [filter, setFilter] = useState({
     week: [],
@@ -83,48 +40,55 @@ export default function Sales() {
   const [salesByWeekLoading, setSalesByWeekLoading] = useState(true);
 
   useEffect(() => {
-    if (GetSalesGraphDataRes?.status === true) {
-      setChartData(GetSalesGraphDataRes?.data);
+    if (salesGraphData?.status === true) {
+      setChartData(salesGraphData?.data);
       setSalesGraphLoading(false);
-    } else if (GetSalesGraphDataRes?.status === false) {
+    } else if (salesGraphData?.status === false) {
       setSalesGraphLoading(false);
     }
-  }, [GetSalesGraphDataRes]);
+  }, [salesGraphData]);
 
   useEffect(() => {
-    if (GetSalesReportCallOutsRes?.status === true) {
-      setReportData(GetSalesReportCallOutsRes?.data?.[0] || {});
+    if (salesReportCallOuts?.status === true) {
+      setReportData(salesReportCallOuts?.data?.[0] || {});
       setReportCallOutLoading(false);
-    } else if (GetSalesReportCallOutsRes?.status === false) {
+    } else if (salesReportCallOuts?.status === false) {
       setReportCallOutLoading(false);
     }
-  }, [GetSalesReportCallOutsRes]);
+  }, [salesReportCallOuts]);
 
   useEffect(() => {
-    if (GetSalesByWeekDataRes?.status === true) {
-      setTableList(Object.values(GetSalesByWeekDataRes?.data?.[0] || {}));
+    if (salesByWeekData?.status === true) {
+      setTableList(Object.values(salesByWeekData?.data?.[0] || {}));
       setSalesByWeekLoading(false);
-    } else if (GetSalesByWeekDataRes?.status === false) {
+    } else if (salesByWeekData?.status === false) {
       setSalesByWeekLoading(false);
     }
-  }, [GetSalesByWeekDataRes]);
+  }, [salesByWeekData]);
 
   useEffect(() => {
     setSalesGraphLoading(true);
     setReportCallOutLoading(true);
     setSalesByWeekLoading(true);
-    getSalesGraphDataAction({
-      search_year: filter?.year,
-      search_week: filter?.week?.join(","),
-    }, setGetSalesGraphDataRes, push);
-    getSalesReportCallOutsAction({
-      search_year: filter?.year,
-      search_week: filter?.week?.join(","),
-    }, setGetSalesReportCallOutsRes, push);
-    getSalesByWeekDataAction({
-      search_year: filter?.year,
-      search_week: filter?.week?.join(","),
-    }, setGetSalesByWeekDataRes, push);
+
+    dispatch(
+      getSalesGraphData({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
+    dispatch(
+      getSalesReportCallOuts({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
+    dispatch(
+      getSalesByWeekData({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
   }, [filter]);
 
   const handleChange = (value) => {
