@@ -32,6 +32,7 @@ export default function Signup() {
         setSubmit(false);
         if (res.data.status) {
           localStorage.setItem("token", res.data.data.auth_token);
+          localStorage.setItem("user", JSON.stringify(res.data.data));
           message.success(res.data.message);
           push("/sales-analytics/sales");
         } else {
