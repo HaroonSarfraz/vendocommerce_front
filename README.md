@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# Follow these steps to run the application.
+
+1. First of all, install nvm to manage different versions of node.
+2. Install required node version by running command `'nvm install 18.14.2'` and run `'nvm use 18.14.2'`.
+3. Go to your project directory and run the command `'yarn install'`, this will install the required dependencies.
+4. Run the command `'yarn dev'` to run the development server.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
 ## Getting Started
 
 First, run the development server:
