@@ -28,21 +28,20 @@ export default function Sidebar(props) {
   }, [router?.route]);
 
   const defaultSubMenuSelected = () => {
-    let subMenuPath = router.route.split("/");
-    if (subMenuPath.length == 3) {
+    let subMenuPath = router?.route.split("/");
+    if (subMenuPath.length === 3) {
       return [subMenuPath?.[1]];
     }
     return [];
   };
 
   const checkMenu = () => {
-    const menuList =
-      userType ? adminMenus : userMenus;
+    const menu = userType ? adminMenus : userMenus;
     if (defaultSubMenuSelected()?.length == 0) {
       return [current];
     }
     if (
-      menuList.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length ==
+      menu.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length ==
       0
     ) {
       return [""];
@@ -180,9 +179,9 @@ export default function Sidebar(props) {
             router.push("/" + e.keyPath.reverse().join("/"));
             setCurrent(e.key);
           }}
-          defaultOpenKeys={defaultSubMenuSelected()}
           inlineCollapsed={collapsed}
-          items={userMenus}
+          defaultOpenKeys={defaultSubMenuSelected()}
+          items={userType ? adminMenus : userMenus}
         />
       </div>
       <div

@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }) {
   //   return <Redirect to={"/login"} />;
   // }
 
-  const GetModules = () => (user?.user_data?.u_type == 2 ? false : true);
+  const GetModules = () => (user?.user_data?.u_type === 1 ? true : false);
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>

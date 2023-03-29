@@ -7,8 +7,8 @@ import { signInRequest } from "@/src/api/auth.api";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUserName] = useState("darren_saul@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [username, setUserName] = useState("admin@admin.com");
+  const [password, setPassword] = useState("admin@admin.com");
   const [sending, setSending] = useState(false);
 
   const onLogin = (e) => {
@@ -23,8 +23,9 @@ export default function Login() {
       .then((res) => {
         setSending(false);
         if (res.data.status) {
+          const admin = res.data.data.user_data.u_type === 1;
           localStorage.setItem("user", JSON.stringify(res.data.data));
-          router.push("/sales-analytics/sales");
+          router.push(admin ? "/users" : "/sales-analytics/sales");
           message.success(res.data.message);
         } else {
           message.error(res.data.message);
