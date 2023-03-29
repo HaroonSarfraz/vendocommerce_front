@@ -1,0 +1,1 @@
+export const BASE_URL = "http://3.139.3.16/vendo_api/api/v1";
