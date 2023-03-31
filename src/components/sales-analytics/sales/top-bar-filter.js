@@ -1,5 +1,4 @@
 import { Select } from "antd";
-import moment from "moment";
 
 export default function TopBarFilter(filter, setFilter, type) {
   return (
