@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setSwitchUser } from "../store/slice/users.slice";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
 export default function DashboardLayout({ children }) {
-  // const [hide, setHide] = useState(false);
-  // const [moveToLogin, setMoveToLogin] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(false);
   const [hideMenus, setHideMenus] = useState(false);
 
   const user = typeof window !== "undefined" && JSON.parse(localStorage.getItem("user"));
-
-  // const [userData, setUserData] = useState(
-  //   JSON.parse(localStorage.getItem("user"))
-  // );
-  // window.updateProfile = (e) => {
-  //   setUserData(e);
-  // };
 
   const checkWidth = () => {
     setHideMenus(690 > window.innerWidth);
@@ -39,10 +35,8 @@ export default function DashboardLayout({ children }) {
     function updateSize() {
       if (window.innerWidth < 992) {
         setCollapsed(true);
-        // setHide(true);
       } else {
         setCollapsed(false);
-        // setHide(false);
       }
     }
     window.addEventListener("resize", updateSize);
@@ -50,22 +44,20 @@ export default function DashboardLayout({ children }) {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // const backToAdmin = () => {
-  //   let adminDataLocal = localStorage.getItem("adminData");
-  //   if (adminDataLocal) {
-  //     adminDataLocal = JSON.parse(adminDataLocal);
-  //     localStorage.setItem("user", adminDataLocal.data);
-  //     localStorage.setItem("token", adminDataLocal.token);
-  //     localStorage.setItem("userType", 1);
-  //     setUserData(JSON.parse(adminDataLocal.data));
-  //     localStorage.removeItem("adminData");
-  //   }
-  // };
+  const backToAdmin = () => {
+    let adminDataLocal = localStorage.getItem("adminData");
+    if (adminDataLocal) {
+      dispatch(setSwitchUser({}));
 
-  // if (!localStorage.getItem("user") || moveToLogin === true) {
-  //   localStorage.clear();
-  //   return <Redirect to={"/login"} />;
-  // }
+      localStorage.setItem("user", adminDataLocal);
+
+      setTimeout(() => {
+        localStorage.removeItem("adminData");
+        dispatch(setSwitchUser({}));
+        router.push("/users");
+      }, 1000);
+    }
+  };
 
   const GetModules = () => (user?.user_data?.u_type === 1 ? true : false);
 
@@ -76,26 +68,22 @@ export default function DashboardLayout({ children }) {
         style={{ height: "100vh" }}
       >
         <Sidebar
-          // logout={() => setMoveToLogin(true)}
           user={user?.user_data || {}}
           hideMenus={hideMenus}
           collapsed={collapsed}
           userType={GetModules()}
           setCollapsed={() => setCollapsed(!collapsed)}
-          // {...props}
         />
         <div
           style={{ height: "100vh" }}
           className=" d-flex flex-column flex-row-fluid"
         >
           <Header
-            // backToAdmin={() => backToAdmin()}
-            // backToUser={setUserData}
+            collapsed={collapsed}
             hideMenus={hideMenus}
+            backToAdmin={backToAdmin}
             setHideMenus={setHideMenus}
             setCollapsed={() => setCollapsed(!collapsed)}
-            collapsed={collapsed}
-            // {...props}
           />
           <div
             style={{

@@ -9,10 +9,8 @@ export default function Header(props) {
   const router = useRouter()
   const {
     backToAdmin,
-    history,
     hideMenus,
     setHideMenus,
-    backToUser,
     collapsed,
     setCollapsed,
   } = props;
@@ -20,18 +18,6 @@ export default function Header(props) {
   const [current, setCurrent] = useState({
     name: "",
   });
-
-  // const SwitchUserRes = useSelector(
-  //   (state) => state.User.SwitchUserResponse || {}
-  // );
-
-  // useEffect(() => {
-  //   if (SwitchUserRes.status) {
-  //     backToUser(SwitchUserRes?.data?.user_data);
-  //     history.push("/sales-analytics/sales");
-  //     fakeActionUser();
-  //   }
-  // }, [SwitchUserRes]);
 
   useEffect(() => {
     if (nameObject[router.route]) {
@@ -139,11 +125,7 @@ export default function Header(props) {
             <div className="d-flex">
               <button
                 className="btn btn-secondary ml-auto mr-10px"
-                onClick={() => {
-                  // backToAdmin();
-                  message.success("Success");
-                  // history.push("/users");
-                }}
+                onClick={backToAdmin}
               >
                 Back to admin
               </button>

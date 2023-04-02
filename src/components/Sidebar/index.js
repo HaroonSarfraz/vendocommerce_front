@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
+import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
 
 export default function Sidebar(props) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [current, setCurrent] = useState("dashboard");
   const { user, collapsed, hideMenus, userType } = props;
 
@@ -202,6 +205,7 @@ export default function Sidebar(props) {
           }}
           id="btnLogout"
           onClick={() => {
+            dispatch(setSwitchUser({}))
             localStorage.clear();
             router.push("/login");
           }}

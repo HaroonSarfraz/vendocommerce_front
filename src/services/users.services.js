@@ -6,7 +6,6 @@ export const getUserList = (data) => {
   return (dispatch) => {
     fetchUserList(data)
       .then((res) => {
-        console.log(res.data.status)
         if (res.data.status) {
           dispatch(setUserList(res.data));
         } else {

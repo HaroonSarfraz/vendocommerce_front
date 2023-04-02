@@ -47,22 +47,19 @@ export default function Users() {
 
   useEffect(() => {
     if (switchUser.status) {
-      message.destroy();
-      let adminToken = localStorage.getItem("token");
-      let adminData = localStorage.getItem("user");
+      let user = localStorage.getItem("user");
 
-      const data = {
-        token: adminToken,
-        data: adminData,
-      };
+      const admin = JSON.parse(user).user_data.u_type === 1;
 
-      localStorage.setItem("adminData", JSON.stringify(data));
-      localStorage.setItem("user", JSON.stringify(switchUser?.data));
+      admin && localStorage.setItem("adminData", user);
 
-      router.push("/sales-analytics/sales");
+      setTimeout(() => {
+        localStorage.setItem("user", JSON.stringify(switchUser?.data));
+        router.push("/sales-analytics/sales");
+      }, 1000);
+
       message.success(switchUser.message);
     } else if (switchUser.status === false) {
-      message.destroy();
       message.error(switchUser.message);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
