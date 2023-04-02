@@ -68,7 +68,7 @@ export default function DashboardLayout({ children }) {
         style={{ height: "100vh" }}
       >
         <Sidebar
-          user={user?.user_data || {}}
+          user={user || {}}
           hideMenus={hideMenus}
           collapsed={collapsed}
           userType={GetModules()}

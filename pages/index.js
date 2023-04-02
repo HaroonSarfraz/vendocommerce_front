@@ -7,10 +7,8 @@ export default function Home() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
-    user?.auth_token
-      ? user.user_data.u_type === 1
-        ? router.push("/users")
-        : router.push("/sales-analytics/sales")
+    user?.access_token
+      ? router.push("/dashboard")
       : router.push("/login");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

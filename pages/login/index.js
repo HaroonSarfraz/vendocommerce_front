@@ -7,27 +7,26 @@ import { signInRequest } from "@/src/api/auth.api";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUserName] = useState("darren_saul@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [sending, setSending] = useState(false);
 
   const onLogin = (e) => {
     e.preventDefault();
     setSending(true);
     let body = {
-      username,
+      email,
       password,
     };
 
     signInRequest(body)
       .then((res) => {
         setSending(false);
-        if (res.data.status) {
-          const admin = res.data.data.user_data.u_type === 1;
-          localStorage.setItem("user", JSON.stringify(res.data.data));
-          router.push(admin ? "/users" : "/sales-analytics/sales");
+        if(res.status >= 200 && res.status <= 299) {
+          router.push("/dashboard");
+          localStorage.setItem("user", JSON.stringify(res.data));
         } else {
-          message.error(res.data.message);
+          message.error(res.data.message)
         }
       })
       .catch((err) => message.error(err));
@@ -102,8 +101,8 @@ export default function Login() {
                       placeholder="Enter Email"
                       type="email"
                       size="large"
-                      value={username}
-                      onChange={(e) => setUserName(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                   <div className="fv-row mb-10">
@@ -126,7 +125,7 @@ export default function Login() {
                   <div className="text-center">
                     <button
                       type="submit"
-                      disabled={username && password && !sending ? false : true}
+                      disabled={email && password && !sending ? false : true}
                       className="btn btn-lg btn-primary w-100 mb-5"
                       onClick={onLogin}
                     >

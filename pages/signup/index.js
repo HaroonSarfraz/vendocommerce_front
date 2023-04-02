@@ -27,12 +27,11 @@ export default function Signup() {
     signUpRequest(values)
       .then((res) => {
         setSubmit(false);
-        if (res.data.status) {
-          localStorage.setItem("user", JSON.stringify(res.data.data));
-          router.push("/sales-analytics/sales");
-          message.success(res.data.message);
+        if(res.status >= 200 && res.status <= 299) {
+          router.push("/dashboard");
+          localStorage.setItem("user", JSON.stringify(res.data));
         } else {
-          message.error(res.data.message);
+          message.error(res.data.message)
         }
       })
       .catch((err) => message.error(err));
@@ -117,7 +116,7 @@ export default function Signup() {
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                         {" "}
                         <Form.Item
-                          name="u_email"
+                          name="email"
                           label="E-mail"
                           rules={[
                             {
@@ -149,7 +148,7 @@ export default function Signup() {
                       <Input size="large" autoComplete="off" />
                     </Form.Item>
                     <Form.Item
-                      name="u_password"
+                      name="password"
                       label="Password"
                       rules={[
                         {
@@ -166,9 +165,9 @@ export default function Signup() {
                     </Form.Item>
 
                     <Form.Item
-                      name="u_confirm_password"
+                      name="confirm_password"
                       label="Confirm Password"
-                      dependencies={["u_password"]}
+                      dependencies={["password"]}
                       hasFeedback
                       rules={[
                         {
@@ -179,7 +178,7 @@ export default function Signup() {
                           validator(_, value) {
                             if (
                               !value ||
-                              getFieldValue("u_password") === value
+                              getFieldValue("password") === value
                             ) {
                               return Promise.resolve();
                             }
