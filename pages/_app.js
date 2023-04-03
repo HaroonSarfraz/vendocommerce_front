@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import Layout from "@/src/layouts/Layout";
 import store from "@/src/store";
 import "@/styles/globals.css";
+import "@/styles/style.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
