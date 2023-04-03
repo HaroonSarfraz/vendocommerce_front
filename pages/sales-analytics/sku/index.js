@@ -89,7 +89,8 @@ export default function SalesBySku() {
             setSearchText={(e) => setSearchText(e.target.value)}
             searchText={searchText}
             dateFilter={dateFilter}
-            getList={(e) => getList(e)}
+            setLoading={setLoading}
+            getList={() => getList()}
           />
           <SkuTable loading={detailsLoading} details={details} />
           <SalesBySkuSku loading={loading} list={list} />

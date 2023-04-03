@@ -8,7 +8,8 @@ export default function TopBarFilterSku({
   setSearchText,
   dateFilter,
   searchText,
-  getList
+  getList,
+  setLoading
 }) {
   return (
     <>
