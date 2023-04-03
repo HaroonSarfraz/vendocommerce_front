@@ -2,8 +2,12 @@ const initialState = {
   sales: {
     salesGraphData: {},
     salesByWeekData: {},
-    salesReportCallOuts: {},
+    salesReportCallOuts: {}
   },
+  sku: {
+    salesSKUDetailsList: {},
+    salesBySKUDetails: {}
+  }
 };
 
 export default initialState;
