@@ -3,8 +3,8 @@ import NoData from '../../no-data';
 import Loading from '../../loading';
 import { Tooltip } from 'antd';
 import Image from 'rc-image';
+
 export default function SalesBySkuSku({ loading, list }) {
-  console.log(list);
   const columns = [
     {
       title: 'Row Labels',
@@ -142,6 +142,7 @@ export default function SalesBySkuSku({ loading, list }) {
       }
     }
   ];
+
   return (
     <div className='row'>
       <div className='col-lg-12'>

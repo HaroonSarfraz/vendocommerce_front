@@ -1,4 +1,5 @@
 import { Table } from 'antd';
+
 const ASINTable = (props) => {
   const {
     columns,

@@ -56,6 +56,7 @@ export default function SalesBySku() {
       setLoading(true);
       getList();
     }
+    /* eslint-disable react-hooks/exhaustive-deps */
   }, [dateFilter]);
 
   useEffect(() => {
@@ -69,7 +70,6 @@ export default function SalesBySku() {
 
   useEffect(() => {
     if (salesSKUDetailsLists?.status === true) {
-      console.log(salesSKUDetailsLists.status, 'status...');
       setList(salesSKUDetailsLists?.data || []);
       setDetailsLoading(false);
     } else if (salesSKUDetailsLists?.status === false) {

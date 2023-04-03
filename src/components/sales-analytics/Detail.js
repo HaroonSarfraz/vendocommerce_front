@@ -9,6 +9,7 @@ const checkFloor = (srt) => {
     return false;
   }
 };
+
 const formatter = (value) => (
   <CountUp
     decimals={checkFloor(value) ? 2 : 0}
@@ -17,9 +18,8 @@ const formatter = (value) => (
   />
 );
 
-export default function Details( props ) {
+export default function Details(props) {
   const { data = [], loading = true } = props;
-  // console.log(data, "da")
   const getValue = (value, type) => {
     return value.replace(type ? /[^a-zA-Z0-9-. ]/g : /[^$-% ]/g, '');
   };
