@@ -85,7 +85,7 @@ export default function SalesBySku() {
       >
         <div className='container-fluid' id='kt_content_container'>
           <TopBarFilterSku
-            setDateFilter={(e) => setDateFilter(e.target.value)}
+            setDateFilter={(e) => setDateFilter(e)}
             setSearchText={(e) => setSearchText(e.target.value)}
             searchText={searchText}
             dateFilter={dateFilter}
