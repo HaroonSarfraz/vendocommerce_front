@@ -8,6 +8,10 @@ const initialState = {
     salesByWeekData: {},
     salesReportCallOuts: {},
   },
+  salesBySku: {
+    salesSkuDetailsList: {},
+    salesBySkuDetails: {}
+  }
 };
 
 export default initialState;

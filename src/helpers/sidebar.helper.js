@@ -25,15 +25,15 @@ export const userMenus = [
       null,
       "sales-analytics"
     ),
-    // getItem(
-    //   "Sales by SKU",
-    //   "sku",
-    //   <span className="menu-bullet">
-    //     <span className="bullet bullet-dot" />
-    //   </span>,
-    //   null,
-    //   "sales-analytics"
-    // ),
+    getItem(
+      "Sales by SKU",
+      "sku",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "sales-analytics"
+    ),
     // getItem(
     //   "Sales by Product",
     //   "product",
