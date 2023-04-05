@@ -13,6 +13,11 @@ const initialState = {
     saveColumnConfiguration: {},
     salesByProductColumnList: {},
     saveTableConfiguration: {}
+  },
+  week: {
+    salesWeekDetailList: {},
+    salesWeekGraph: {},
+    salesWeekData: {}
   }
 };
 

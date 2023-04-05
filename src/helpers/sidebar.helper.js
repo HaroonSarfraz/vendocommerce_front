@@ -43,15 +43,15 @@ export const userMenus = [
       null,
       "sales-analytics"
     ),
-    // getItem(
-    //   "Sales by Week",
-    //   "week",
-    //   <span className="menu-bullet">
-    //     <span className="bullet bullet-dot" />
-    //   </span>,
-    //   null,
-    //   "sales-analytics"
-    // ),
+    getItem(
+      "Sales by Week",
+      "week",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "sales-analytics"
+    ),
     // getItem(
     //   "Sales by Month",
     //   "month",

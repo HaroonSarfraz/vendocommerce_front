@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import initialState from '../initialState';
 
 export const productSlice = createSlice({
-  initialState: initialState.sku,
+  initialState: initialState.product,
   name: 'product',
   reducers: {
     setSalesByProductList: (state, action) => {
