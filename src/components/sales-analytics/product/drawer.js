@@ -128,7 +128,6 @@ export default function Drawers(props) {
               setSubmitLoading(true);
               message.loading("Loading...", 0);
               dispatch(getSaveTableConfiguration(obj));
-              dispatch(getSalesByProductList());
             }}
             className="btn fs-7 btn-dark"
             data-kt-menu-dismiss="true"

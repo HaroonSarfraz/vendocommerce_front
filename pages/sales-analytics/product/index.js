@@ -93,10 +93,12 @@ export default function SalesByProducts() {
       setColumnsLoading(false);
       const { year, week } = filter;
       setTableLoading(true);
-      getSalesByProductList({
-        search_year: year,
-        search_week: week?.join(","),
-      });
+      dispatch(
+        getSalesByProductList({
+          search_year: year,
+          search_week: week?.join(","),
+        })
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SaveTableConfigurationRes]);
