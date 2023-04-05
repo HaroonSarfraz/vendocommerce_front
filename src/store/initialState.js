@@ -10,8 +10,14 @@ const initialState = {
   },
   salesBySku: {
     salesSkuDetailsList: {},
-    salesBySkuDetails: {}
-  }
+    salesBySkuDetails: {},
+  },
+  salesByProduct: {
+    salesByProductList: {},
+    saveColumnConfiguration: {},
+    salesByProductColumnList: {},
+    saveTableConfiguration: {},
+  },
 };
 
 export default initialState;
