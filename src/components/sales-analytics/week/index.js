@@ -21,6 +21,7 @@ export default function Week() {
     year: 2023
   });
   const [graphFilter, setGraphFilter] = useState('child_asin');
+  const [expand, setExpand] = useState(null);
 
   const [graphLoading, setGraphLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(true);
@@ -386,24 +387,15 @@ export default function Week() {
                           <>
                             <tr className>
                               <td className>
-                                <a
-                                  href
-                                  data-bs-toggle='collapse'
-                                  data-bs-target={`kt_accordion_${i + 1}_body_${
-                                    i + 1
-                                  }`}
-                                  aria-expanded='false'
-                                  aria-controls={`kt_accordion_${i + 1}_body_${
-                                    i + 1
-                                  }`}
-                                  className='open-arrow collapsed'
-                                >
-                                  <FontAwesomeIcon
-                                    icon={faAngleDown}
-                                    color='black'
-                                    className='las fs-4'
-                                  />
-                                </a>
+                                <FontAwesomeIcon
+                                  icon={faAngleDown}
+                                  className='las la-angle-down text-dark fs-4'
+                                  onClick={() => {
+                                    setExpand((prev) =>
+                                      prev === i ? setExpand(null) : i
+                                    );
+                                  }}
+                                />
                               </td>
                               <td>
                                 {d?.start_date}&nbsp;to&nbsp;{d?.end_date}
@@ -428,14 +420,7 @@ export default function Week() {
                                 colSpan={12}
                                 className='hiddenRow bg-light bg-opacity-100'
                               >
-                                <div
-                                  id={`kt_accordion_${i + 1}_body_${i + 1}`}
-                                  className='accordion-collapse collapse'
-                                  aria-labelledby={`kt_accordion_${
-                                    i + 1
-                                  }_body_${i + 1}`}
-                                  data-bs-parent={`#kt_accordion_${i + 1}`}
-                                >
+                                {expand === i && (
                                   <div className='table-responsive m-0'>
                                     <table
                                       className='table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0'
@@ -513,7 +498,7 @@ export default function Week() {
                                       </tbody>
                                     </table>
                                   </div>
-                                </div>
+                                )}
                               </td>
                             </tr>
                           </>
