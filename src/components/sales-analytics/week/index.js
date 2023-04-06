@@ -2,7 +2,6 @@ import { Select, Skeleton } from 'antd';
 import { useState, useEffect } from 'react';
 import { TopBarFilter } from '../sales';
 import { DotChartOutlined } from '@ant-design/icons';
-// import Wrapper from './style';
 import ReactApexChart from 'react-apexcharts';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../loading';
@@ -12,6 +11,8 @@ import {
   getSalesWeekDetailList,
   getSalesWeekGraph
 } from '@/src/services/week.services';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function Week() {
   const dispatch = useDispatch();
@@ -39,8 +40,6 @@ export default function Week() {
     (state) => state.week?.salesWeekData || {}
   );
 
-  console.log(SalesByWeekDataRes, 'week');
-  console.log(SalesByWeekDataRes, 'dar');
   useEffect(() => {
     setGraphLoading(true);
     setTableLoading(true);
@@ -189,12 +188,12 @@ export default function Week() {
     },
     tooltip: {}
   };
+
   return (
     <div className='content d-flex flex-column flex-column-fluid'>
       <div className='container-fluid' id='kt_content_container'>
         {TopBarFilter(filter, setFilter, 'Week')}
         <div className='row gx-5 gx-xl-5'>
-          {/*begin::Col*/}
           <div className='col-xl-12 mb-5 mb-xl-5'>
             <div className='card card-flush h-xl-100'>
               <div className='card-header min-h-55px '>
@@ -230,14 +229,16 @@ export default function Week() {
                     <button
                       onClick={() => {
                         setGraphLoading(true);
-                        getSalesWeekGraph({
-                          graph_filter_type: graphFilter,
-                          search_year: filter?.year
-                        });
+                        dispatch(
+                          getSalesWeekGraph({
+                            graph_filter_type: graphFilter,
+                            search_year: filter?.year
+                          })
+                        );
                       }}
                       className='btn btn-danger btn-sm fs-7 ps-5 px-5'
                     >
-                      <i className='bi bi-search pe-0' />
+                      <FontAwesomeIcon icon={faSearch} />
                     </button>
                   </div>
                 </div>
@@ -333,7 +334,6 @@ export default function Week() {
         <div className='row'>
           <div className='col-md-12'>
             <div className='card mb-5 mb-xl-8'>
-              {/*begin::Header*/}
               <div className='card-header border-bottom border-bottom-dashed'>
                 <h3 className='card-title align-items-start flex-column'>
                   <span className='card-label fw-bolder fs-3 mb-0'>
@@ -346,10 +346,7 @@ export default function Week() {
                   </button>
                 </div>
               </div>
-              {/*end::Header*/}
-              {/*begin::Body*/}
               <div className='card-body pt-2'>
-                {/*begin::Table container*/}
                 {detailsLoading ? (
                   <Loading />
                 ) : (
@@ -392,16 +389,20 @@ export default function Week() {
                                 <a
                                   href
                                   data-bs-toggle='collapse'
-                                  data-bs-target={`#kt_accordion_${
+                                  data-bs-target={`kt_accordion_${i + 1}_body_${
                                     i + 1
-                                  }_body_${i + 1}`}
+                                  }`}
                                   aria-expanded='false'
                                   aria-controls={`kt_accordion_${i + 1}_body_${
                                     i + 1
                                   }`}
                                   className='open-arrow collapsed'
                                 >
-                                  <i className='las la-angle-down text-dark fs-4' />
+                                  <FontAwesomeIcon
+                                    icon={faAngleDown}
+                                    color='black'
+                                    className='las fs-4'
+                                  />
                                 </a>
                               </td>
                               <td>
@@ -425,23 +426,21 @@ export default function Week() {
                             <tr>
                               <td
                                 colSpan={12}
-                                className='hiddenRow  bg-light bg-opacity-100'
+                                className='hiddenRow bg-light bg-opacity-100'
                               >
                                 <div
                                   id={`kt_accordion_${i + 1}_body_${i + 1}`}
-                                  className='accordion-collapse collapse '
+                                  className='accordion-collapse collapse'
                                   aria-labelledby={`kt_accordion_${
                                     i + 1
                                   }_body_${i + 1}`}
                                   data-bs-parent={`#kt_accordion_${i + 1}`}
-                                  style={{}}
                                 >
                                   <div className='table-responsive m-0'>
                                     <table
                                       className='table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0'
                                       id
                                     >
-                                      {/*begin::Table body*/}
                                       <thead className='border-bottom border-bottom-dashed'>
                                         <tr className='fw-bolder text-gray-800'>
                                           <th className='min-w-50px p-0' />
@@ -524,7 +523,6 @@ export default function Week() {
                   </div>
                 )}
               </div>
-              {/*begin::Body*/}
             </div>
           </div>
         </div>
