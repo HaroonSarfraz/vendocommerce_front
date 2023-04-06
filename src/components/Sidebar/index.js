@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
+import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
 
 export default function Sidebar(props) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [current, setCurrent] = useState("dashboard");
   const { user, collapsed, hideMenus, userType } = props;
 
@@ -28,21 +31,20 @@ export default function Sidebar(props) {
   }, [router?.route]);
 
   const defaultSubMenuSelected = () => {
-    let subMenuPath = router.route.split("/");
-    if (subMenuPath.length == 3) {
+    let subMenuPath = router?.route.split("/");
+    if (subMenuPath.length === 3) {
       return [subMenuPath?.[1]];
     }
     return [];
   };
 
   const checkMenu = () => {
-    const menuList =
-      userType ? adminMenus : userMenus;
+    const menu = userType ? adminMenus : userMenus;
     if (defaultSubMenuSelected()?.length == 0) {
       return [current];
     }
     if (
-      menuList.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length ==
+      menu.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length ==
       0
     ) {
       return [""];
@@ -180,9 +182,9 @@ export default function Sidebar(props) {
             router.push("/" + e.keyPath.reverse().join("/"));
             setCurrent(e.key);
           }}
-          defaultOpenKeys={defaultSubMenuSelected()}
           inlineCollapsed={collapsed}
-          items={userMenus}
+          defaultOpenKeys={defaultSubMenuSelected()}
+          items={userType ? adminMenus : userMenus}
         />
       </div>
       <div
@@ -203,6 +205,7 @@ export default function Sidebar(props) {
           }}
           id="btnLogout"
           onClick={() => {
+            dispatch(setSwitchUser({}))
             localStorage.clear();
             router.push("/login");
           }}

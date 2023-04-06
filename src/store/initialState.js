@@ -1,4 +1,8 @@
 const initialState = {
+  users: {
+    userList: {},
+    switchUser: {},
+  },
   sales: {
     salesGraphData: {},
     salesByWeekData: {},
