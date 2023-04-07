@@ -52,15 +52,15 @@ export const userMenus = [
       null,
       "sales-analytics"
     ),
-    // getItem(
-    //   "Sales by Month",
-    //   "month",
-    //   <span className="menu-bullet">
-    //     <span className="bullet bullet-dot" />
-    //   </span>,
-    //   null,
-    //   "sales-analytics"
-    // ),
+    getItem(
+      "Sales by Month",
+      "month",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "sales-analytics"
+    ),
   ]),
   // getItem(
   //   "Inventory Management",
