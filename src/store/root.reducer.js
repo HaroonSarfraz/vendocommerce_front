@@ -1,4 +1,5 @@
 import monthSlice from './slice/month.slice';
+import planningSlice from './slice/planning.slice';
 import productSlice from './slice/product.slice';
 import SalesReducer from './slice/sales.slice';
 import skuReducer from './slice/sku.slice';
@@ -9,5 +10,6 @@ export const rootReducer = {
   sku: skuReducer,
   product: productSlice,
   week: weekSlice,
-  month: monthSlice
+  month: monthSlice,
+  planning: planningSlice
 };

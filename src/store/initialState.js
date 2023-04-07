@@ -23,6 +23,11 @@ const initialState = {
     salesByMonthData: {},
     salesByMonthDetail: {},
     salesByMonthGraph: {}
+  },
+  planning: {
+    inventoryPlaning: {},
+    inventoryPlaningColumnsList: {},
+    inventoryPlaningColumnsSave: {}
   }
 };
 
