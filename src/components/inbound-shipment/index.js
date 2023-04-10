@@ -807,7 +807,7 @@ export default function Shipment() {
                                 {/*begin::Svg Icon | path: icons/duotune/coding/cod001.svg*/}
                                 <span className='svg-icon svg-icon-4x me-4'>
                                   <img
-                                    src='/media/box.png'
+                                    src='/images/box.png'
                                     alt=''
                                     className='w-60px'
                                   />
@@ -837,7 +837,7 @@ export default function Shipment() {
                                 {/*begin::Svg Icon | path: icons/duotune/communication/com003.svg*/}
                                 <span className='svg-icon svg-icon-4x me-4'>
                                   <img
-                                    src='/media/boxes.png'
+                                    src='/images/boxes.png'
                                     alt=''
                                     className='w-60px'
                                   />
