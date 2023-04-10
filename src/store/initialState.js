@@ -8,6 +8,21 @@ const initialState = {
     salesByWeekData: {},
     salesReportCallOuts: {},
   },
+  salesBySku: {
+    salesSkuDetailsList: {},
+    salesBySkuDetails: {},
+  },
+  salesByProduct: {
+    salesByProductList: {},
+    saveColumnConfiguration: {},
+    salesByProductColumnList: {},
+    saveTableConfiguration: {},
+  },
+  salesByWeek: {
+    salesWeekDetailList: {},
+    salesWeekGraph: {},
+    salesWeekData: {}
+  }
 };
 
 export default initialState;

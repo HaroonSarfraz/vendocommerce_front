@@ -3,7 +3,7 @@ import { BASE_URL } from "../constants/api";
 
 const request = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 request.interceptors.request.use(

@@ -7,8 +7,8 @@ import { signInRequest } from "@/src/api/auth.api";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUserName] = useState("admin@admin.com");
-  const [password, setPassword] = useState("admin@admin.com");
+  const [username, setUserName] = useState("darren_saul@gmail.com");
+  const [password, setPassword] = useState("12345678");
   const [sending, setSending] = useState(false);
 
   const onLogin = (e) => {
