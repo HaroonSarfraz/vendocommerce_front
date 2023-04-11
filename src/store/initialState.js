@@ -21,8 +21,13 @@ const initialState = {
   salesByWeek: {
     salesWeekDetailList: {},
     salesWeekGraph: {},
-    salesWeekData: {}
-  }
+    salesWeekData: {},
+  },
+  salesByMonth: {
+    salesByMonthData: {},
+    salesByMonthDetail: {},
+    salesByMonthGraph: {},
+  },
 };
 
 export default initialState;
