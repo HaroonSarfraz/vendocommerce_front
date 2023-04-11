@@ -11,6 +11,7 @@ function getItem(label, key, icon, children, parent = "") {
 
 export const adminMenus = [
   getItem("Manage Users", "users", <Icons type="users" />),
+  getItem("Permission and User Role Access", "permissions", <Icons type="lock" />),
 ];
 
 export const userMenus = [

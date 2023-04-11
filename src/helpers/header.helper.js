@@ -5,6 +5,9 @@ export const nameObject = {
   "/users": {
     name: "Manage Users",
   },
+  "/permissions": {
+    name: "Permission and User Role Access",
+  },
   "/sales-analytics/sales": {
     name: "Sales",
     parent: "Sales Analytics",

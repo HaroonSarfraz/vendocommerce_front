@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
     <div className={inter.className}>
       <Layout>
         <Provider store={store}>
-          <Component {...pageProps} />
+          <Component className={inter.className} {...pageProps} />
         </Provider>
       </Layout>
     </div>
