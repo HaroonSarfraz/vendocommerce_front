@@ -33,4 +33,8 @@ export const nameObject = {
     name: "Inbound Shipment",
     parent: "Inventory Management",
   },
+  "/advertising-analytics/advertising-data": {
+    name: "Amazon Advertising",
+    parent: "Advertisement Analytics",
+  },
 };

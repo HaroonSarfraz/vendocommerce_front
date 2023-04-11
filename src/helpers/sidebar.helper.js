@@ -78,4 +78,20 @@ export const userMenus = [
   //     ),
   //   ]
   // ),
+  getItem(
+    "Advertisement Analytics",
+    "advertising-analytics",
+    <Icons type="clipboard" />,
+    [
+      getItem(
+        "Amazon Advertising",
+        "advertising-data",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "advertising-analytics"
+      ),
+    ]
+  ),
 ];
