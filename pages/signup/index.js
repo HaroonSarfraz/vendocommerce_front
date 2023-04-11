@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Button, Form, Input, message } from "antd";
-import { signUpRequest } from "@/src/api/auth.api";
+import { signInRequest, signUpRequest } from "@/src/api/auth.api";
 
 const formItemLayout = {
   labelCol: {
@@ -26,12 +26,20 @@ export default function Signup() {
 
     signUpRequest(values)
       .then((res) => {
-        setSubmit(false);
-        if(res.status >= 200 && res.status <= 299) {
-          router.push("/dashboard");
-          localStorage.setItem("user", JSON.stringify(res.data));
+        if (res.status >= 200 && res.status <= 299) {
+          signInRequest({ email: values.email, password: values.password })
+            .then((res) => {
+              setSubmit(false);
+              if (res.status >= 200 && res.status <= 299) {
+                router.push("/dashboard");
+                localStorage.setItem("user", JSON.stringify(res.data));
+              } else {
+                message.error(res.data.message);
+              }
+            })
+            .catch((err) => message.error(err));
         } else {
-          message.error(res.data.message)
+          message.error(res.data.message);
         }
       })
       .catch((err) => message.error(err));
@@ -94,7 +102,7 @@ export default function Signup() {
                     form={form}
                     name="register"
                     onFinish={onFinish}
-                    className='signup-form'
+                    className="signup-form"
                   >
                     <div className="row">
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -176,10 +184,7 @@ export default function Signup() {
                         },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
-                            if (
-                              !value ||
-                              getFieldValue("password") === value
-                            ) {
+                            if (!value || getFieldValue("password") === value) {
                               return Promise.resolve();
                             }
                             return Promise.reject(
