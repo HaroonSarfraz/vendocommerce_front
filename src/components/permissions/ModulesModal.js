@@ -6,7 +6,7 @@ import Icons from "@/src/assets/icons";
 export default function ModulesModal({ isOpen, closeModal, account }) {
   return (
     <ModalWrapper isOpen={isOpen} closeModal={closeModal}>
-      <div className="w-500px max-h-500px">
+      <div className="w-md-500px max-h-500px">
         <div style={{ backgroundColor: "#F6F6F6" }} className="modal-header">
           <p className="modal-title fw-bolder fs-5">
             {account}&apos;s  Accessible Modules

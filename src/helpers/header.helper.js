@@ -8,6 +8,9 @@ export const nameObject = {
   "/permissions": {
     name: "Manage Users",
   },
+  "/permissions/create": {
+    name: "Add New Admin",
+  },
   "/sales-analytics/sales": {
     name: "Sales",
     parent: "Sales Analytics",

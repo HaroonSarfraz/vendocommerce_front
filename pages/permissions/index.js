@@ -256,7 +256,12 @@ export default function Users() {
               <div className="card mb-7">
                 <div className="h-80px px-10 pt-4 d-flex flex-row justify-content-between align-items-center">
                   <h4 className="fw-bold">MANAGE ADMINS</h4>
-                  <p className="btn btn-dark">Add Admin</p>
+                  <p
+                    className="btn btn-dark"
+                    onClick={() => router.push("/permissions/create")}
+                  >
+                    Add Admin
+                  </p>
                 </div>
                 <div className="card-body pt-2">
                   {loading ? (
