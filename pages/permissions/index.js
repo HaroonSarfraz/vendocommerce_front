@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input, message } from "antd";
+import { message } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
@@ -12,7 +12,9 @@ import { DefaultPerPage, timeSince } from "@/src/config";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getSwitchUser, getUserList } from "@/src/services/users.services";
+import { getUserList } from "@/src/services/users.services";
+import AccountsModal from "@/src/components/permissions/AccountsModal";
+import ModulesModal from "@/src/components/permissions/ModulesModal";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -21,7 +23,18 @@ const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
 export default function Users() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [accountsModal, setAccountsModal] = useState(false);
+  const [modulesModal, setModulesModal] = useState(false);
+  const [clickedAccount, setClickedAccount] = useState('');
 
+  const handleAccountsModal = () => {
+    setAccountsModal(!accountsModal);
+  }
+
+  const handleModulesModal = () => {
+    setModulesModal(!modulesModal);
+  }
+  
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -139,7 +152,13 @@ export default function Users() {
       align: "center",
       render: (text) => {
         return (
-          <span style={{ cursor: "pointer" }} onClick={() => {}}>
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              handleAccountsModal();
+              setClickedAccount(text.u_email)
+            }}
+          >
             View All
           </span>
         );
@@ -151,7 +170,13 @@ export default function Users() {
       align: "center",
       render: (text) => {
         return (
-          <span style={{ cursor: "pointer" }} onClick={() => {}}>
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              handleModulesModal();
+              setClickedAccount(text.u_email);
+            }}
+          >
             View All
           </span>
         );
@@ -204,15 +229,15 @@ export default function Users() {
       render: (text) => {
         return (
           <div className="d-flex">
-            <a style={{ marginRight: "10px" }}>
-              <FontAwesomeIcon
-                icon={faPenToSquare}
-                className="text-dark fs-3"
-              />
-            </a>
-            <a>
-              <FontAwesomeIcon icon={faTrashCan} className="text-danger fs-3" />
-            </a>
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              style={{ marginRight: '10px' }}
+              className="text-dark fs-3 cursor-pointer"
+            />
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
           </div>
         );
       },
@@ -226,27 +251,6 @@ export default function Users() {
         id="kt_content"
       >
         <div className="container-fluid" id="kt_content_container">
-          {/* <div className="row mb-4">
-            <div className="col-lg-12">
-              <div className="card card-flush h-xl-100">
-                <Input
-                  onChange={(e) => setSearchText(e.target.value)}
-                  onKeyPress={(ev) => {
-                    if (ev?.key === "Enter") {
-                      ev?.preventDefault();
-                      ev?.target?.blur();
-                    }
-                  }}
-                  onBlur={() => {
-                    search();
-                  }}
-                  value={searchText}
-                  className="w-200px py-2 my-4 mx-4"
-                  placeholder="search..."
-                />
-              </div>
-            </div>
-          </div> */}
           <div className="row">
             <div className="col-lg-12">
               <div className="card mb-7">
@@ -291,6 +295,16 @@ export default function Users() {
           </div>
         </div>
       </div>
+      <AccountsModal
+        isOpen={accountsModal}
+        account={clickedAccount}
+        closeModal={handleAccountsModal}
+      />
+      <ModulesModal
+        isOpen={modulesModal}
+        account={clickedAccount}
+        closeModal={handleModulesModal}
+      />
     </DashboardLayout>
   );
 }

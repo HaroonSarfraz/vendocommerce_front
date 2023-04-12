@@ -215,16 +215,8 @@ export default function Users() {
       align: "left",
       render: (text) => {
         return (
-          <div className="d-flex">
-            <a style={{ marginRight: "10px" }}>
-              <FontAwesomeIcon
-                icon={faPenToSquare}
-                className="text-dark fs-3"
-              />
-            </a>
-            <a>
-              <FontAwesomeIcon icon={faTrashCan} className="text-danger fs-3" />
-            </a>
+          <div className="d-flex flex-row justify-content-center">
+            <FontAwesomeIcon icon={faTrashCan} className="text-danger fs-3 cursor-pointer" />
           </div>
         );
       },
