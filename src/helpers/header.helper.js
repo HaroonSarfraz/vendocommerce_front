@@ -3,10 +3,10 @@ export const nameObject = {
     name: "Dashboard",
   },
   "/users": {
-    name: "Manage Users",
+    name: "Manage Brands",
   },
   "/permissions": {
-    name: "Permission and User Role Access",
+    name: "Manage Users",
   },
   "/sales-analytics/sales": {
     name: "Sales",

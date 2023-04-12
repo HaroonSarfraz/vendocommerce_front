@@ -119,7 +119,15 @@ export default function Users() {
       width: 120,
       align: "left",
       render: (text) => {
-        return <b>{text?.u_name || "N/A"}</b>;
+        return <span>{text?.u_name || "N/A"}</span>;
+      },
+    },
+    {
+      title: "Brand Name",
+      width: 120,
+      align: "left",
+      render: (text) => {
+        return <b>{text?.u_amazon_seller_name || "N/A"}</b>;
       },
     },
     {
