@@ -2,6 +2,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import Graph from "@/src/components/advertising-analytics/total-revenue/Graph";
+import Drawers from "@/src/components/advertising-analytics/total-revenue/Drawer";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 
@@ -11,6 +12,7 @@ const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
 
 export default function Users() {
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [filter, setFilter] = useState({
     week: [],
@@ -177,6 +179,15 @@ export default function Users() {
           <div className="mt-5 col-lg-12">
             <div className="card mb-7 pt-5">
               <div className="card-body pt-2">
+                <div className="mb-5 d-flex flex-row justify-content-end">
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
+                  >
+                    Configuration
+                  </button>
+                </div>
+
                 {loading ? (
                   <Loading />
                 ) : (
@@ -199,6 +210,13 @@ export default function Users() {
             </div>
           </div>
         </div>
+        {isOpen && (
+          <Drawers
+            data={columns}
+            open={isOpen}
+            onHide={() => setIsOpen(false)}
+          />
+        )}
       </div>
     </DashboardLayout>
   );
