@@ -1,8 +1,8 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import KPITable from "@/src/components/advertising-analytics/advertising-data/KPITable";
 import Graph from "@/src/components/advertising-analytics/advertising-data/Graph";
+import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -43,7 +43,11 @@ export default function Users() {
               <Graph heading="CPO" loading={true} />
             </div>
             <div className="col-xl-6 mb-5">
-              <Graph heading="TOTAL SALES & ACOS" loading={false} chartData={true} />
+              <Graph
+                heading="TOTAL SALES & ACOS"
+                loading={false}
+                chartData={true}
+              />
             </div>
           </div>
         </div>
