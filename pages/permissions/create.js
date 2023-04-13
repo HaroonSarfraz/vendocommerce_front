@@ -1,7 +1,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Icons from "@/src/assets/icons";
-import { Button, Checkbox, Divider, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, Select } from "antd";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -41,6 +41,19 @@ export default function Users() {
     "Central Log System",
     "Settings",
   ];
+
+  const options = [];
+
+  for (let i = 1; i < 10; i++) {
+    options.push({
+      label: i.toString(36) + i,
+      value: i.toString(36) + i,
+    });
+  }
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
 
   return (
     <DashboardLayout>
@@ -100,18 +113,29 @@ export default function Users() {
                       </div>
                       <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                         <Form.Item
-                          name="u_amazon_seller_name"
+                          name="brand_accounts"
                           label="Brand Account(s)"
                           className="fw-bolder"
                           rules={[
                             {
                               required: true,
-                              message: "Amazon Seller Name is required",
+                              message: "Brand Account(s) cannot be blank",
                             },
                           ]}
                           hasFeedback
                         >
-                          <Input size="large" autoComplete="off" />
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{
+                              width: "100%",
+                            }}
+                            size="large"
+                            placeholder="Select Brand Account(s) ..."
+                            defaultValue={[]}
+                            onChange={handleChange}
+                            options={options}
+                          />
                         </Form.Item>
                       </div>
                     </div>
@@ -184,10 +208,7 @@ export default function Users() {
                             </div>
                             <div className="custom-control custom-checkbox mr-2">
                               <Checkbox id="checkAll" className="mx-2" />
-                              <label
-                                className="fw-bold"
-                                for="checkAll"
-                              >
+                              <label className="fw-bold" for="checkAll">
                                 Select All
                               </label>
                             </div>
@@ -196,7 +217,10 @@ export default function Users() {
                           <div className="border-top px-2 pt-2">
                             <div className="py-2 row">
                               {permissionFields.map((item, index) => (
-                                <div key={index} className="my-2 col-lg-3 col-md-6">
+                                <div
+                                  key={index}
+                                  className="my-2 col-lg-3 col-md-6"
+                                >
                                   <div className="custom-control custom-checkbox mb-2">
                                     <Checkbox id={item} className="mx-2" />
                                     <label className="fw-bold" for={item}>
