@@ -37,4 +37,8 @@ export const nameObject = {
     name: "Amazon Advertising",
     parent: "Advertisement Analytics",
   },
+  "/advertising-analytics/total-revenue-acos": {
+    name: "Total Revenue ACoS",
+    parent: "Advertisement Analytics",
+  },
 };

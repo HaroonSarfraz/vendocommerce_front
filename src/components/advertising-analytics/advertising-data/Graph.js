@@ -1,5 +1,5 @@
 import { DotChartOutlined } from "@ant-design/icons";
-import { Select, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });

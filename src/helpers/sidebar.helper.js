@@ -92,6 +92,15 @@ export const userMenus = [
         null,
         "advertising-analytics"
       ),
+      getItem(
+        "Total Revenue ACoS",
+        "total-revenue-acos",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "advertising-analytics"
+      ),
     ]
   ),
 ];
