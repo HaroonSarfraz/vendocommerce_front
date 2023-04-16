@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input, message } from "antd";
+import { message } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
@@ -9,11 +9,12 @@ import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
 import ASINTooltip from "@/src/components/tooltip";
 import { DefaultPerPage, timeSince } from "@/src/config";
-import Icons from "@/src/assets/icons";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getSwitchUser, getUserList } from "@/src/services/users.services";
+import { getUserList } from "@/src/services/users.services";
+import AccountsModal from "@/src/components/permissions/AccountsModal";
+import ModulesModal from "@/src/components/permissions/ModulesModal";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -22,7 +23,18 @@ const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
 export default function Users() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [accountsModal, setAccountsModal] = useState(false);
+  const [modulesModal, setModulesModal] = useState(false);
+  const [clickedAccount, setClickedAccount] = useState('');
 
+  const handleAccountsModal = () => {
+    setAccountsModal(!accountsModal);
+  }
+
+  const handleModulesModal = () => {
+    setModulesModal(!modulesModal);
+  }
+  
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -119,15 +131,7 @@ export default function Users() {
       width: 120,
       align: "left",
       render: (text) => {
-        return <span>{text?.u_name || "N/A"}</span>;
-      },
-    },
-    {
-      title: "Brand Name",
-      width: 120,
-      align: "left",
-      render: (text) => {
-        return <b>{text?.u_amazon_seller_name || "N/A"}</b>;
+        return <b>{text?.u_name || "N/A"}</b>;
       },
     },
     {
@@ -143,28 +147,37 @@ export default function Users() {
       },
     },
     {
-      title: "Contact No",
+      title: "Accounts",
       width: 90,
-      align: "left",
-      render: (text) => {
-        return <span>{text?.u_contact_no || "N/A"}</span>;
-      },
-    },
-    {
-      title: "Switch User",
-      width: 150,
       align: "center",
       render: (text) => {
         return (
           <span
-            style={{ cursor: "pointer" }}
+            className="cursor-pointer"
             onClick={() => {
-              message.destroy();
-              message.loading("Loading...");
-              dispatch(getSwitchUser(text?.id));
+              handleAccountsModal();
+              setClickedAccount(text.u_email)
             }}
           >
-            <Icons type="switchUser" />
+            View All
+          </span>
+        );
+      },
+    },
+    {
+      title: "Modules",
+      width: 90,
+      align: "center",
+      render: (text) => {
+        return (
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              handleModulesModal();
+              setClickedAccount(text.u_email);
+            }}
+          >
+            View All
           </span>
         );
       },
@@ -215,8 +228,16 @@ export default function Users() {
       align: "left",
       render: (text) => {
         return (
-          <div className="d-flex flex-row justify-content-center">
-            <FontAwesomeIcon icon={faTrashCan} className="text-danger fs-3 cursor-pointer" />
+          <div className="d-flex">
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              style={{ marginRight: '10px' }}
+              className="text-dark fs-3 cursor-pointer"
+            />
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
           </div>
         );
       },
@@ -230,48 +251,38 @@ export default function Users() {
         id="kt_content"
       >
         <div className="container-fluid" id="kt_content_container">
-          <div className="row mb-4">
-            <div className="col-lg-12">
-              <div className="card card-flush h-xl-100">
-                <Input
-                  onChange={(e) => setSearchText(e.target.value)}
-                  onKeyPress={(ev) => {
-                    if (ev?.key === "Enter") {
-                      ev?.preventDefault();
-                      ev?.target?.blur();
-                    }
-                  }}
-                  onBlur={() => {
-                    search();
-                  }}
-                  value={searchText}
-                  className="w-200px py-2 my-4 mx-4"
-                  placeholder="search..."
-                />
-              </div>
-            </div>
-          </div>
           <div className="row">
             <div className="col-lg-12">
               <div className="card mb-7">
+                <div className="h-80px px-10 pt-4 d-flex flex-row justify-content-between align-items-center">
+                  <h4 className="fw-bold">MANAGE ADMINS</h4>
+                  <p
+                    className="btn btn-dark"
+                    onClick={() => router.push("/permissions/create")}
+                  >
+                    Add Admin
+                  </p>
+                </div>
                 <div className="card-body pt-2">
                   {loading ? (
                     <Loading />
                   ) : list?.length != 0 ? (
-                    <ASINTable
-                      columns={columns}
-                      dataSource={list}
-                      ellipsis
-                      rowKey="key"
-                      loading={loading}
-                      pagination={false}
-                      scroll={{
-                        x:
-                          columns
-                            ?.map((d) => d.width)
-                            .reduce((a, b) => a + b, 0) + 300,
-                      }}
-                    />
+                    <div>
+                      <ASINTable
+                        columns={columns}
+                        dataSource={list}
+                        ellipsis
+                        rowKey="key"
+                        loading={loading}
+                        pagination={false}
+                        scroll={{
+                          x:
+                            columns
+                              ?.map((d) => d.width)
+                              .reduce((a, b) => a + b, 0) + 300,
+                        }}
+                      />
+                    </div>
                   ) : (
                     <NoData />
                   )}
@@ -289,6 +300,16 @@ export default function Users() {
           </div>
         </div>
       </div>
+      <AccountsModal
+        isOpen={accountsModal}
+        account={clickedAccount}
+        closeModal={handleAccountsModal}
+      />
+      <ModulesModal
+        isOpen={modulesModal}
+        account={clickedAccount}
+        closeModal={handleModulesModal}
+      />
     </DashboardLayout>
   );
 }

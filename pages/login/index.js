@@ -26,7 +26,6 @@ export default function Login() {
           const admin = res.data.data.user_data.u_type === 1;
           localStorage.setItem("user", JSON.stringify(res.data.data));
           router.push(admin ? "/users" : "/sales-analytics/sales");
-          message.success(res.data.message);
         } else {
           message.error(res.data.message);
         }

@@ -10,7 +10,8 @@ function getItem(label, key, icon, children, parent = "") {
 }
 
 export const adminMenus = [
-  getItem("Manage Users", "users", <Icons type="users" />),
+  getItem("Manage Brands", "users", <Icons type="users" />),
+  getItem("Manage Users", "permissions", <Icons type="lock" />),
 ];
 
 export const userMenus = [
