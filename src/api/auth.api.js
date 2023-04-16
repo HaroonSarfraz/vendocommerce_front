@@ -5,5 +5,5 @@ export const signInRequest = (data) => {
 };
 
 export const signUpRequest = (data) => {
-  return request.post("/users", data);
+  return request.post("/auth/signup", data);
 };

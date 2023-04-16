@@ -305,29 +305,29 @@ const Icons = (icon) => {
             <g>
               <polygon
                 style={{ fill: "#F5F5F5" }}
-                points="512,472.046 512,432.118 344.465,323.369 393.961,323.369 512,399.989 512,375.402 
+                points="512,472.046 512,432.118 344.465,323.369 393.961,323.369 512,399.989 512,375.402
       432.581,323.369 512,323.369 512,296.421 296.421,296.421 296.421,512 323.368,512 323.368,348.46 	"
               />
               <polygon
                 style={{ fill: "#F5F5F5" }}
-                points="0,296.421 0,323.369 79.419,323.369 0,375.402 0,413.203 138.395,323.369 187.891,323.369 
+                points="0,296.421 0,323.369 79.419,323.369 0,375.402 0,413.203 138.395,323.369 187.891,323.369
       0,445.332 0,472.046 188.632,348.46 188.632,512 215.579,512 215.579,296.421 	"
               />
               <polygon
                 style={{ fill: "#F5F5F5" }}
-                points="215.579,0 188.632,0 188.632,163.54 0,39.954 0,83.679 161.684,188.632 112.188,188.632 
+                points="215.579,0 188.632,0 188.632,163.54 0,39.954 0,83.679 161.684,188.632 112.188,188.632
       0,115.807 0,136.598 79.419,188.632 0,188.632 0,215.579 215.579,215.579 	"
               />
               <polygon
                 style={{ fill: "#F5F5F5" }}
-                points="512,215.579 512,188.632 432.581,188.632 512,136.598 512,98.314 372.864,188.632 
+                points="512,215.579 512,188.632 432.581,188.632 512,136.598 512,98.314 372.864,188.632
       323.368,188.632 512,66.185 512,39.954 323.368,163.54 323.368,0 296.421,0 296.421,215.579 	"
               />
             </g>
             <g>
               <polygon
                 style={{ fill: "#FF4B55" }}
-                points="512,296.421 512,215.579 296.421,215.579 296.421,0 215.579,0 215.579,215.579 0,215.579 
+                points="512,296.421 512,215.579 296.421,215.579 296.421,0 215.579,0 215.579,215.579 0,215.579
       0,296.421 215.579,296.421 215.579,512 296.421,512 296.421,296.421 	"
               />
               <polygon
@@ -1180,10 +1180,10 @@ const Icons = (icon) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            // class="feather feather-lock"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            // rokelinejoin="feather feather-lock"
           >
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -1199,10 +1199,10 @@ const Icons = (icon) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-user mr-50"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            rokelinejoin="feather feather-user mr-50"
           >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -1218,10 +1218,10 @@ const Icons = (icon) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-user font-medium-4 mr-25"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            rokelinejoin="feather feather-user font-medium-4 mr-25"
           >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -1237,10 +1237,10 @@ const Icons = (icon) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-arrow-right mr-50"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            rokelinejoin="feather feather-arrow-right mr-50"
           >
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -1256,10 +1256,10 @@ const Icons = (icon) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="feather feather-clipboard"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            rokelinejoin="feather feather-clipboard"
           >
             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
