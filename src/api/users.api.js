@@ -7,3 +7,7 @@ export const fetchUserList = (data) => {
 export const fetchSwitchUser = (id) => {
   return request.get(`/auth/user-token/${id}`);
 };
+
+export const createUserRequest = (data) => {
+  return request.post(`/users`, data);
+};
