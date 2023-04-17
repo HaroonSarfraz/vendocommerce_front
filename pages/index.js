@@ -10,7 +10,7 @@ export default function Home() {
     user?.access_token
       ? user.role === "User"
         ? router.push("/dashboard")
-        : router.push("/users")
+        : router.push("/brands")
       : router.push("/login");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

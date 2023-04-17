@@ -40,7 +40,7 @@ export default function Users() {
         setSubmit(false);
         if (res.status >= 200 && res.status <= 299) {
           message.success("user created successfully");
-          router.push("/permissions");
+          router.push("/users");
         } else {
           message.error("unable to create user");
         }

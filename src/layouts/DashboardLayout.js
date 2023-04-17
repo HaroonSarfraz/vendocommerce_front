@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }) {
       setTimeout(() => {
         localStorage.removeItem("adminData");
         dispatch(setSwitchUser({}));
-        router.push("/users");
+        router.push("/brands");
       }, 1000);
     }
   };

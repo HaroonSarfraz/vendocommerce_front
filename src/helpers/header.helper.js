@@ -2,13 +2,13 @@ export const nameObject = {
   "/dashboard": {
     name: "Dashboard",
   },
-  "/users": {
+  "/brands": {
     name: "Manage Brands",
   },
-  "/permissions": {
+  "/users": {
     name: "Manage Users",
   },
-  "/permissions/create": {
+  "/users/create": {
     name: "Add New Admin",
   },
   "/sales-analytics/sales": {
