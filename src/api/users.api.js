@@ -11,3 +11,7 @@ export const fetchSwitchUser = (id) => {
 export const createUserRequest = (data) => {
   return request.post(`/users`, data);
 };
+
+export const activateUserRequest = (id) => {
+  return request.get(`/users/${id}/verify`);
+};

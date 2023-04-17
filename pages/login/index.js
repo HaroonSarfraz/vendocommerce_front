@@ -22,11 +22,17 @@ export default function Login() {
     signInRequest(body)
       .then((res) => {
         setSending(false);
-        if(res.status >= 200 && res.status <= 299) {
+        if (res.status >= 200 && res.status <= 299) {
           localStorage.setItem("user", JSON.stringify(res.data));
-          router.push(res.data.role === "User" ? "/dashboard" : "/brands")
+          router.push(
+            res.data.role === "User"
+              ? res.data.user_status === 0
+                ? "/dashboard"
+                : "/sales-analytics/sales"
+              : "/brands"
+          );
         } else {
-          message.error(res.data.message)
+          message.error(res.data.message);
         }
       })
       .catch((err) => message.error(err));
