@@ -54,12 +54,12 @@ export default function DashboardLayout({ children }) {
       setTimeout(() => {
         localStorage.removeItem("adminData");
         dispatch(setSwitchUser({}));
-        router.push("/users");
+        router.push("/brands");
       }, 1000);
     }
   };
 
-  const GetModules = () => (user?.user_data?.u_type === 1 ? true : false);
+  const GetModules = () => (user?.role === 'User' ? false : true);
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>

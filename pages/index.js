@@ -8,7 +8,9 @@ export default function Home() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     user?.access_token
-      ? router.push("/dashboard")
+      ? user.role === "User"
+        ? router.push("/dashboard")
+        : router.push("/brands")
       : router.push("/login");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -24,7 +24,7 @@ export default function Login() {
         setSending(false);
         if(res.status >= 200 && res.status <= 299) {
           localStorage.setItem("user", JSON.stringify(res.data));
-          router.push(res.data.role === "User" ? "/dashboard" : "/users")
+          router.push(res.data.role === "User" ? "/dashboard" : "/brands")
         } else {
           message.error(res.data.message)
         }

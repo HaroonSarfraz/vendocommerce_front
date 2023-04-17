@@ -1,7 +1,9 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { Button, Checkbox, Form, Input, message, Select } from "antd";
+import { createUserRequest } from "@/src/api/users.api";
 import Icons from "@/src/assets/icons";
-import { Button, Checkbox, Form, Input, Select } from "antd";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -21,15 +23,29 @@ const formItemLayout = {
 export default function Users() {
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
+  const router = useRouter();
 
   const onFinish = (values) => {
-    console.log(values);
-
     setSubmit(true);
 
-    setTimeout(() => {
-      setSubmit(false);
-    }, 3000);
+    const data = {
+      ...values,
+      u_role: "User",
+      user_status: 0,
+      u_type: 0,
+    };
+
+    createUserRequest(data)
+      .then((res) => {
+        setSubmit(false);
+        if (res.status >= 200 && res.status <= 299) {
+          message.success("user created successfully");
+          router.push("/users");
+        } else {
+          message.error("unable to create user");
+        }
+      })
+      .catch((err) => message.error(err));
   };
 
   const permissionFields = [
@@ -118,7 +134,8 @@ export default function Users() {
                           className="fw-bolder"
                           rules={[
                             {
-                              required: true,
+                              // required: true,
+                              required: false,
                               message: "Brand Account(s) cannot be blank",
                             },
                           ]}
@@ -208,7 +225,7 @@ export default function Users() {
                             </div>
                             <div className="custom-control custom-checkbox mr-2">
                               <Checkbox id="checkAll" className="mx-2" />
-                              <label className="fw-bold" for="checkAll">
+                              <label className="fw-bold" htmlFor="checkAll">
                                 Select All
                               </label>
                             </div>
@@ -223,7 +240,7 @@ export default function Users() {
                                 >
                                   <div className="custom-control custom-checkbox mb-2">
                                     <Checkbox id={item} className="mx-2" />
-                                    <label className="fw-bold" for={item}>
+                                    <label className="fw-bold" htmlFor={item}>
                                       {item}
                                     </label>
                                   </div>
