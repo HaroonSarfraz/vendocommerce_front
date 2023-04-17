@@ -36,8 +36,8 @@ export default function Users() {
   const switchUser = useSelector((state) => state.users.switchUser);
 
   useEffect(() => {
-    if (userList?.status === true) {
-      setList(userList?.data?.records);
+    if (userList) {
+      setList(userList);
       setLoading(false);
       setTotalPage(userList?.data?.pagination?.totalCount);
     } else if (userList?.status === false) {
@@ -46,16 +46,16 @@ export default function Users() {
   }, [userList]);
 
   useEffect(() => {
-    if (switchUser.status) {
+    if (switchUser.role && switchUser.role !== 'Admin') {
       let user = localStorage.getItem("user");
 
-      const admin = JSON.parse(user).user_data.u_type === 1;
+      const admin = JSON.parse(user).role === 'Admin';
 
       admin && localStorage.setItem("adminData", user);
 
       setTimeout(() => {
-        localStorage.setItem("user", JSON.stringify(switchUser?.data));
-        router.push("/sales-analytics/sales");
+        localStorage.setItem("user", JSON.stringify(switchUser));
+        router.push("/dashboard");
       }, 1000);
 
       message.success(switchUser.message);

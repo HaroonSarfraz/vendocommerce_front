@@ -23,8 +23,8 @@ export default function Login() {
       .then((res) => {
         setSending(false);
         if(res.status >= 200 && res.status <= 299) {
-          router.push("/dashboard");
           localStorage.setItem("user", JSON.stringify(res.data));
+          router.push(res.data.role === "User" ? "/dashboard" : "/users")
         } else {
           message.error(res.data.message)
         }

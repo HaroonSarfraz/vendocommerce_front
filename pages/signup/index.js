@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Button, Form, Input, message } from "antd";
 import { signUpRequest } from "@/src/api/auth.api";
+import { Button, Form, Input, message } from "antd";
 
 const formItemLayout = {
   labelCol: {
@@ -27,11 +27,11 @@ export default function Signup() {
     signUpRequest(values)
       .then((res) => {
         setSubmit(false);
-        if(res.status >= 200 && res.status <= 299) {
-          router.push("/dashboard");
+        if (res.status >= 200 && res.status <= 299) {
+          res.data.role === "User" && router.push("/dashboard");
           localStorage.setItem("user", JSON.stringify(res.data));
         } else {
-          message.error(res.data.message)
+          message.error(res.data.message ?? "Something went wrong");
         }
       })
       .catch((err) => message.error(err));
@@ -94,7 +94,7 @@ export default function Signup() {
                     form={form}
                     name="register"
                     onFinish={onFinish}
-                    className='signup-form'
+                    className="signup-form"
                   >
                     <div className="row">
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -116,7 +116,7 @@ export default function Signup() {
                       <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                         {" "}
                         <Form.Item
-                          name="email"
+                          name="u_email"
                           label="E-mail"
                           rules={[
                             {
@@ -148,26 +148,30 @@ export default function Signup() {
                       <Input size="large" autoComplete="off" />
                     </Form.Item>
                     <Form.Item
-                      name="password"
+                      name="u_password"
                       label="Password"
                       rules={[
                         {
                           required: true,
                           message: "Password is required",
                         },
+                        {
+                          min: 8,
+                          message: "Password must be 8 characters long",
+                        },
                       ]}
                       hasFeedback
                     >
                       <Input.Password
                         size="large"
-                        autoComplete="new-password"
+                        autoComplete="off"
                       />
                     </Form.Item>
 
                     <Form.Item
                       name="confirm_password"
                       label="Confirm Password"
-                      dependencies={["password"]}
+                      dependencies={["u_password"]}
                       hasFeedback
                       rules={[
                         {
@@ -176,10 +180,7 @@ export default function Signup() {
                         },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
-                            if (
-                              !value ||
-                              getFieldValue("password") === value
-                            ) {
+                            if (!value || getFieldValue("u_password") === value) {
                               return Promise.resolve();
                             }
                             return Promise.reject(

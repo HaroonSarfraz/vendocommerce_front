@@ -6,7 +6,7 @@ export const getUserList = (data) => {
   return (dispatch) => {
     fetchUserList(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.data) {
           dispatch(setUserList(res.data));
         } else {
           message.error(res.data.message);
@@ -22,8 +22,9 @@ export const getSwitchUser = (data) => {
   return (dispatch) => {
     fetchSwitchUser(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.data) {
           dispatch(setSwitchUser(res.data));
+
         } else {
           message.error(res.data.message);
         }
