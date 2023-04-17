@@ -46,7 +46,7 @@ export default function Users() {
   }, [userList]);
 
   useEffect(() => {
-    if (switchUser.role && switchUser.role !== 'Admin') {
+    if (switchUser.role && switchUser.role === 'User') {
       let user = localStorage.getItem("user");
 
       const admin = JSON.parse(user).role === 'Admin';
@@ -57,8 +57,6 @@ export default function Users() {
         localStorage.setItem("user", JSON.stringify(switchUser));
         router.push("/dashboard");
       }, 1000);
-
-      message.success(switchUser.message);
     } else if (switchUser.status === false) {
       message.error(switchUser.message);
     }
@@ -260,7 +258,7 @@ export default function Users() {
                   ) : list?.length != 0 ? (
                     <ASINTable
                       columns={columns}
-                      dataSource={list}
+                      dataSource={list.filter((user) => user.role === "User")}
                       ellipsis
                       rowKey="key"
                       loading={loading}

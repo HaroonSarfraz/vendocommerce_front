@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { message } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
@@ -42,14 +41,11 @@ export default function Users() {
   const [totalPage, setTotalPage] = useState(1);
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
-  const [searchText, setSearchText] = useState("");
-
   const userList = useSelector((state) => state.users.userList);
-  const switchUser = useSelector((state) => state.users.switchUser);
 
   useEffect(() => {
-    if (userList?.status === true) {
-      setList(userList?.data?.records);
+    if (userList) {
+      setList(userList);
       setLoading(false);
       setTotalPage(userList?.data?.pagination?.totalCount);
     } else if (userList?.status === false) {
@@ -58,29 +54,9 @@ export default function Users() {
   }, [userList]);
 
   useEffect(() => {
-    if (switchUser.status) {
-      let user = localStorage.getItem("user");
-
-      const admin = JSON.parse(user).user_data.u_type === 1;
-
-      admin && localStorage.setItem("adminData", user);
-
-      setTimeout(() => {
-        localStorage.setItem("user", JSON.stringify(switchUser?.data));
-        router.push("/sales-analytics/sales");
-      }, 1000);
-
-      message.success(switchUser.message);
-    } else if (switchUser.status === false) {
-      message.error(switchUser.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [switchUser]);
-
-  useEffect(() => {
     setLoading(true);
     dispatch(
-      getUserList({ page: page, perPage: pageSize, search_term: searchText })
+      getUserList({ page: page, perPage: pageSize })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -105,15 +81,6 @@ export default function Users() {
         page: 1,
         perPage: e,
       })
-    );
-  };
-
-  const search = () => {
-    setLoading(true);
-    setPage(1);
-    setList([]);
-    dispatch(
-      getUserList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
 
@@ -255,12 +222,12 @@ export default function Users() {
             <div className="col-lg-12">
               <div className="card mb-7">
                 <div className="h-80px px-10 pt-4 d-flex flex-row justify-content-between align-items-center">
-                  <h4 className="fw-bold">MANAGE ADMINS</h4>
+                  <h4 className="fw-bold">MANAGE USERS</h4>
                   <p
                     className="btn btn-dark"
                     onClick={() => router.push("/permissions/create")}
                   >
-                    Add Admin
+                    Add User
                   </p>
                 </div>
                 <div className="card-body pt-2">
