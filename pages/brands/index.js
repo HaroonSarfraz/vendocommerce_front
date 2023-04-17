@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getSwitchUser, getUserList } from "@/src/services/users.services";
+import { activateUserRequest } from "@/src/api/users.api";
+import _ from "lodash";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -103,6 +105,19 @@ export default function Users() {
     );
   };
 
+  const activateUser = (id) => {
+    activateUserRequest(id)
+      .then((res) => {
+        if (res.status === 200) {
+          const list_ = _.cloneDeep(list);
+          const index = list_.findIndex((user) => user.id === res.data.id);
+          list_[index] = res.data;
+          setList(list_);
+        }
+      })
+      .catch((err) => message.error(err));
+  };
+
   const columns = [
     {
       title: "#",
@@ -126,6 +141,27 @@ export default function Users() {
       align: "left",
       render: (text) => {
         return <b>{text?.u_amazon_seller_name || "N/A"}</b>;
+      },
+    },
+    {
+      title: "Status",
+      width: 120,
+      align: "left",
+      render: (text) => {
+        return (
+          <>
+            {text.user_status === 0 ? (
+              <button
+                onClick={() => activateUser(text.id)}
+                className="btn btn-sm btn-primary"
+              >
+                Activate
+              </button>
+            ) : (
+              <span>Activated</span>
+            )}
+          </>
+        );
       },
     },
     {
