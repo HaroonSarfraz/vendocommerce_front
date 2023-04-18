@@ -1,3 +1,5 @@
+# .github/workflows/build-and-deploy.yml
+
 name: Node.js CI
 
 on:
@@ -6,21 +8,31 @@ on:
 
 jobs:
   build:
-		
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v3
+        
+      # a standard step for GitHub actions on Node
+      # https://github.com/actions/setup-node
+      - uses: actions/setup-node@v3
         with:
           # update the Node version to meet your needs
-          node-version: 18.14.2
+          node-version: 16
           cache: npm
 
       - name: Build
         run: |
           npm ci
-          # configure the build here
+          npm run build
+          npm run export
+          touch out/.nojekyll
 
       - name: Deploy
+        # https://github.com/JamesIves/github-pages-deploy-action
+        uses: JamesIves/github-pages-deploy-action@4.4.0
+        with:
+          branch: gh-pages
+          folder: out
