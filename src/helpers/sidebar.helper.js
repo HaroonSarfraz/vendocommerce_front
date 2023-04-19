@@ -118,15 +118,15 @@ export const userMenus = [
         null,
         "customer-acquisition"
       ),
-      // getItem(
-      //   "LTV",
-      //   "ltv",
-      //   <span className="menu-bullet">
-      //     <span className="bullet bullet-dot" />
-      //   </span>,
-      //   null,
-      //   "customer-acquisition"
-      // ),
+      getItem(
+        "LTV",
+        "ltv",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "customer-acquisition"
+      ),
     ]
   ),
 ];

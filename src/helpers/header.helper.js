@@ -51,4 +51,8 @@ export const nameObject = {
     name: "New v/s Repeat",
     parent: "Customer Acquisition",
   },
+  "/customer-acquisition/ltv": {
+    name: "LTV",
+    parent: "Customer Acquisition",
+  },
 };
