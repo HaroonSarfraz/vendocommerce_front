@@ -104,4 +104,29 @@ export const userMenus = [
       ),
     ]
   ),
+  getItem(
+    "Customer Acquisition",
+    "customer-acquisition",
+    <Icons type="user-lg" />,
+    [
+      getItem(
+        "New v/s Repeat",
+        "new-vs-repeat",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "customer-acquisition"
+      ),
+      // getItem(
+      //   "LTV",
+      //   "ltv",
+      //   <span className="menu-bullet">
+      //     <span className="bullet bullet-dot" />
+      //   </span>,
+      //   null,
+      //   "customer-acquisition"
+      // ),
+    ]
+  ),
 ];
