@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { Button, Checkbox, Form, Input, message, Select } from "antd";
 import { createUserRequest } from "@/src/api/users.api";
 import Icons from "@/src/assets/icons";
+import _ from "lodash";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -21,9 +22,10 @@ const formItemLayout = {
 };
 
 export default function Users() {
+  const router = useRouter();
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
-  const router = useRouter();
+  const [permissions, setPermissions] = useState([]);
 
   const onFinish = (values) => {
     setSubmit(true);
@@ -69,6 +71,27 @@ export default function Users() {
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
+  };
+
+  const handleCheck = (item) => {
+    const permissions_ = _.cloneDeep(permissions);
+    const index = permissions.findIndex((perm) => perm === item);
+    permissions_.includes(item)
+      ? permissions_.splice(index, 1)
+      : permissions_.push(item);
+    setPermissions(permissions_);
+  };
+
+  const handleCheckAll = () => {
+    const save = () => {
+      const permissions_ = _.cloneDeep(permissions);
+      permissionFields.forEach((field) => {
+        !permissions_.includes(field) && permissions_.push(field);
+      });
+      setPermissions(permissions_);
+    };
+
+    _.isEqual(permissions, permissionFields) ? setPermissions([]) : save();
   };
 
   return (
@@ -224,7 +247,15 @@ export default function Users() {
                               </h6>
                             </div>
                             <div className="custom-control custom-checkbox mr-2">
-                              <Checkbox id="checkAll" className="mx-2" />
+                              <Checkbox
+                                id="checkAll"
+                                className="mx-2"
+                                checked={_.isEqual(
+                                  permissions.sort(),
+                                  permissionFields.sort()
+                                )}
+                                onChange={handleCheckAll}
+                              />
                               <label className="fw-bold" htmlFor="checkAll">
                                 Select All
                               </label>
@@ -239,7 +270,12 @@ export default function Users() {
                                   className="my-2 col-lg-3 col-md-6"
                                 >
                                   <div className="custom-control custom-checkbox mb-2">
-                                    <Checkbox id={item} className="mx-2" />
+                                    <Checkbox
+                                      id={item}
+                                      className="mx-2"
+                                      onChange={() => handleCheck(item)}
+                                      checked={permissions.includes(item)}
+                                    />
                                     <label className="fw-bold" htmlFor={item}>
                                       {item}
                                     </label>

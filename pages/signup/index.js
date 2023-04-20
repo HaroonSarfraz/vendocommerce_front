@@ -20,6 +20,7 @@ export default function Signup() {
   const router = useRouter();
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const onFinish = (values) => {
     setSubmit(true);
@@ -199,8 +200,8 @@ export default function Signup() {
                         <input
                           className="form-check-input mx-4"
                           type="checkbox"
-                          name="toc"
-                          defaultValue={1}
+                          value={checked}
+                          onChange={() => setChecked(!checked)}
                         />
                         <span
                           style={{ width: "410px" }}
@@ -218,7 +219,7 @@ export default function Signup() {
                         style={{ height: "45px" }}
                         type="primary"
                         htmlType="submit"
-                        disabled={submit}
+                        disabled={submit || !checked}
                         className="btn btn-lg btn-primary"
                       >
                         {submit ? (

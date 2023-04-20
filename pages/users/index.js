@@ -14,6 +14,7 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getUserList } from "@/src/services/users.services";
 import AccountsModal from "@/src/components/permissions/AccountsModal";
 import ModulesModal from "@/src/components/permissions/ModulesModal";
+import { Input } from "antd";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -39,6 +40,7 @@ export default function Users() {
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
   const userList = useSelector((state) => state.users.userList);
@@ -81,6 +83,15 @@ export default function Users() {
         page: 1,
         perPage: e,
       })
+    );
+  };
+
+  const search = () => {
+    setLoading(true);
+    setPage(1);
+    setList([]);
+    dispatch(
+      getUserList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
 
@@ -218,6 +229,27 @@ export default function Users() {
         id="kt_content"
       >
         <div className="container-fluid" id="kt_content_container">
+          <div className="row mb-4">
+            <div className="col-lg-12">
+              <div className="card card-flush h-xl-100">
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  onKeyPress={(ev) => {
+                    if (ev?.key === "Enter") {
+                      ev?.preventDefault();
+                      ev?.target?.blur();
+                    }
+                  }}
+                  onBlur={() => {
+                    search();
+                  }}
+                  value={searchText}
+                  className="w-200px py-2 my-4 mx-4"
+                  placeholder="search..."
+                />
+              </div>
+            </div>
+          </div>
           <div className="row">
             <div className="col-lg-12">
               <div className="card mb-7">
