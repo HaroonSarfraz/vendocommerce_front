@@ -40,7 +40,7 @@ export default function Users() {
     setSubmit(true);
 
     const data = {
-      name: "",
+      name: values.name,
       u_amazon_seller_name: values.brand_name,
       users: {
         connect: values.user_accounts.map((id) => ({ id: id })),
@@ -93,6 +93,22 @@ export default function Users() {
                             {
                               required: true,
                               message: "Brand Name is required",
+                            },
+                          ]}
+                          hasFeedback
+                        >
+                          <Input size="large" autoFocus autoComplete="off" />
+                        </Form.Item>
+                      </div>
+                      <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                        <Form.Item
+                          name="name"
+                          label="Name"
+                          className="fw-bolder"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Name is required",
                             },
                           ]}
                           hasFeedback
