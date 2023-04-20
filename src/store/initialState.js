@@ -3,6 +3,9 @@ const initialState = {
     userList: {},
     switchUser: {},
   },
+  brands: {
+    brandList: [],
+  },
   sales: {
     salesGraphData: {},
     salesByWeekData: {},

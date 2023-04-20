@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, message } from "antd";
@@ -7,14 +8,11 @@ import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
-import ASINTooltip from "@/src/components/tooltip";
 import { DefaultPerPage, timeSince } from "@/src/config";
-import Icons from "@/src/assets/icons";
-import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getSwitchUser, getUserList } from "@/src/services/users.services";
-import { activateUserRequest } from "@/src/api/users.api";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { getBrandList } from "@/src/services/brands.services";
+import Icons from "@/src/assets/icons";
 import _ from "lodash";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
@@ -34,41 +32,41 @@ export default function Users() {
 
   const [searchText, setSearchText] = useState("");
 
-  const userList = useSelector((state) => state.users.userList);
-  const switchUser = useSelector((state) => state.users.switchUser);
+  const brandList = useSelector((state) => state.brands.brandList);
+  // const switchUser = useSelector((state) => state.users.switchUser);
 
   useEffect(() => {
-    if (userList) {
-      setList(userList);
+    if (brandList) {
+      setList(brandList);
       setLoading(false);
-      setTotalPage(userList?.data?.pagination?.totalCount);
-    } else if (userList?.status === false) {
+      setTotalPage(brandList?.data?.pagination?.totalCount);
+    } else if (brandList?.status === false) {
       // fakeActionUser()
     }
-  }, [userList]);
+  }, [brandList]);
 
-  useEffect(() => {
-    if (switchUser.role && switchUser.role === 'User') {
-      let user = localStorage.getItem("user");
+  // useEffect(() => {
+  //   if (switchUser.role && switchUser.role === 'User') {
+  //     let user = localStorage.getItem("user");
 
-      const admin = JSON.parse(user).role === 'Admin';
+  //     const admin = JSON.parse(user).role === 'Admin';
 
-      admin && localStorage.setItem("adminData", user);
+  //     admin && localStorage.setItem("adminData", user);
 
-      setTimeout(() => {
-        localStorage.setItem("user", JSON.stringify(switchUser));
-        router.push("/dashboard");
-      }, 1000);
-    } else if (switchUser.status === false) {
-      message.error(switchUser.message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [switchUser]);
+  //     setTimeout(() => {
+  //       localStorage.setItem("user", JSON.stringify(switchUser));
+  //       router.push("/dashboard");
+  //     }, 1000);
+  //   } else if (switchUser.status === false) {
+  //     message.error(switchUser.message);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [switchUser]);
 
   useEffect(() => {
     setLoading(true);
     dispatch(
-      getUserList({ page: page, perPage: pageSize, search_term: searchText })
+      getBrandList({ page: page, perPage: pageSize, search_term: searchText })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,7 +74,7 @@ export default function Users() {
   const onPageNo = (e) => {
     setLoading(true);
     dispatch(
-      getUserList({
+      getBrandList({
         page: e,
         perPage: pageSize,
       })
@@ -89,7 +87,7 @@ export default function Users() {
     setPageSize(e);
     setLoading(true);
     dispatch(
-      getUserList({
+      getBrandList({
         page: 1,
         perPage: e,
       })
@@ -101,22 +99,22 @@ export default function Users() {
     setPage(1);
     setList([]);
     dispatch(
-      getUserList({ page: page, perPage: pageSize, search_term: searchText })
+      getBrandList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
 
-  const activateUser = (id) => {
-    activateUserRequest(id)
-      .then((res) => {
-        if (res.status === 200) {
-          const list_ = _.cloneDeep(list);
-          const index = list_.findIndex((user) => user.id === res.data.id);
-          list_[index] = res.data;
-          setList(list_);
-        }
-      })
-      .catch((err) => message.error(err));
-  };
+  // const activateUser = (id) => {
+  //   activateUserRequest(id)
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         const list_ = _.cloneDeep(list);
+  //         const index = list_.findIndex((user) => user.id === res.data.id);
+  //         list_[index] = res.data;
+  //         setList(list_);
+  //       }
+  //     })
+  //     .catch((err) => message.error(err));
+  // };
 
   const columns = [
     {
@@ -128,14 +126,6 @@ export default function Users() {
       },
     },
     {
-      title: "Name",
-      width: 120,
-      align: "left",
-      render: (text) => {
-        return <span>{text?.u_name || "N/A"}</span>;
-      },
-    },
-    {
       title: "Brand Name",
       width: 120,
       align: "left",
@@ -144,59 +134,26 @@ export default function Users() {
       },
     },
     {
-      title: "Status",
+      title: "Name",
       width: 120,
       align: "left",
       render: (text) => {
-        return (
-          <>
-            {text.user_status === 0 ? (
-              <button
-                onClick={() => activateUser(text.id)}
-                className="btn btn-sm btn-primary"
-              >
-                Activate
-              </button>
-            ) : (
-              <span>Activated</span>
-            )}
-          </>
-        );
+        return <span>{text?.name || "N/A"}</span>;
       },
     },
     {
-      title: "Email",
-      width: 160,
-      align: "left",
-      render: (text) => {
-        return (
-          <ASINTooltip rule title={text?.u_email}>
-            {text?.u_email || "N/A"}
-          </ASINTooltip>
-        );
-      },
-    },
-    {
-      title: "Contact No",
-      width: 90,
-      align: "left",
-      render: (text) => {
-        return <span>{text?.u_contact_no || "N/A"}</span>;
-      },
-    },
-    {
-      title: "Switch User",
-      width: 150,
+      title: "Switch Brand",
+      width: 100,
       align: "center",
       render: (text) => {
         return (
           <span
             style={{ cursor: "pointer" }}
-            onClick={() => {
-              message.destroy();
-              message.loading("Loading...");
-              dispatch(getSwitchUser(text?.id));
-            }}
+            // onClick={() => {
+            //   message.destroy();
+            //   message.loading("Loading...");
+            //   dispatch(getSwitchUser(text?.id));
+            // }}
           >
             <Icons type="switchUser" />
           </span>
@@ -205,7 +162,7 @@ export default function Users() {
     },
     {
       title: "Created At",
-      width: 150,
+      width: 130,
       align: "left",
       render: (text) => {
         return (
@@ -225,7 +182,7 @@ export default function Users() {
     },
     {
       title: "Updated At",
-      width: 150,
+      width: 130,
       align: "left",
       render: (text) => {
         return (
@@ -294,7 +251,7 @@ export default function Users() {
                   ) : list?.length != 0 ? (
                     <ASINTable
                       columns={columns}
-                      dataSource={list.filter((user) => user.role === "User")}
+                      dataSource={list}
                       ellipsis
                       rowKey="key"
                       loading={loading}
