@@ -245,6 +245,15 @@ export default function Users() {
           <div className="row">
             <div className="col-lg-12">
               <div className="card mb-7">
+                <div className="h-80px px-10 pt-4 d-flex flex-row justify-content-between align-items-center">
+                  <h4 className="fw-bold">MANAGE BRANDS</h4>
+                  <p
+                    className="btn btn-dark"
+                    onClick={() => router.push("/brands/create")}
+                  >
+                    Add Brand
+                  </p>
+                </div>
                 <div className="card-body pt-2">
                   {loading ? (
                     <Loading />

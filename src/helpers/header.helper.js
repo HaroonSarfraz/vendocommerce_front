@@ -5,6 +5,9 @@ export const nameObject = {
   "/brands": {
     name: "Manage Brands",
   },
+  "/brands/create": {
+    name: "Create New Brand",
+  },
   "/users": {
     name: "Manage Users",
   },
