@@ -132,7 +132,7 @@ export default function Sidebar(props) {
                         {user?.u_name}
                       </a>
                       <span className="text-gray-600 fw-bold d-block fs-7 mb-1">
-                        {user?.email}
+                        {user?.u_email}
                       </span>
                     </div>
                   }
@@ -153,7 +153,7 @@ export default function Sidebar(props) {
                   {user?.u_name}
                 </a>
                 <span className="text-gray-600 fw-bold d-block fs-7 mb-1">
-                  {user?.email}
+                  {user?.u_email}
                 </span>
               </div>
             )}
