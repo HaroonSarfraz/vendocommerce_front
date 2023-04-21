@@ -15,3 +15,7 @@ export const createUserRequest = (data) => {
 export const activateUserRequest = (id) => {
   return request.get(`/users/${id}/verify`);
 };
+
+export const updateUserRequest = (id, data) => {
+  return request.patch(`/users/${id}`, data);
+};
