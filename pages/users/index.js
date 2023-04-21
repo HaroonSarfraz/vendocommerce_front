@@ -14,7 +14,9 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getUserList } from "@/src/services/users.services";
 import AccountsModal from "@/src/components/permissions/AccountsModal";
 import ModulesModal from "@/src/components/permissions/ModulesModal";
+import { updateUserRequest } from "@/src/api/users.api";
 import { Input } from "antd";
+import _ from "lodash";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -34,7 +36,7 @@ export default function Users() {
   const handleModulesModal = () => {
     setModulesModal(!modulesModal);
   }
-  
+
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -95,6 +97,20 @@ export default function Users() {
     );
   };
 
+  const changeUserStatus = (id, status) => {
+    updateUserRequest(id, { user_status: status })
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          const list_ = _.cloneDeep(list);
+          const index = list_.findIndex((user) => user.id === res.data.id);
+          list_[index] = res.data;
+          setList(list_);
+        }
+      })
+      .catch((err) => message.error(err));
+  };
+
   const columns = [
     {
       title: "#",
@@ -139,6 +155,32 @@ export default function Users() {
           >
             View All
           </span>
+        );
+      },
+    },
+    {
+      title: "Status",
+      width: 120,
+      align: "left",
+      render: (text) => {
+        return (
+          <>
+            {text.user_status === 0 ? (
+              <button
+                onClick={() => changeUserStatus(text.id, 1)}
+                className="btn btn-sm btn-primary"
+              >
+                Activate
+              </button>
+            ) : (
+              <button
+                onClick={() => changeUserStatus(text.id, 0)}
+                className="btn btn-sm btn-danger bg-danger"
+              >
+                Deactivate
+              </button>
+            )}
+          </>
         );
       },
     },
