@@ -1,7 +1,10 @@
 const initialState = {
   users: {
-    userList: {},
+    userList: [],
     switchUser: {},
+  },
+  brands: {
+    brandList: [],
   },
   sales: {
     salesGraphData: {},
