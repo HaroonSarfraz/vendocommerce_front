@@ -7,3 +7,7 @@ export const signInRequest = (data) => {
 export const signUpRequest = (data) => {
   return request.post("/auth/signup", data);
 };
+
+export const fetchMeRequest = () => {
+  return request.get("/auth/me");
+};

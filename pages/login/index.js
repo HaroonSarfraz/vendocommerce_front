@@ -28,7 +28,7 @@ export default function Login() {
             res.data.role === "User"
               ? res.data.user_status === 0
                 ? "/dashboard"
-                : "/sales-analytics/sales"
+                : "/sales-analytics/sku"
               : "/brands"
           );
         } else {

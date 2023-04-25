@@ -29,20 +29,20 @@ export default function SalesBySku() {
   const salesBySKUDetails = useSelector((state) => state.salesBySku.salesBySkuDetails);
   const salesSKUDetailsLists = useSelector((state) => state.salesBySku.salesSkuDetailsList);
 
-  const getList = (e) => { 
+  const getList = (e) => {
     setDetailsLoading(true);
     setLoading(true);
-    dispatch(
-      getSalesBySkuDetailsList({
-        start_date: moment(dateFilter[0]['$d']).format('MM-DD-YYYY'),
-        end_date: moment(dateFilter[1]['$d']).format('MM-DD-YYYY'),
-        search_text: e || searchText || ''
-      })
-    );
+    // dispatch(
+    //   getSalesBySkuDetailsList({
+    //     start_date: moment(dateFilter[0]['$d']).format('MM-DD-YYYY'),
+    //     end_date: moment(dateFilter[1]['$d']).format('MM-DD-YYYY'),
+    //     search_text: e || searchText || ''
+    //   })
+    // );
     dispatch(
       getSalesBySkuDetails({
-        start_date: moment(dateFilter[0]['$d']).format('MM-DD-YYYY'),
-        end_date: moment(dateFilter[1]['$d']).format('MM-DD-YYYY'),
+        start_date: moment(dateFilter[0]['$d']).format('YYYY-MM-DD'),
+        end_date: moment(dateFilter[1]['$d']).format('YYYY-MM-DD'),
         search_text: e || searchText || ''
       })
     );
@@ -57,23 +57,22 @@ export default function SalesBySku() {
   }, [dateFilter]);
 
   useEffect(() => {
-    if (salesBySKUDetails?.status === true) {
-      setDetails(salesBySKUDetails?.data?.[0] || []);
-      setLoading(false);
+    if (salesBySKUDetails?.status) {
+      setDetails(salesBySKUDetails?.data);
+      setDetailsLoading(false);
     } else if (salesBySKUDetails?.status === false) {
-      setLoading(false);
+      setDetailsLoading(false);
     }
   }, [salesBySKUDetails]);
 
-  useEffect(() => {
-    if (salesSKUDetailsLists?.status === true) {
-      console.log(salesSKUDetailsLists.status, 'status...');
-      setList(salesSKUDetailsLists?.data || []);
-      setDetailsLoading(false);
-    } else if (salesSKUDetailsLists?.status === false) {
-      setDetailsLoading(false);
-    }
-  }, [salesSKUDetailsLists]);
+  // useEffect(() => {
+  //   if (salesSKUDetailsLists?.status === true) {
+  //     setList(salesSKUDetailsLists?.data || []);
+  //     setDetailsLoading(false);
+  //   } else if (salesSKUDetailsLists?.status === false) {
+  //     setDetailsLoading(false);
+  //   }
+  // }, [salesSKUDetailsLists]);
 
   return (
     <DashboardLayout>
