@@ -12,8 +12,8 @@ export const getSalesBySkuDetails = (data) => {
   return (dispatch) => {
     fetchSalesBySkuDetails(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesBySkuDetails(res.data));
+        if (res.data) {
+          dispatch(setSalesBySkuDetails({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }

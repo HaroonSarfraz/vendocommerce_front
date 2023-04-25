@@ -7,3 +7,7 @@ export const fetchBrandList = (data) => {
 export const createBrandRequest = (data) => {
   return request.post(`/brands?createdb=${true}`, data);
 };
+
+export const fetchUserBrandList = () => {
+  return request.get("/users/brands");
+};
