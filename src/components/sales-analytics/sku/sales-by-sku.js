@@ -17,13 +17,13 @@ export default function SalesBySkuTable({ loading, list }) {
           <div className='d-flex align-items-center position-relative'>
             <div className='symbol symbol-75px me-5'>
               <Image
-                src={text?.product_image || '/images/no-product-image.png'}
+                src={text?.image_urls || '/images/no-product-image.png'}
                 onError={(ev) =>
                   (ev.target.src = '/images/no-product-image.png')
                 }
                 loading='lazy'
                 style={{ objectFit: 'contain' }}
-                alt='product_image'
+                alt='product image'
                 width={50}
                 height={50}
               />
@@ -69,7 +69,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.total_ordered_units || 0}</span>;
+        return <span>{text?.astr_units_ordered_sum || 0}</span>;
       }
     },
     {
@@ -78,7 +78,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>${text?.total_ordered_product_sales || 0}</span>;
+        return <span>${text?.ordered_product_sales_sum || 0}</span>;
       }
     },
     {
@@ -87,7 +87,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.avg_buy_box_percentage || '0%'}</span>;
+        return <span>{text?.astr_buy_box_percentage_sum || '0%'}</span>;
       }
     },
     {
@@ -96,7 +96,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.avg_unit_session_percentage || '0%'}</span>;
+        return <span>{text?.unit_session_percentage_sum || '0%'}</span>;
       }
     },
     {
@@ -105,7 +105,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.total_session || 0}</span>;
+        return <span>{text?.astr_sessions_sum || 0}</span>;
       }
     },
     {
@@ -114,7 +114,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.total_page_views || 0}</span>;
+        return <span>{text?.astr_page_views_sum || 0}</span>;
       }
     },
     {
@@ -123,7 +123,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.avg_session_percentage || '0%'}</span>;
+        return <span>{text?.astr_session_percentage_sum || '0%'}</span>;
       }
     },
     {
@@ -132,7 +132,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.total_order_items || '0'}</span>;
+        return <span>{text?.total_order_items_sum || '0'}</span>;
       }
     },
     {
@@ -141,7 +141,7 @@ export default function SalesBySkuTable({ loading, list }) {
       align: 'left',
       ellipsis: true,
       render: (text) => {
-        return <span>{text?.avg_page_view_percentage || '0%'}</span>;
+        return <span>{text?.astr_page_view_percentage_sum || '0%'}</span>;
       }
     }
   ];
