@@ -63,6 +63,15 @@ export default function Users() {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [switchUser]);
 
+  const switchUser = (brand) => {
+    localStorage.setItem("brand", brand);
+    localStorage.setItem("switchUser", 'true');
+
+    setTimeout(() => {
+      router.push("/sales-analytics/sku");
+    }, 1000);
+  };
+
   useEffect(() => {
     setLoading(true);
     dispatch(
@@ -103,19 +112,6 @@ export default function Users() {
     );
   };
 
-  // const activateUser = (id) => {
-  //   activateUserRequest(id)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         const list_ = _.cloneDeep(list);
-  //         const index = list_.findIndex((user) => user.id === res.data.id);
-  //         list_[index] = res.data;
-  //         setList(list_);
-  //       }
-  //     })
-  //     .catch((err) => message.error(err));
-  // };
-
   const columns = [
     {
       title: "#",
@@ -149,11 +145,11 @@ export default function Users() {
         return (
           <span
             style={{ cursor: "pointer" }}
-            // onClick={() => {
-            //   message.destroy();
-            //   message.loading("Loading...");
-            //   dispatch(getSwitchUser(text?.id));
-            // }}
+            onClick={() => {
+              message.destroy();
+              message.loading("Loading...");
+              switchUser(text);
+            }}
           >
             <Icons type="switchUser" />
           </span>

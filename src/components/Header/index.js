@@ -121,16 +121,17 @@ export default function Header(props) {
 
           <div className="d-flex d-lg-none align-items-center ms-p1 me-2"></div>
 
-          {localStorage.getItem("adminData") && (
-            <div className="d-flex">
-              <button
-                className="btn btn-secondary ml-auto mr-10px"
-                onClick={backToAdmin}
-              >
-                Back to admin
-              </button>
-            </div>
-          )}
+          {localStorage.getItem("adminData") ||
+            (localStorage.getItem("switchUser") && (
+              <div className="d-flex">
+                <button
+                  className="btn btn-secondary ml-auto mr-10px"
+                  onClick={backToAdmin}
+                >
+                  Back to admin
+                </button>
+              </div>
+            ))}
         </div>
       </Wrapper>
     </>
