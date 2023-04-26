@@ -65,14 +65,14 @@ export default function SalesBySku() {
     }
   }, [salesBySKUDetails]);
 
-  // useEffect(() => {
-  //   if (salesSKUDetailsLists?.status === true) {
-  //     setList(salesSKUDetailsLists?.data || []);
-  //     setDetailsLoading(false);
-  //   } else if (salesSKUDetailsLists?.status === false) {
-  //     setDetailsLoading(false);
-  //   }
-  // }, [salesSKUDetailsLists]);
+  useEffect(() => {
+    if (salesSKUDetailsLists?.status) {
+      setList(salesSKUDetailsLists?.data || []);
+      setLoading(false);
+    } else if (salesSKUDetailsLists?.status === false) {
+      setLoading(false);
+    }
+  }, [salesSKUDetailsLists]);
 
   return (
     <DashboardLayout>

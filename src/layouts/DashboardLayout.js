@@ -56,10 +56,16 @@ export default function DashboardLayout({ children }) {
         dispatch(setSwitchUser({}));
         router.push("/brands");
       }, 1000);
+    } else if (localStorage.getItem("brand")) {
+      setTimeout(() => {
+        localStorage.removeItem("switchUser");
+        localStorage.removeItem("brand");
+        router.push("/brands");
+      }, 1000);
     }
   };
 
-  const GetModules = () => (user?.role === 'User' ? false : true);
+  const GetModules = () => (localStorage.getItem("brand") ? false : user?.role === 'User' ? false : true);
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>

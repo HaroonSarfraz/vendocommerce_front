@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -249,11 +250,16 @@ export default function Users() {
       render: (text) => {
         return (
           <div className="d-flex">
-            <FontAwesomeIcon
-              icon={faPenToSquare}
-              style={{ marginRight: '10px' }}
-              className="text-dark fs-3 cursor-pointer"
-            />
+            <Link
+              href={{ pathname: "/users/edit", query: text }}
+              as={`/users/edit`}
+            >
+              <FontAwesomeIcon
+                icon={faPenToSquare}
+                style={{ marginRight: "10px" }}
+                className="text-dark fs-3 cursor-pointer"
+              />
+            </Link>
             <FontAwesomeIcon
               icon={faTrashCan}
               className="text-danger fs-3 cursor-pointer"

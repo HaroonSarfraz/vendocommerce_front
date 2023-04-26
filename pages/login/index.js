@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input, message } from "antd";
 import { useRouter } from "next/router";
 import { signInRequest } from "@/src/api/auth.api";
+import { fetchUserBrandList } from "@/src/api/brands.api";
 
 export default function Login() {
   const router = useRouter();
@@ -24,13 +25,25 @@ export default function Login() {
         setSending(false);
         if (res.status >= 200 && res.status <= 299) {
           localStorage.setItem("user", JSON.stringify(res.data));
-          router.push(
-            res.data.role === "User"
-              ? res.data.user_status === 0
-                ? "/dashboard"
-                : "/sales-analytics/sku"
-              : "/brands"
-          );
+          res.data.role === "User"
+            ? res.data.user_status === 0
+              ? router.push("/dashboard")
+              : fetchUserBrandList().then((res) => {
+                  if (res.status >= 200 && res.status <= 299) {
+                    if (res.data.Brands.length > 0) {
+                      localStorage.setItem(
+                        "brand",
+                        JSON.stringify(res.data.Brands[0])
+                      );
+                      router.push("/sales-analytics/sku");
+                    } else {
+                      router.push("/dashboard");
+                    }
+                  } else {
+                    setLoading(false);
+                  }
+                })
+            : router.push("/brands");
         } else {
           message.error(res.data.message);
         }

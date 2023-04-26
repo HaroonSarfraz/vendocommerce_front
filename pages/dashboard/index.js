@@ -24,7 +24,7 @@ export default function Dashboard() {
           fetchUserBrandList()
             .then((res) => {
               if (res.status >= 200 && res.status <= 299) {
-                localStorage.setItem("brand", JSON.stringify(res.data));
+                localStorage.setItem("brand", JSON.stringify(res.data[0]));
                 router.push("/sales-analytics/sku");
               } else {
                 setLoading(false);
@@ -34,7 +34,8 @@ export default function Dashboard() {
           setLoading(false);
         }
       })
-      .catch((err) => err.error(err));
+      .catch((err) => message.error(err?.response?.message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

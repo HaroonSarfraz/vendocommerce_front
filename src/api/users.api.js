@@ -12,10 +12,14 @@ export const createUserRequest = (data) => {
   return request.post(`/users`, data);
 };
 
-export const activateUserRequest = (id) => {
-  return request.get(`/users/${id}/verify`);
+export const addBrandsRequest = (id, data) => {
+  return request.post(`/users/${id}/verify`, data);
 };
 
 export const updateUserRequest = (id, data) => {
   return request.patch(`/users/${id}`, data);
+};
+
+export const fetchUserBrands = (id) => {
+  return request.get(`/users/${id}/brands`);
 };

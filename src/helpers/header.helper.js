@@ -14,6 +14,9 @@ export const nameObject = {
   "/users/create": {
     name: "Add New Admin",
   },
+  "/users/edit": {
+    name: "Edit User",
+  },
   "/sales-analytics/sales": {
     name: "Sales",
     parent: "Sales Analytics",
