@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Checkbox, Form, Input, message, Select } from "antd";
-import { addBrandsRequest, createUserRequest } from "@/src/api/users.api";
+import { addBrandsRequest, fetchUserBrands, updateUserRequest } from "@/src/api/users.api";
 import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
@@ -29,11 +29,27 @@ export default function Users() {
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
   const [permissions, setPermissions] = useState([]);
+  const [brands, setBrands] = useState([]);
 
   const brandList = useSelector((state) => state.brands.brandList);
 
+  const user = router?.query ?? {};
+
   useEffect(() => {
     dispatch(getBrandList());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    fetchUserBrands(router?.query?.id)
+      .then((res) => {
+        let brands_ = _.cloneDeep(brands);
+        brands_ = res?.data?.Brands.map((brand) => {
+          return brand.id;
+        });
+        setBrands(brands_);
+      })
+      .catch((err) => message.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -41,27 +57,24 @@ export default function Users() {
     setSubmit(true);
 
     const data = {
-      ...values,
-      u_role: "User",
-      user_status: 0,
-      u_type: 0,
+      u_name: values.u_name,
+      u_email: values.u_email,
     };
 
-    createUserRequest(data)
+    updateUserRequest(router?.query?.id, data)
       .then((res) => {
-        setSubmit(false);
-        if (res.status >= 200 && res.status <= 299) {
-          addBrandsRequest(res.data.id, { brand_ids: data.brand_ids })
+        if (res.status === 200) {
+          const brand_ids = _.isEmpty(values.brand_ids) ? brands : values.brand_ids;
+          addBrandsRequest(res.data.id, { brand_ids: brand_ids })
             .then(() => {
-              message.success("user created successfully");
+              setSubmit(false);
+              message.success("user updated successfully");
               router.push("/users");
             })
-            .catch((err) => message.error(err));
-        } else {
-          message.error("unable to create user");
+            .catch((err) => console.error(err));
         }
       })
-      .catch((err) => message.error(err));
+      .catch((err) => console.error(err));
   };
 
   const permissionFields = [
@@ -134,6 +147,7 @@ export default function Users() {
                               message: "Name is required",
                             },
                           ]}
+                          initialValue={user?.u_name ?? ""}
                           hasFeedback
                         >
                           <Input size="large" autoFocus autoComplete="off" />
@@ -154,6 +168,7 @@ export default function Users() {
                               message: "E-mail is required",
                             },
                           ]}
+                          initialValue={user?.u_email ?? ""}
                           hasFeedback
                         >
                           <Input size="large" autoComplete="off" />
@@ -166,7 +181,7 @@ export default function Users() {
                           className="fw-bolder"
                           rules={[
                             {
-                              required: true,
+                              required: brands.length > 0 ? false : true,
                               message: "Brand Account(s) cannot be blank",
                             },
                           ]}
@@ -180,64 +195,10 @@ export default function Users() {
                             }}
                             size="large"
                             placeholder="Select Brand Account(s) ..."
-                            // defaultValue={[]}
-                            onChange={handleChange}
                             options={options}
+                            defaultValue={brands}
+                            onChange={handleChange}
                           />
-                        </Form.Item>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                        <Form.Item
-                          name="u_password"
-                          label="Password"
-                          className="fw-bolder"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Password is required",
-                            },
-                          ]}
-                          hasFeedback
-                        >
-                          <Input.Password
-                            size="large"
-                            autoComplete="new-password"
-                          />
-                        </Form.Item>
-                      </div>
-                      <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                        <Form.Item
-                          name="u_confirm_password"
-                          label="Confirm Password"
-                          className="fw-bolder"
-                          dependencies={["u_password"]}
-                          hasFeedback
-                          rules={[
-                            {
-                              required: true,
-                              message: "Confirm password is required",
-                            },
-                            ({ getFieldValue }) => ({
-                              validator(_, value) {
-                                if (
-                                  !value ||
-                                  getFieldValue("u_password") === value
-                                ) {
-                                  return Promise.resolve();
-                                }
-                                return Promise.reject(
-                                  new Error(
-                                    "The two passwords that you entered do not match!"
-                                  )
-                                );
-                              },
-                            }),
-                          ]}
-                        >
-                          <Input.Password autoComplete="off" size="large" />
                         </Form.Item>
                       </div>
                     </div>
