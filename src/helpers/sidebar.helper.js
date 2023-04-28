@@ -77,6 +77,15 @@ export const userMenus = [
         null,
         "inventory-management"
       ),
+      getItem(
+        "Inventory Dashboard",
+        "dashboard",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "inventory-management"
+      ),
     ]
   ),
   getItem(

@@ -41,6 +41,10 @@ export const nameObject = {
     name: "Inventory Planning",
     parent: "Inventory Management",
   },
+  "/inventory-management/dashboard": {
+    name: "Inventory Dashboard",
+    parent: "Inventory Management",
+  },
   "/inbound-shipment": {
     name: "Inbound Shipment",
     parent: "Inventory Management",
