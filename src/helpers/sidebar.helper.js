@@ -63,22 +63,22 @@ export const userMenus = [
       "sales-analytics"
     ),
   ]),
-  // getItem(
-  //   "Inventory Management",
-  //   "inventory-management",
-  //   <Icons type="categories" />,
-  //   [
-  //     getItem(
-  //       "Inventory Planning",
-  //       "planning",
-  //       <span className="menu-bullet">
-  //         <span className="bullet bullet-dot" />
-  //       </span>,
-  //       null,
-  //       "inventory-management"
-  //     ),
-  //   ]
-  // ),
+  getItem(
+    "Inventory Management",
+    "inventory-management",
+    <Icons type="categories" />,
+    [
+      getItem(
+        "Inventory Planning",
+        "planning",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "inventory-management"
+      ),
+    ]
+  ),
   getItem(
     "Advertisement Analytics",
     "advertising-analytics",

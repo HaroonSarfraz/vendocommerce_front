@@ -31,6 +31,11 @@ const initialState = {
     salesByMonthDetail: {},
     salesByMonthGraph: {},
   },
+  planning: {
+    inventoryPlaning: {},
+    inventoryPlaningColumnsList: {},
+    inventoryPlaningColumnsSave: {},
+  },
 };
 
 export default initialState;
