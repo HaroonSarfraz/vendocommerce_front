@@ -69,6 +69,15 @@ export const userMenus = [
     <Icons type="categories" />,
     [
       getItem(
+        "Inventory Dashboard",
+        "inventory-dashboard",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "inventory-management"
+      ),
+      getItem(
         "Inventory Planning",
         "planning",
         <span className="menu-bullet">

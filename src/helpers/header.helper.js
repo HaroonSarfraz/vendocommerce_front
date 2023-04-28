@@ -37,6 +37,10 @@ export const nameObject = {
     name: "Month",
     parent: "Sales Analytics",
   },
+  "/inventory-management/inventory-dashboard": {
+    name: "Inventory Dashboard",
+    parent: "Inventory Management",
+  },
   "/inventory-management/planning": {
     name: "Inventory Planning",
     parent: "Inventory Management",
