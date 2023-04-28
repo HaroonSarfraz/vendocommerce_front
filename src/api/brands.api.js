@@ -11,3 +11,7 @@ export const createBrandRequest = (data) => {
 export const fetchUserBrandList = () => {
   return request.get("/users/brands");
 };
+
+export const updateBrandRequest = (id, data) => {
+  return request.patch(`/brands/${id}`, data);
+};

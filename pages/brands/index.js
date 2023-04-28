@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +11,7 @@ import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
 import { DefaultPerPage, timeSince } from "@/src/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
@@ -202,8 +203,21 @@ export default function Users() {
       align: "left",
       render: (text) => {
         return (
-          <div className="d-flex flex-row justify-content-center">
-            <FontAwesomeIcon icon={faTrashCan} className="text-danger fs-3 cursor-pointer" />
+          <div className="d-flex">
+            <Link
+              href={{ pathname: "/brands/edit", query: text }}
+              as={`/brands/edit`}
+            >
+              <FontAwesomeIcon
+                icon={faPenToSquare}
+                style={{ marginRight: "10px" }}
+                className="text-dark fs-3 cursor-pointer"
+              />
+            </Link>
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
           </div>
         );
       },
