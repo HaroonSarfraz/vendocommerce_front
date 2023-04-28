@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
