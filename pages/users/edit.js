@@ -42,6 +42,11 @@ export default function Users() {
   }, []);
 
   useEffect(() => {
+    if(!router?.query?.id) {
+      router.push("/users");
+      return;
+    }
+
     fetchUserBrands(router?.query?.id)
       .then((res) => {
         let brands_ = res?.data?.Brands.map((brand) => {
