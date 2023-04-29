@@ -1,7 +1,7 @@
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { Button, Progress, Tag } from "antd";
-import Card from "antd/es/card/Card";
-import Meta from "antd/es/card/Meta";
+import { Progress } from "antd";
+import Card from "antd/lib/card/Card";
+import Meta from "antd/lib/card/Meta";
 import React from "react";
 
 export default function InventoryDashboard() {
@@ -13,7 +13,8 @@ export default function InventoryDashboard() {
       "100%": "#87d068"
     };
   };
-  const format = (percent) => (
+
+  const format = (_percent) => (
     <div
       style={{
         display: "flex",
@@ -23,6 +24,7 @@ export default function InventoryDashboard() {
       {<span>100%</span>}
     </div>
   );
+
   const CommonCard = (props) => {
     return (
       <div className='col col-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3 col-sm-6 col-xs-12 px-3 py-2'>

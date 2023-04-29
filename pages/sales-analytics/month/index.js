@@ -376,7 +376,7 @@ export default function SalesByMonth() {
                                     />
                                   </td>
                                   <td>
-                                    <a href className="fw-boldest text-dark">
+                                    <a href='#' className="fw-boldest text-dark">
                                       {d?.month}
                                     </a>
                                   </td>
@@ -420,7 +420,7 @@ export default function SalesByMonth() {
                                             <tbody className="text-gray-700 fw-bold">
                                               {d?.asin_data?.map((r, t) => {
                                                 return (
-                                                  <tr data-key={0}>
+                                                  <tr key={r} data-key={0}>
                                                     <td />
                                                     <td>
                                                       <div className="fs-7">

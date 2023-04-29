@@ -491,7 +491,7 @@ export default function SalesByWeek() {
                                                     <b className="fw-boldest me-2 text-dark">
                                                       Child ASIN:{" "}
                                                     </b>{" "}
-                                                    <a href>{r?.child_asin}</a>
+                                                    <a href='#'>{r?.child_asin}</a>
                                                   </span>
                                                   <span className="d-flex mt-1">
                                                     <b className="fw-boldest me-2 text-dark">

@@ -2,7 +2,7 @@ import React from "react";
 import { pageDropdown, DefaultPerPage } from "../../config";
 import { Pagination, Select } from "antd";
 
-export default function (props) {
+export default function CustomPagination(props) {
   const {
     pageSize = 10,
     onPerPage,
