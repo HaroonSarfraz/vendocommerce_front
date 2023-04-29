@@ -149,8 +149,8 @@ export default function SalesByProducts() {
   }, [SalesByProductColumnListRes]);
 
   useEffect(() => {
-    if (SalesByProductListRes?.status === true) {
-      const getMax = Object.values(SalesByProductListRes?.data?.records).map(
+    if (!_.isEmpty(SalesByProductListRes)) {
+      const getMax = Object.values(SalesByProductListRes).map(
         (d, i) => {
           // delete d?.GrandTotal;
           return Object.keys(d);
@@ -160,7 +160,7 @@ export default function SalesByProducts() {
         ?.map((d) => d?.length)
         .indexOf(Math.max(...getMax?.map((d) => d?.length)));
       setTableColumns(getMax[index]);
-      setList(Object.values(SalesByProductListRes?.data?.records || {}));
+      setList(Object.values(SalesByProductListRes || {}));
       setTableLoading(false);
     } else if (SalesByProductListRes?.status === false) {
       setList([]);
