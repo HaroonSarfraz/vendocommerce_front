@@ -1,18 +1,15 @@
 import dynamic from "next/dynamic";
-import { Dropdown, message, Select, theme } from "antd";
+import { Dropdown, Select, theme } from "antd";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getSalesByProductColumnList,
-  getSalesByProductList,
-  getSaveColumnConfiguration,
-} from "@/src/services/salesByProduct.services";
+import { getSalesByProductList } from "@/src/services/salesByProduct.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import Loading from "@/src/components/loading";
 import VendoTooltip from "@/src/components/tooltip";
 import Drawer from "@/src/components/sales-analytics/product/drawer";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
+import _ from "lodash";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -32,24 +29,15 @@ export default function SalesByProducts() {
   const SalesByProductListRes = useSelector(
     (state) => state.salesByProduct.salesByProductList
   );
-  const SaveColumnConfigurationRes = useSelector(
-    (state) => state.salesByProduct.saveColumnConfiguration
-  );
-  const SalesByProductColumnListRes = useSelector(
-    (state) => state.salesByProduct.salesByProductColumnList
-  );
-  const SaveTableConfigurationRes = useSelector(
-    (state) => state.salesByProduct.saveTableConfiguration
-  );
 
-  const [columnsLoading, setColumnsLoading] = useState(true);
-  const [columnsData, setColumnsData] = useState({});
-  const [selectColumn, setSelectColumn] = useState(null);
+  const [selectedColumn, setSelectedColumn] = useState(null);
 
   const [tableLoading, setTableLoading] = useState(true);
   const [list, setList] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
   const [selectedColumnsList, setSelectedColumnsList] = useState([]);
+
+  const [columnConfig, setColumnConfig] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState({
@@ -57,9 +45,58 @@ export default function SalesByProducts() {
     year: 2023,
   });
 
+  const columnsList = [
+    { label: "Sum of Sessions", value: "total_session" },
+    {
+      label: "Sum of Ordered Product Sales",
+      value: "total_ordered_product_sales",
+    },
+    { label: "Sum of Total Order Items", value: "total_order_items" },
+    { label: "Sum of Sessions - Mobile App", value: "mobile_app_sessions" },
+    { label: "Sum of Sessions - Browser", value: "browser_sessions" },
+    { label: "Sum of Session Percentage", value: "avg_session_percentage" },
+    {
+      label: "Sum of Session Percentage - Mobile App",
+      value: "avg_mobile_app_session_percentage",
+    },
+    {
+      label: "Sum of Session Percentage - Browser",
+      value: "avg_browser_session_percentage",
+    },
+    { label: "Sum of Page Views", value: "total_page_views" },
+    {
+      label: "Sum of Page Views - Mobile App",
+      value: "total_mobile_app_page_views",
+    },
+    { label: "Sum of Page Views - Browser", value: "total_browser_page_views" },
+    {
+      label: "Sum of Page Views Percentage",
+      value: "avg_page_view_percentage",
+    },
+    {
+      label: "Sum of Page Views Percentage - Mobile App",
+      value: "avg_mobile_app_page_views_percentage",
+    },
+    {
+      label: "Sum of Page Views Percentage - Browser",
+      value: "avg_browser_page_views_percentage",
+    },
+    {
+      label: "Sum of Buy Box Percentage",
+      value: "avg_buy_box_percentage",
+    },
+    { label: "Sum of Units Ordered", value: "total_ordered_units" },
+    {
+      label: "Sum of Unit Session Percentage",
+      value: "avg_unit_session_percentage",
+    },
+  ];
+
   useEffect(() => {
-    setColumnsLoading(true);
-    dispatch(getSalesByProductColumnList());
+    setColumnConfig(columnsList);
+    setSelectedColumn(columnsList[1].value);
+
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -76,81 +113,8 @@ export default function SalesByProducts() {
   }, [filter]);
 
   useEffect(() => {
-    if (SaveTableConfigurationRes?.status === true) {
-      message.destroy();
-      message.success(SaveTableConfigurationRes?.message);
-      setColumnsData(
-        {
-          records: SaveTableConfigurationRes?.data?.columnList,
-          selectedColumnList:
-            SaveTableConfigurationRes?.data?.selectedColumnList,
-          selectedDefaultColumn:
-            SaveTableConfigurationRes?.data?.selectedDefaultColumn,
-        } || {}
-      );
-      setSelectColumn(SaveTableConfigurationRes?.data?.selectedDefaultColumn);
-      setIsOpen(false);
-      setColumnsLoading(false);
-      const { year, week } = filter;
-      setTableLoading(true);
-      dispatch(
-        getSalesByProductList({
-          search_year: year,
-          search_week: week?.join(","),
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [SaveTableConfigurationRes]);
-
-  useEffect(() => {
-    if (SaveColumnConfigurationRes?.status === true) {
-      message.destroy();
-      message.success(SaveColumnConfigurationRes?.message);
-      setColumnsData(
-        {
-          records: SaveColumnConfigurationRes?.data?.columnList,
-          selectedColumnList:
-            SaveColumnConfigurationRes?.data?.selectedColumnList,
-          selectedDefaultColumn:
-            SaveColumnConfigurationRes?.data?.selectedDefaultColumn,
-        } || {}
-      );
-      setSelectColumn(SaveColumnConfigurationRes?.data?.selectedDefaultColumn);
-      setColumnsLoading(false);
-    } else if (SaveColumnConfigurationRes?.status === false) {
-      message.destroy();
-      message.error(SaveColumnConfigurationRes?.message);
-      setSelectColumn(null);
-      setColumnsData({});
-      setColumnsLoading(false);
-    }
-  }, [SaveColumnConfigurationRes]);
-
-  useEffect(() => {
-    if (SalesByProductColumnListRes?.status === true) {
-      if (SalesByProductColumnListRes?.data?.selectedColumnList) {
-        setSelectedColumnsList(
-          SalesByProductColumnListRes?.data?.selectedColumnList?.map((d) => {
-            return {
-              value: d,
-              label: SalesByProductColumnListRes?.data?.records?.[d],
-            };
-          }) || []
-        );
-      }
-      setColumnsData(SalesByProductColumnListRes?.data || {});
-      setSelectColumn(SalesByProductColumnListRes?.data?.selectedDefaultColumn);
-      setColumnsLoading(false);
-    } else if (SalesByProductColumnListRes?.status === false) {
-      setColumnsData({});
-      setColumnsLoading(false);
-    }
-  }, [SalesByProductColumnListRes]);
-
-  useEffect(() => {
-    if (SalesByProductListRes?.status === true) {
-      const getMax = Object.values(SalesByProductListRes?.data?.records).map(
+    if (!_.isEmpty(SalesByProductListRes)) {
+      const getMax = Object.values(SalesByProductListRes).map(
         (d, i) => {
           // delete d?.GrandTotal;
           return Object.keys(d);
@@ -160,24 +124,13 @@ export default function SalesByProducts() {
         ?.map((d) => d?.length)
         .indexOf(Math.max(...getMax?.map((d) => d?.length)));
       setTableColumns(getMax[index]);
-      setList(Object.values(SalesByProductListRes?.data?.records || {}));
+      setList(Object.values(SalesByProductListRes || {}));
       setTableLoading(false);
     } else if (SalesByProductListRes?.status === false) {
       setList([]);
       setTableLoading(false);
     }
   }, [SalesByProductListRes]);
-
-  const changeDefaultColumn = (reset) => {
-    message.destroy();
-    message.loading("Loading...", 0);
-    setColumnsLoading(true);
-    dispatch(getSaveColumnConfiguration({
-      selected_default_column: reset
-        ? "avg_browser_page_views_percentage"
-        : selectColumn,
-    }));
-  };
 
   return (
     <DashboardLayout>
@@ -216,43 +169,17 @@ export default function SalesByProducts() {
                             <div className="separator border-gray-200" />
                             <div className="px-7 py-5 min-w-300px">
                               <Select
-                                loading={columnsLoading}
                                 className="min-w-250px"
                                 placeholder="Columns"
                                 size="large"
                                 onChange={(e) => {
-                                  setSelectColumn(e);
+                                  setSelectedColumn(e);
                                 }}
-                                value={selectColumn || null}
-                                options={Object?.entries(
-                                  columnsData?.records || {}
-                                )?.map((d) => {
-                                  return { label: d[1], value: d[0] };
+                                value={selectedColumn || null}
+                                options={columnConfig.map((d) => {
+                                  return d;
                                 })}
                               />
-                              <div className="d-flex justify-content-end mt-7">
-                                <button
-                                  type="reset"
-                                  onClick={() => {
-                                    changeDefaultColumn(true);
-                                  }}
-                                  className="btn btn-sm btn-light btn-active-light-primary me-2"
-                                  data-kt-menu-dismiss="true"
-                                >
-                                  Reset
-                                </button>
-                                <button
-                                  disabled={!selectColumn}
-                                  type="submit"
-                                  onClick={() => {
-                                    changeDefaultColumn(false);
-                                  }}
-                                  className="btn btn-sm btn-dark"
-                                  data-kt-menu-dismiss="true"
-                                >
-                                  Apply
-                                </button>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -268,12 +195,7 @@ export default function SalesByProducts() {
                     </Dropdown>
 
                     <button
-                      disabled={columnsLoading}
-                      onClick={() => {
-                        if (!columnsLoading) {
-                          setIsOpen(true);
-                        }
-                      }}
+                      onClick={() => setIsOpen(true)}
                       className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
                       id="kt_drawer_example_basic_button"
                     >
@@ -409,7 +331,7 @@ export default function SalesByProducts() {
                                     return;
                                   }
                                   const defaultValue =
-                                    r?.[1]?.[selectColumn] || 0;
+                                    r?.[1]?.[selectedColumn] || 0;
                                   return (
                                     <td key={t}>
                                       <div className="d-flex align-items-center">
@@ -435,7 +357,7 @@ export default function SalesByProducts() {
                                                 {selectedColumnsList?.map(
                                                   (h, j) => {
                                                     if (
-                                                      selectColumn === h.value
+                                                      selectedColumn === h.value
                                                     ) {
                                                       return;
                                                     }
@@ -480,7 +402,9 @@ export default function SalesByProducts() {
         </div>
         {isOpen && (
           <Drawer
-            data={columnsData}
+            columnsList={columnsList}
+            columnConfig={columnConfig}
+            setColumnConfig={setColumnConfig}
             open={isOpen}
             onHide={() => {
               setIsOpen(false);

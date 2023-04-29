@@ -1,7 +1,7 @@
 import request from './request';
 
 export const fetchSalesByProductList = (data) => {
-  return request.get(`/get-sales-by-product?search_year=${data?.search_year || ''}&search_week=${data?.search_week || ''}`);
+  return request.get(`/brands/1/sales/sales-by-product?year=${data?.search_year || ''}&weeks=${data?.search_week || '1,2,3'}`);
 };
 
 export const SaveColumnConfiguration = (data) => {
