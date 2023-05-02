@@ -1,13 +1,25 @@
-import request from './request';
+import request from "./request";
 
 export const fetchSalesWeekDetailList = (data) => {
-  return request.get(`get-sales-by-wk-detail?search_year=${data?.search_year || ''}&search_week=${data?.search_week || ''}`);
+  return request.get(
+    `/sales/sales-by-week-data?year=${data?.search_year || ""}&weeks=${
+      data?.search_week || ""
+    }`
+  );
 };
 
 export const fetchSalesWeekGraph = (data) => {
-  return request.get(`sales-by-week-graph-filter?graph_filter_type=${data?.graph_filter_type || ''}&search_year=${data?.search_year || ''}`);
+  return request.get(
+    `sales-by-week-graph-filter?graph_filter_type=${
+      data?.graph_filter_type || ""
+    }&search_year=${data?.search_year || ""}`
+  );
 };
 
 export const fetchSalesWeekData = (data) => {
-  return request.get(`get-sales-by-wk-data?search_year=${data?.search_year || ''}&search_week=${data?.search_week || ''}`);
+  return request.get(
+    `/sales/sales-by-week-summary?year=${data?.search_year || ""}&weeks=${
+      data?.search_week || ""
+    }`
+  );
 };

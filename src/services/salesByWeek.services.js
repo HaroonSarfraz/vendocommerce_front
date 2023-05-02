@@ -14,8 +14,8 @@ export const getSalesWeekDetailList = (data) => {
   return (dispatch) => {
     fetchSalesWeekDetailList(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesWeekDetailList(res.data));
+        if (res.data) {
+          dispatch(setSalesWeekDetailList({status: true, data: res.data.sort((a, b) => a.week - b.week)}));
         } else {
           message.error(res.data.message);
         }
@@ -46,8 +46,8 @@ export const getSalesWeekData = (data) => {
   return (dispatch) => {
     fetchSalesWeekData(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesWeekData(res.data));
+        if (res.data) {
+          dispatch(setSalesWeekData({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }

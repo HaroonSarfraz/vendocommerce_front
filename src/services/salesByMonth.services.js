@@ -14,8 +14,8 @@ export const getSalesByMonthData = (data) => {
   return (dispatch) => {
     fetchSalesByMonthData(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesByMonthData(res.data));
+        if (res.data) {
+          dispatch(setSalesByMonthData({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }
@@ -30,8 +30,8 @@ export const getSalesByMonthDetail = (data) => {
   return (dispatch) => {
     fetchSalesByMonthDetail(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesByMonthDetail(res.data));
+        if (res.data) {
+          dispatch(setSalesByMonthDetail({status: true, data: res.data.sort((a, b) => a.week - b.week)}));
         } else {
           message.error(res.data.message);
         }
