@@ -1,25 +1,30 @@
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Select, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { DotChartOutlined } from "@ant-design/icons";
-import Loading from '@/src/components/loading';
-import Details from '@/src/components/Details';
+import Loading from "@/src/components/loading";
+import Details from "@/src/components/Details";
 import {
   getSalesByMonthData,
   getSalesByMonthDetail,
   getSalesByMonthGraph,
 } from "@/src/services/salesByMonth.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TopBarFilter } from '@/src/components/sales-analytics/sales';
-import { faAngleDown, faAngleUp, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { TopBarFilter } from "@/src/components/sales-analytics/sales";
+import {
+  faAngleDown,
+  faAngleUp,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
-const DashboardLayout = dynamic(() => import('@/src/layouts/DashboardLayout'), {
-  ssr: false
+const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
+  ssr: false,
 });
 
 export default function SalesByMonth() {
@@ -36,13 +41,14 @@ export default function SalesByMonth() {
   const [salesByMonthDataLoading, setSalesByMonthDataLoading] = useState(true);
 
   const [salesByMonthDetail, setSalesByMonthDetail] = useState([]);
-  const [salesByMonthDetailLoading, setSalesByMonthDetailLoading] =useState(true);
-  const [salesByMonthGraphLoading, setSalesByMonthGraphLoading] =useState(true);
+  const [salesByMonthDetailLoading, setSalesByMonthDetailLoading] =
+    useState(true);
+  const [salesByMonthGraphLoading, setSalesByMonthGraphLoading] =
+    useState(true);
   const [salesByMonthGraph, setSalesByMonthGraph] = useState({
     series: [],
     label: [],
   });
-
 
   const SalesByMonthDataRes = useSelector(
     (state) => state.salesByMonth.salesByMonthData
@@ -72,18 +78,18 @@ export default function SalesByMonth() {
         search_month: month?.join(","),
       })
     );
-    dispatch(
-      getSalesByMonthGraph({
-        search_year: year,
-        search_month: month?.join(","),
-        graph_filter_type: "",
-      })
-    );
+    // dispatch(
+    //   getSalesByMonthGraph({
+    //     search_year: year,
+    //     search_month: month?.join(","),
+    //     graph_filter_type: "",
+    //   })
+    // );
   }, [filter]);
 
   useEffect(() => {
     if (SalesByMonthDataRes?.status === true) {
-      setSalesByMonthData(SalesByMonthDataRes?.data?.[0] || {});
+      setSalesByMonthData(SalesByMonthDataRes?.data || {});
       setSalesByMonthDataLoading(false);
     } else if (SalesByMonthDataRes?.status === false) {
       setSalesByMonthData({});
@@ -263,39 +269,39 @@ export default function SalesByMonth() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: salesByMonthData?.total_ordered_product_sales,
+                          value: salesByMonthData?.totalOrderedProductSales,
                         },
                         {
                           title: "Sum of Sessions",
-                          value: salesByMonthData?.total_session,
+                          value: salesByMonthData?.totalSession,
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: salesByMonthData?.avg_session_percentage,
+                          value: salesByMonthData?.totalSessionPercentage,
                         },
                         {
                           title: "Sum of Page Views",
-                          value: salesByMonthData?.total_page_views,
+                          value: salesByMonthData?.totalPageViews,
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: salesByMonthData?.avg_page_view_percentage,
+                          value: salesByMonthData?.avgPageViewPercentage,
                         },
                         {
                           title: "Average of Buy Box",
-                          value: salesByMonthData?.avg_buy_box_percentage,
+                          value: salesByMonthData?.avgBuyBox,
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: salesByMonthData?.total_ordered_units,
+                          value: salesByMonthData?.totalUnitOrdered,
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: salesByMonthData?.avg_unit_session_percentage,
+                          value: salesByMonthData?.avgUnitSession,
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: salesByMonthData?.total_order_items,
+                          value: salesByMonthData?.totalOrderItems,
                         },
                       ]}
                     />
@@ -376,19 +382,22 @@ export default function SalesByMonth() {
                                     />
                                   </td>
                                   <td>
-                                    <a href='#' className="fw-boldest text-dark">
-                                      {d?.month}
+                                    <a
+                                      href="#"
+                                      className="fw-boldest text-dark"
+                                    >
+                                      {d && d.week < 13 ? moment(d.week, 'M').format('MMMM') : '' }
                                     </a>
                                   </td>
-                                  <td>{d?.total_ordered_product_sales}</td>
-                                  <td>{d?.total_session}</td>
-                                  <td>{d?.avg_session_percentage}</td>
-                                  <td>{d?.total_page_views}</td>
-                                  <td>{d?.avg_page_view_percentage}</td>
-                                  <td>{d?.avg_buy_box_percentage}</td>
-                                  <td>{d?.total_ordered_units}</td>
-                                  <td>{d?.avg_unit_session_percentage}</td>
-                                  <td>{d?.total_order_items}</td>
+                                  <td>{d?.totalOrderedProductSales}</td>
+                                  <td>{d?.totalSession}</td>
+                                  <td>{d?.totalSessionPercentage}</td>
+                                  <td>{d?.totalPageViews}</td>
+                                  <td>{d?.avgPageViewPercentage}</td>
+                                  <td>{d?.avgBuyBox}</td>
+                                  <td>{d?.totalUnitOrdered}</td>
+                                  <td>{d?.avgUnitSession}</td>
+                                  <td>{d?.totalOrderItems}</td>
                                 </tr>
                                 <tr>
                                   <td
