@@ -37,9 +37,9 @@ export default function Users() {
 
   useEffect(() => {
     if (brandList) {
-      setList(brandList);
+      setList(brandList.data);
       setLoading(false);
-      setTotalPage(brandList?.data?.pagination?.totalCount);
+      setTotalPage(brandList.count);
     }
   }, [brandList]);
 

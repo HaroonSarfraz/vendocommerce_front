@@ -1,7 +1,7 @@
 import request from "./request";
 
 export const fetchUserList = (data) => {
-  return request.get(`/users/all?page=${data?.page || 1}&per-page=${data?.perPage || 10}&name=${data?.search_term || ''}`);
+  return request.get(`/users/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&name=${data?.search_term || ''}`);
 };
 
 export const fetchSwitchUser = (id) => {
