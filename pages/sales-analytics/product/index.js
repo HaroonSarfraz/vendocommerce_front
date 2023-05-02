@@ -114,12 +114,10 @@ export default function SalesByProducts() {
 
   useEffect(() => {
     if (!_.isEmpty(SalesByProductListRes)) {
-      const getMax = Object.values(SalesByProductListRes).map(
-        (d, i) => {
-          // delete d?.GrandTotal;
-          return Object.keys(d);
-        }
-      );
+      const getMax = Object.values(SalesByProductListRes).map((d, i) => {
+        // delete d?.GrandTotal;
+        return Object.keys(d);
+      });
       var index = getMax
         ?.map((d) => d?.length)
         .indexOf(Math.max(...getMax?.map((d) => d?.length)));
@@ -212,9 +210,7 @@ export default function SalesByProducts() {
                     {tableLoading ? (
                       <Loading />
                     ) : (
-                      <table
-                        className="table align-middle table-row-dashed  table-row-gray-300 fs-7 gy-4 gx-5 border-top-d"
-                      >
+                      <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">
                             <th className="min-w-300px " colSpan="2">
@@ -339,7 +335,7 @@ export default function SalesByProducts() {
                                           className="d-block"
                                           style={{ width: 150 }}
                                         >
-                                          {defaultValue || 0}%
+                                          {defaultValue || 0}{selectedColumn.startsWith("avg") && '%'}
                                         </span>
                                         <div
                                           id={`kt_accordion_1_body_${t + 1}`}
@@ -353,7 +349,7 @@ export default function SalesByProducts() {
                                           <table className="table mb-0">
                                             <tbody>
                                               <tr>
-                                                <td className=" min-w-300px" />
+                                                <td className="min-w-300px" />
                                                 {selectedColumnsList?.map(
                                                   (h, j) => {
                                                     if (
@@ -364,7 +360,7 @@ export default function SalesByProducts() {
                                                     return (
                                                       <td
                                                         key={j}
-                                                        className=" min-w-300px"
+                                                        className="min-w-300px"
                                                       >
                                                         {r?.[1]?.[h.value] || 0}
                                                         {j === 0 ? "%" : ""}

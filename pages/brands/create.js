@@ -32,7 +32,7 @@ export default function Users() {
   const userList = useSelector((state) => state.users.userList);
 
   useEffect(() => {
-    dispatch(getUserList());
+    dispatch(getUserList({ perPage: 1000}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,7 +60,7 @@ export default function Users() {
       .catch((err) => message.error(err));
   };
 
-  const options = userList.map((user) => {
+  const options = userList.items.map((user) => {
     return { label: user.u_name, value: user.id };
   });
 

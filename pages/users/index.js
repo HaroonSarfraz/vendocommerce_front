@@ -50,9 +50,9 @@ export default function Users() {
 
   useEffect(() => {
     if (userList) {
-      setList(userList);
+      setList(userList.items);
       setLoading(false);
-      setTotalPage(userList?.data?.pagination?.totalCount);
+      setTotalPage(userList.count);
     } else if (userList?.status === false) {
       // fakeActionUser()
     }
