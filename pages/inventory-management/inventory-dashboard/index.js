@@ -5,13 +5,13 @@ import Meta from "antd/lib/card/Meta";
 import React from "react";
 
 export default function InventoryDashboard() {
-  const ProgressBarCard = () => {
-    const targetValue = 70;
-    const progressColor = {
+  const ProgressBarCard = {
+    targetValue: 70,
+    progressColor: {
       "0%": "#108ee9",
       "70%": "#108ee9",
       "100%": "#87d068"
-    };
+    }
   };
 
   const format = (_percent) => (
@@ -28,9 +28,7 @@ export default function InventoryDashboard() {
   const CommonCard = (props) => {
     return (
       <div className='col col-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3 col-sm-6 col-xs-12 px-3 py-2'>
-        <Card
-        hoverable
-        >
+        <Card hoverable >
           <div className='d-flex justify-content-between shadow-3d-info'>
             <Meta
               title={props.heading}
@@ -59,13 +57,13 @@ export default function InventoryDashboard() {
   return (
     <DashboardLayout>
       <div className='mx-5 my-4'>
-      <h2>Inventory Dashboard</h2>
+        <h2>Inventory Dashboard</h2>
         <div className='row my-5'>
           <div className='col col-12 col-md-6 col-lg-6 col-sm-6 px-3 py-2 col-xl-3 col-xxl-3'>
             <Card hoverable style={{ height: 120 }}>
               <div className='d-flex justify-content-between display-7'>
                 <Meta
-                className="display-7"
+                  className="display-7"
                   title='Inventory Performance Index'
                   description='70% index'
                 />
@@ -73,7 +71,7 @@ export default function InventoryDashboard() {
               <Progress
                 className='mt-5'
                 percent={ProgressBarCard.targetValue}
-                successPercent={75}
+                success={{ percent: 75 }}
                 strokeColor={ProgressBarCard.progressColor}
                 format={format}
               />
@@ -92,15 +90,14 @@ export default function InventoryDashboard() {
                 <a href='#'>
                   <span>View All</span>
                   <svg
-                    className='mx-1'
+                    className='mx-1 bi bi-arrow-right'
                     xmlns='http://www.w3.org/2000/svg'
                     width='16'
                     height='16'
                     fill='currentColor'
-                    class='bi bi-arrow-right'
                     viewBox='0 0 16 16'>
                     <path
-                      fill-rule='evenodd'
+                      fillRule='evenodd'
                       d='M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z'
                     />
                   </svg>
