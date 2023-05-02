@@ -335,7 +335,7 @@ export default function SalesByProducts() {
                                           className="d-block"
                                           style={{ width: 150 }}
                                         >
-                                          {defaultValue || 0}%
+                                          {defaultValue || 0}{selectedColumn.startsWith("avg") && '%'}
                                         </span>
                                         <div
                                           id={`kt_accordion_1_body_${t + 1}`}
