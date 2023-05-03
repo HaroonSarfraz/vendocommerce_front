@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { defaultDateRange } from "@/src/config";
 import dayjs from 'dayjs';
 import {
   getSalesBySkuDetails,
@@ -23,7 +24,7 @@ export default function SalesBySku() {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
   const [detailsLoading, setDetailsLoading] = useState(true);
-  const [dateFilter, setDateFilter] = useState([dayjs().add(-7, 'd'), dayjs()]);
+  const [dateFilter, setDateFilter] = useState(defaultDateRange());
   const [searchText, setSearchText] = useState('');
 
   const salesBySKUDetails = useSelector((state) => state.salesBySku.salesBySkuDetails);
