@@ -40,6 +40,11 @@ const initialState = {
     inventoryPlaningColumnsList: {},
     inventoryPlaningColumnsSave: {},
   },
+  shipping: {
+    shippingList: {
+      items: []
+    },
+  },
 };
 
 export default initialState;
