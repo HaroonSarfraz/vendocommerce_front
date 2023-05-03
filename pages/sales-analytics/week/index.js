@@ -3,6 +3,7 @@ import { Select, Skeleton } from "antd";
 import { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import { defaultWeek, defaultYear } from "@/src/config";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Details from "@/src/components/Details";
 import Loading from "@/src/components/loading";
@@ -29,8 +30,8 @@ export default function SalesByWeek() {
   const dispatch = useDispatch();
   const [expand, setExpand] = useState(null);
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: [defaultWeek()],
+    year: defaultYear(),
   });
 
   const [graphFilter, setGraphFilter] = useState("child_asin");

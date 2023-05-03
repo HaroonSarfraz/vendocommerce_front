@@ -10,6 +10,7 @@ import VendoTooltip from "@/src/components/tooltip";
 import Drawer from "@/src/components/sales-analytics/product/drawer";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import _ from "lodash";
+import { defaultWeek, defaultYear } from "@/src/config";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -40,8 +41,8 @@ export default function SalesByProducts() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: [defaultWeek()],
+    year: defaultYear(),
   });
 
   const columnsList = [
@@ -273,11 +274,29 @@ export default function SalesByProducts() {
                                       }}
                                     >
                                       <tr>
-                                        {columnConfig?.map((t, y) => (
-                                          <th className=" min-w-300px" key={y}>
-                                            {t.label}
-                                          </th>
-                                        ))}
+                                        <th
+                                          className=" min-w-300px"
+                                        >
+                                          {
+                                            columnConfig?.find(
+                                              (config) =>
+                                                config.value == selectedColumn
+                                            )?.label
+                                          }
+                                        </th>
+                                        {columnConfig?.map((t, y) => {
+                                          if (selectedColumn === t.value) {
+                                            return;
+                                          }
+                                          return (
+                                            <th
+                                              className=" min-w-300px"
+                                              key={y}
+                                            >
+                                              {t.label}
+                                            </th>
+                                          );
+                                        })}
                                       </tr>
                                     </thead>
                                   </table>
