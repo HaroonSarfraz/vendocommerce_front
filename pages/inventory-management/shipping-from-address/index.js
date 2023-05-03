@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { Modal, Form, Input, Menu, Dropdown } from "antd";
+import { Menu, Dropdown } from "antd";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import NoData from "@/src/components/no-data";
@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import { getShippingList } from "@/src/services/shipping.services";
+import AddModel from "@/src/components/addnew-model/add-new";
 
 export default function ShippingFromAddress() {
   const dispatch = useDispatch();
@@ -123,25 +124,6 @@ export default function ShippingFromAddress() {
   ];
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [form] = Form.useForm();
-  const [values, setValues] = useState({});
-
-  const handleChange = (name, value) => {
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
-  };
-
-  const handleOk = () => {
-    form.validateFields().then((values) => {
-      console.log(values);
-    });
-    form.resetFields();
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setModalOpen(false);
-    setValues({});
-  };
   const menu = (
     <Menu>
       <Menu.Item key="1">Export to csv</Menu.Item>
@@ -196,49 +178,16 @@ export default function ShippingFromAddress() {
                     <p
                       className="btn btn-dark d-flex align-items-center"
                       onClick={() => {
-                        setModalOpen(true);
+                        setModalOpen(!modalOpen);
                       }}
                     >
                       Add New
                     </p>
                   </div>
                 </div>
-                <Modal
-                  visible={modalOpen}
-                  title="Add New Shipping From Address"
-                  okText="Save"
-                  cancelText="Cancel"
-                  onCancel={handleCancel}
-                  onOk={handleOk}
-                >
-                  <Form
-                    form={form}
-                    layout="vertical"
-                    className="mt-3"
-                    initialValues={values}
-                    onValuesChange={(changedValues) =>
-                      handleChange(
-                        Object.keys(changedValues)[0],
-                        changedValues[Object.keys(changedValues)[0]]
-                      )
-                    }
-                  >
-                    {columns.map(
-                      (column) =>
-                        column.title !== "#" &&
-                        column.title !== "Action" && (
-                          <Form.Item
-                            key={column.dataIndex}
-                            label={column.title}
-                            name={column.dataIndex}
-                            style={{ marginBottom: "12px" }}
-                          >
-                            <Input />
-                          </Form.Item>
-                        )
-                    )}
-                  </Form>
-                </Modal>
+                {modalOpen && (
+                  <AddModel columns={columns} modalValue={modalOpen} />
+                )}
               </div>
               <div className="card-body pt-2">
                 {console.log(list)}
