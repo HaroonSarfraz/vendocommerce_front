@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { fetchMeRequest } from "@/src/api/auth.api";
 import { fetchUserBrandList } from "@/src/api/brands.api";
 import { useRouter } from "next/router";
+import { isClient } from "@/src/helpers/isClient";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -17,19 +18,18 @@ export default function Dashboard() {
     setLoading(true);
     fetchMeRequest()
       .then((res) => {
-        if (res.status == 200 && res.data.user_status === 1) {
+        if (res.status == 200 && res.data.user_status === 1 && isClient) {
           let user = JSON.parse(localStorage.getItem("user"));
-          user.user_status = 1
+          user.user_status = 1;
           localStorage.setItem("user", JSON.stringify(user));
-          fetchUserBrandList()
-            .then((res) => {
-              if (res.status >= 200 && res.status <= 299) {
-                localStorage.setItem("brand", JSON.stringify(res.data[0]));
-                router.push("/sales-analytics/sku");
-              } else {
-                setLoading(false);
-              }
-            })
+          fetchUserBrandList().then((res) => {
+            if (res.status >= 200 && res.status <= 299) {
+              localStorage.setItem("brand", JSON.stringify(res.data[0]));
+              router.push("/sales-analytics/sku");
+            } else {
+              setLoading(false);
+            }
+          });
         } else {
           setLoading(false);
         }
@@ -53,8 +53,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      )
-      }
+      )}
     </DashboardLayout>
   );
 }

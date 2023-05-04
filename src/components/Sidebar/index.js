@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
 import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
+import { isClient } from "@/src/helpers/isClient";
 
 export default function Sidebar(props) {
   const router = useRouter();
@@ -44,8 +45,7 @@ export default function Sidebar(props) {
       return [current];
     }
     if (
-      menu.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length ==
-      0
+      menu.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length == 0
     ) {
       return [""];
     }
@@ -58,9 +58,11 @@ export default function Sidebar(props) {
         height: "100%",
         width: collapsed ? "105px" : "289px",
         minWidth: collapsed ? "105px" : "289px",
-        zIndex: window.innerWidth >= 992 ? "999" : "1000",
+        zIndex: isClient && window.innerWidth >= 992 ? "999" : "1000",
         position:
-          690 > window.innerWidth || hideMenus ? "absolute" : "relative",
+          690 > ((isClient && window.innerWidth) || hideMenus)
+            ? "absolute"
+            : "relative",
         transition: "width 0.4s, 0.4s",
         background: "#fff",
         overflowY: "auto",
@@ -199,20 +201,22 @@ export default function Sidebar(props) {
           className={`btn btn-light-danger btn-icon-gray-600 btn-text-gray-600 w-200px ${
             collapsed ? "mx-3" : "mx-0"
           }`}
-          style={{
+          style={
+            {
               // backgroundImage: "linear-gradient(45deg,#000000,#3e3e3e)",
               // color: "#FFF",
-          }}
+            }
+          }
           id="btnLogout"
           onClick={() => {
-            dispatch(setSwitchUser({}))
-            localStorage.clear();
+            dispatch(setSwitchUser({}));
+            isClient && localStorage.clear();
             router.push("/login");
           }}
         >
           <LogoutOutlined
             className={`${
-              window.innerWidth >= 992 && !collapsed ? "me-2" : ""
+              isClient && window.innerWidth >= 992 && !collapsed ? "me-2" : ""
             }`}
             style={{ transform: "rotate(-90deg)" }}
           />{" "}

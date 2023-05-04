@@ -5,6 +5,7 @@ import { setSwitchUser } from "../store/slice/users.slice";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { isClient } from "../helpers/isClient";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -13,35 +14,39 @@ export default function DashboardLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
   const [hideMenus, setHideMenus] = useState(false);
 
-  const user = typeof window !== "undefined" && JSON.parse(localStorage.getItem("user"));
+  const user = isClient && JSON.parse(localStorage.getItem("user"));
 
   const checkWidth = () => {
-    setHideMenus(690 > window.innerWidth);
+    isClient && setHideMenus(690 > window.innerWidth);
   };
 
   useEffect(() => {
-    setHideMenus(690 > window.innerWidth);
+    if (isClient) {
+      setHideMenus(690 > window.innerWidth);
 
-    window.addEventListener("resize", (e) => {
-      checkWidth();
-    });
-  
-    return () => {
-      window.removeEventListener("resize", () => { });
-    };
+      window.addEventListener("resize", (e) => {
+        checkWidth();
+      });
+
+      return () => {
+        window.removeEventListener("resize", () => {});
+      };
+    }
   }, []);
 
   useLayoutEffect(() => {
-    function updateSize() {
-      if (window.innerWidth < 992) {
-        setCollapsed(true);
-      } else {
-        setCollapsed(false);
+    if (isClient) {
+      function updateSize() {
+        if (window.innerWidth < 992) {
+          setCollapsed(true);
+        } else {
+          setCollapsed(false);
+        }
       }
+      window.addEventListener("resize", updateSize);
+      updateSize();
+      return () => window.removeEventListener("resize", updateSize);
     }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   const backToAdmin = () => {
@@ -65,7 +70,12 @@ export default function DashboardLayout({ children }) {
     }
   };
 
-  const GetModules = () => (localStorage.getItem("brand") ? false : user?.role === 'User' ? false : true);
+  const GetModules = () =>
+    isClient && localStorage.getItem("brand")
+      ? false
+      : user?.role === "User"
+      ? false
+      : true;
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>
@@ -99,9 +109,7 @@ export default function DashboardLayout({ children }) {
             className="d-flex flex-column flex-row-fluid"
             id="kt_wrapper"
           >
-            <div className="flex-column flex-column-fluid">
-              {children}
-            </div>
+            <div className="flex-column flex-column-fluid">{children}</div>
             <Footer />
           </div>
         </div>

@@ -15,6 +15,7 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
+import { isClient } from "@/src/helpers/isClient";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -65,8 +66,10 @@ export default function Users() {
   // }, [switchUser]);
 
   const switchUser = (brand) => {
-    localStorage.setItem("brand", brand);
-    localStorage.setItem("switchUser", 'true');
+    if (isClient) {
+      localStorage.setItem("brand", brand);
+      localStorage.setItem("switchUser", "true");
+    }
 
     setTimeout(() => {
       router.push("/sales-analytics/sku");

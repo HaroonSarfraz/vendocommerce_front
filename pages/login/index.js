@@ -5,6 +5,7 @@ import { Input, message } from "antd";
 import { useRouter } from "next/router";
 import { signInRequest } from "@/src/api/auth.api";
 import { fetchUserBrandList } from "@/src/api/brands.api";
+import { isClient } from "@/src/helpers/isClient";
 
 export default function Login() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Login() {
     signInRequest(body)
       .then((res) => {
         setSending(false);
-        if (res.status >= 200 && res.status <= 299) {
+        if (res.status >= 200 && res.status <= 299 && isClient) {
           localStorage.setItem("user", JSON.stringify(res.data));
           res.data.role === "User"
             ? res.data.user_status === 0
