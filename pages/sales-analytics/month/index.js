@@ -18,7 +18,6 @@ import {
   faAngleUp,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -30,7 +29,7 @@ const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
 export default function SalesByMonth() {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState({
-    month: [],
+    month: [0],
     year: 2023,
   });
 
@@ -386,7 +385,7 @@ export default function SalesByMonth() {
                                       href="#"
                                       className="fw-boldest text-dark"
                                     >
-                                      {d && d.week < 13 ? moment(d.week, 'M').format('MMMM') : '' }
+                                      {d?.month_name }
                                     </a>
                                   </td>
                                   <td>{d?.totalOrderedProductSales}</td>
