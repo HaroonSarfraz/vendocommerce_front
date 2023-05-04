@@ -14,7 +14,7 @@ export const getSalesWeekDetailList = (data) => {
   return (dispatch) => {
     fetchSalesWeekDetailList(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status == 200 && res.data) {
           dispatch(setSalesWeekDetailList({status: true, data: res.data.sort((a, b) => a.week - b.week)}));
         } else {
           message.error(res.data.message);

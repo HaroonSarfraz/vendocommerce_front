@@ -55,7 +55,7 @@ export default function TopBarFilter(filter, setFilter, type) {
                           };
                         })
                       : moment.months()?.map((d, i) => {
-                          return { label: d, value: i + 1 };
+                          return { label: d, value: i };
                         })
                   }
                   allowClear
