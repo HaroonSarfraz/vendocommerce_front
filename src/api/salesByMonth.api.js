@@ -18,10 +18,8 @@ export const fetchSalesByMonthDetail = (data) => {
 
 export const fetchSalesByMonthGraph = (data) => {
   return request.get(
-    `sales-by-mont-graph?search_year=${data?.search_year || ""}&search_month=${
+    `/sales/sales-graph-data?year=${data?.search_year || ""}&months=${
       data?.search_month || ""
-    }&graph_filter_type=${data?.graph_filter_type || ""}&graph_filter_text=${
-      data?.graph_filter_text || ""
-    }`
+    }&graph_filter_type=${data?.graph_filter_type || "month"}`
   );
 };

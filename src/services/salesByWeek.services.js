@@ -30,8 +30,8 @@ export const getSalesWeekGraph = (data) => {
   return (dispatch) => {
     fetchSalesWeekGraph(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesWeekGraph(res.data));
+        if (res.data) {
+          dispatch(setSalesWeekGraph({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }

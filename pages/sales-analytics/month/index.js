@@ -1,5 +1,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useState } from "react";
 import { Select, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +34,8 @@ export default function SalesByMonth() {
     year: 2023,
   });
 
-  const [graphFilter, setGraphFilter] = useState("child_asin");
+  const [graphFilter, setGraphFilter] = useState("month");
+  const [graphSelected, setGraphSelected] = useState([]);
   const [expand, setExpand] = useState(null);
 
   const [salesByMonthData, setSalesByMonthData] = useState({});
@@ -59,11 +61,37 @@ export default function SalesByMonth() {
     (state) => state.salesByMonth.salesByMonthGraph
   );
 
+  const graphOptions = salesByMonthGraph?.label.map((name, index) => {
+    return { label: name, value: index };
+  });
+
+  const graphSelectedLabels = salesByMonthGraph?.label?.filter((_, index) => {
+    return (
+      graphFilter === "month" ||
+      graphSelected.length === 0 ||
+      graphSelected.includes(index)
+    );
+  });
+
+  const graphSelectedSeries = cloneDeep(salesByMonthGraph?.series)?.map(
+    (data) => {
+      data.data = data.data?.filter((_, index) => {
+        return (
+          graphFilter === "month" ||
+          graphSelected.length === 0 ||
+          graphSelected.includes(index)
+        );
+      });
+      return data;
+    }
+  );
+
   useEffect(() => {
     const { month, year } = filter;
     setSalesByMonthDataLoading(true);
     setSalesByMonthGraphLoading(true);
     setSalesByMonthDetailLoading(true);
+    setGraphSelected([]);
 
     dispatch(
       getSalesByMonthData({
@@ -77,14 +105,27 @@ export default function SalesByMonth() {
         search_month: month?.join(","),
       })
     );
-    // dispatch(
-    //   getSalesByMonthGraph({
-    //     search_year: year,
-    //     search_month: month?.join(","),
-    //     graph_filter_type: "",
-    //   })
-    // );
+    dispatch(
+      getSalesByMonthGraph({
+        search_year: year,
+        search_month: month?.join(","),
+        graph_filter_type: graphFilter,
+      })
+    );
   }, [filter]);
+
+  useEffect(() => {
+    setSalesByMonthGraphLoading(true);
+    setGraphSelected([]);
+
+    dispatch(
+      getSalesByMonthGraph({
+        search_year: filter?.year,
+        search_month: filter?.month?.join(","),
+        graph_filter_type: graphFilter,
+      })
+    );
+  }, [graphFilter]);
 
   useEffect(() => {
     if (SalesByMonthDataRes?.status === true) {
@@ -152,48 +193,53 @@ export default function SalesByMonth() {
             <div className="col-xl-12 mb-5 mb-xl-5">
               <div className="card card-flush h-xl-100">
                 <div className="card-header min-h-55px ">
-                  <div className="d-flex flex-stack flex-wrap gap-4">
-                    <div className="position-relative ">
-                      <Select
-                        style={{ width: 200 }}
-                        onChange={(e) => setGraphFilter(e)}
-                        value={graphFilter || null}
-                        options={[
-                          {
-                            label: "Parent ASIN",
-                            value: "parent_asin",
-                          },
-                          {
-                            label: "Child ASIN",
-                            value: "child_asin",
-                          },
-                          {
-                            label: "Title",
-                            value: "title",
-                          },
-                          {
-                            label: "Month",
-                            value: "month",
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="position-relative">
-                      <button
-                        onClick={() => {
-                          setSalesByMonthGraphLoading(true);
-                          dispatch(
-                            getSalesByMonthGraph({
-                              graph_filter_type: graphFilter,
-                              search_year: filter?.year,
-                              search_month: filter?.month?.join(","),
-                            })
-                          );
-                        }}
-                        className="btn btn-danger btn-sm fs-7 ps-5 px-5"
-                      >
-                        <FontAwesomeIcon icon={faSearch} />
-                      </button>
+                  <div className="container mt-2 gap-4">
+                    <div className="row">
+                      <div className="col-2">
+                        <Select
+                          style={{ width: "100%" }}
+                          onChange={(e) => setGraphFilter(e)}
+                          value={graphFilter || null}
+                          options={[
+                            {
+                              label: "Parent ASIN",
+                              value: "parent_asin",
+                            },
+                            {
+                              label: "Child ASIN",
+                              value: "child_asin",
+                            },
+                            {
+                              label: "Title",
+                              value: "title",
+                            },
+                            {
+                              label: "Month",
+                              value: "month",
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className="col-10">
+                        {graphFilter !== "month" &&
+                          !salesByMonthGraphLoading && (
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              style={{
+                                width: "100%",
+                              }}
+                              size="large"
+                              filterOption={(input, option) =>
+                                option.label
+                                  .toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                              }
+                              options={graphOptions}
+                              onChange={(e) => setGraphSelected(e)}
+                            />
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -228,7 +274,7 @@ export default function SalesByMonth() {
                         stroke: {
                           curve: "smooth",
                         },
-                        labels: salesByMonthGraph?.label || [],
+                        labels: graphSelectedLabels || [],
                         xaxis: {
                           line: {
                             show: false,
@@ -249,7 +295,7 @@ export default function SalesByMonth() {
                           "#000",
                         ],
                       }}
-                      series={salesByMonthGraph?.series}
+                      series={graphSelectedSeries}
                       type="area"
                       height={300}
                     />
@@ -385,7 +431,7 @@ export default function SalesByMonth() {
                                       href="#"
                                       className="fw-boldest text-dark"
                                     >
-                                      {d?.month_name }
+                                      {d?.month_name}
                                     </a>
                                   </td>
                                   <td>{d?.totalOrderedProductSales}</td>

@@ -8,7 +8,7 @@ export default function SalesBySKU(tableList, loading) {
           <div className="card-header">
             <h3 className="card-title align-items-start flex-column">
               <span className="card-label fw-bolder fs-3 mb-1">
-                Sales by SKU
+                Sales by Week
               </span>
             </h3>
             <div className="card-toolbar">
