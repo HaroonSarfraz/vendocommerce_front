@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import cloneDeep from "lodash/cloneDeep";
 import { Select, Skeleton } from "antd";
 import { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
@@ -34,7 +35,8 @@ export default function SalesByWeek() {
     year: defaultYear(),
   });
 
-  const [graphFilter, setGraphFilter] = useState("child_asin");
+  const [graphFilter, setGraphFilter] = useState("week");
+  const [graphSelected, setGraphSelected] = useState([]);
 
   const [graphLoading, setGraphLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(true);
@@ -54,10 +56,34 @@ export default function SalesByWeek() {
     (state) => state.salesByWeek.salesWeekData
   );
 
+  const graphOptions = isGraph?.label?.map((name, index) => {
+    return { label: name, value: index };
+  });
+
+  const graphSelectedLabels = isGraph?.label?.filter((_, index) => {
+    return (
+      graphFilter === "month" ||
+      graphSelected.length === 0 ||
+      graphSelected.includes(index)
+    );
+  });
+
+  const graphSelectedSeries = cloneDeep(isGraph?.series)?.map((data) => {
+    data.data = data.data?.filter((_, index) => {
+      return (
+        graphFilter === "month" ||
+        graphSelected.length === 0 ||
+        graphSelected.includes(index)
+      );
+    });
+    return data;
+  });
+
   useEffect(() => {
     setGraphLoading(true);
     setTableLoading(true);
     setDetailsLoading(true);
+    setGraphSelected([]);
 
     const { week, year } = filter;
     dispatch(
@@ -66,12 +92,13 @@ export default function SalesByWeek() {
         search_week: week?.sort()?.join(","),
       })
     );
-    // dispatch(
-    //   getSalesWeekGraph({
-    //     graph_filter_type: graphFilter,
-    //     search_year: year,
-    //   })
-    // );
+    dispatch(
+      getSalesWeekGraph({
+        search_year: year,
+        search_week: week?.sort()?.join(","),
+        graph_filter_type: graphFilter,
+      })
+    );
     dispatch(
       getSalesWeekData({
         search_week: week?.join(","),
@@ -79,6 +106,20 @@ export default function SalesByWeek() {
       })
     );
   }, [filter]);
+
+  useEffect(() => {
+    const { week, year } = filter;
+    setGraphLoading(true);
+    setGraphSelected([]);
+
+    dispatch(
+      getSalesWeekGraph({
+        search_year: year,
+        search_week: week?.sort()?.join(","),
+        graph_filter_type: graphFilter,
+      })
+    );
+  }, [graphFilter]);
 
   useEffect(() => {
     if (SalesWeekGraphRes?.status === true) {
@@ -131,7 +172,7 @@ export default function SalesByWeek() {
     }
   }, [SalesByWeekDataRes]);
 
-  let series = isGraph?.series || [];
+  let series = graphSelectedSeries || [];
   let options = {
     chart: {
       height: 300,
@@ -160,7 +201,7 @@ export default function SalesByWeek() {
         stops: [0, 100, 100, 100],
       },
     },
-    labels: isGraph?.label || [],
+    labels: graphSelectedLabels || [],
     markers: {
       size: 0,
     },
@@ -213,49 +254,53 @@ export default function SalesByWeek() {
             <div className="col-xl-12 mb-5 mb-xl-5">
               <div className="card card-flush h-xl-100">
                 <div className="card-header min-h-55px ">
-                  <div className="d-flex flex-stack flex-wrap gap-4">
-                    <div className="position-relative ">
-                      <Select
-                        onChange={(e) => setGraphFilter(e)}
-                        value={graphFilter || null}
-                        size="large"
-                        placeholder="Week"
-                        className="min-w-200px"
-                        options={[
-                          {
-                            label: "Parent ASIN",
-                            value: "parent_asin",
-                          },
-                          {
-                            label: "Child ASIN",
-                            value: "child_asin",
-                          },
-                          {
-                            label: "Title",
-                            value: "title",
-                          },
-                          {
-                            label: "Week",
-                            value: "week",
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="position-relative">
-                      <button
-                        onClick={() => {
-                          setGraphLoading(true);
-                          dispatch(
-                            getSalesWeekGraph({
-                              graph_filter_type: graphFilter,
-                              search_year: filter?.year,
-                            })
-                          );
-                        }}
-                        className="btn btn-danger btn-sm fs-7 ps-5 px-5"
-                      >
-                        <FontAwesomeIcon icon={faSearch} />
-                      </button>
+                  <div className="container mt-2 gap-4">
+                    <div className="row">
+                      <div className="col-2">
+                        <Select
+                          onChange={(e) => setGraphFilter(e)}
+                          value={graphFilter || null}
+                          style={{ width: "100%" }}
+                          options={[
+                            {
+                              label: "Parent ASIN",
+                              value: "parent_asin",
+                            },
+                            {
+                              label: "Child ASIN",
+                              value: "child_asin",
+                            },
+                            {
+                              label: "Title",
+                              value: "title",
+                            },
+                            {
+                              label: "Week",
+                              value: "week",
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className="col-10">
+                        {graphFilter !== "week" &&
+                          !graphLoading && (
+                            <Select
+                              mode="multiple"
+                              allowClear
+                              style={{
+                                width: "100%",
+                              }}
+                              size="large"
+                              filterOption={(input, option) =>
+                                option.label
+                                  .toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                              }
+                              options={graphOptions}
+                              onChange={(e) => setGraphSelected(e)}
+                            />
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>
