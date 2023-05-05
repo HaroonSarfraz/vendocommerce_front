@@ -16,8 +16,14 @@ const initialState = {
     salesReportCallOuts: {},
   },
   salesBySku: {
-    salesSkuDetailsList: {},
-    salesBySkuDetails: {},
+    salesSkuDetailsList: {
+      status: false,
+      data: []
+    },
+    salesBySkuDetails: {
+      status: false,
+      data: {}
+    },
   },
   salesByProduct: {
     salesByProductList: {},
@@ -26,13 +32,25 @@ const initialState = {
     saveTableConfiguration: {},
   },
   salesByWeek: {
-    salesWeekDetailList: {},
+    salesWeekDetailList: {
+      status: false,
+      data: []
+    },
     salesWeekGraph: {},
-    salesWeekData: {},
+    salesWeekData: {
+      status: false,
+      data: {}
+    },
   },
   salesByMonth: {
-    salesByMonthData: {},
-    salesByMonthDetail: {},
+    salesByMonthData: {
+      status: true,
+      data: {}
+    },
+    salesByMonthDetail: {
+      status: false,
+      data: []
+    },
     salesByMonthGraph: {},
   },
   planning: {
