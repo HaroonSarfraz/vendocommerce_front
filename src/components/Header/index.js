@@ -116,7 +116,7 @@ export default function Header(props) {
           <div className="d-flex d-lg-none align-items-center ms-p1 me-2"></div>
 
           {isClient &&
-            JSON.parse(localStorage.getItem("user")).role != "User" &&
+            JSON.parse(localStorage.getItem("user") || "{}")?.role != "User" &&
             localStorage.getItem("brand") && (
               <div className="d-flex">
                 <button

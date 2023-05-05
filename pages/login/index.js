@@ -9,6 +9,7 @@ import { isClient } from "@/src/helpers/isClient";
 import { setCookie } from "cookies-next";
 import { cookies } from "@/src/constants/cookies";
 import jwt_decode from "jwt-decode";
+import { NoDataSvg } from "@/src/assets";
 
 export default function Login() {
   const router = useRouter();
@@ -91,6 +92,7 @@ export default function Login() {
                   className="fs-2qx pb-5 pb-md-4 fw-normal"
                   style={{ color: "#494951" }}
                 >
+                  <NoDataSvg />
                   Welcome to <b className="fw-boldest">Vendo!!</b>
                 </h1>
                 <p className="fw-normal fs-3" style={{ color: "#494951" }}>
