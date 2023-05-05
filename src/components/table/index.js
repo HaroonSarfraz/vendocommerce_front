@@ -15,14 +15,13 @@ const ASINTable = (props) => {
     ellipsis = false,
     ...rest
   } = props;
-
   return (
     <Table
       columns={columns?.map((d) => {
         return { ...d, ellipsis: d?.ellipsis || ellipsis };
       })}
       fixed={fixed}
-      dataSource={dataSource?.map((d, i) => {
+      dataSource={dataSource.data?.map((d, i) => {
         return { ...d, key: i };
       })}
       rowKey={rowKey}

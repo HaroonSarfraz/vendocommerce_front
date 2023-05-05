@@ -35,45 +35,18 @@ export default function Users() {
   const [searchText, setSearchText] = useState("");
 
   const brandList = useSelector((state) => state.brands.brandList);
-  // const switchUser = useSelector((state) => state.users.switchUser);
 
   useEffect(() => {
     if (brandList) {
-      setList(brandList);
+      setList(brandList.data);
       setLoading(false);
-      setTotalPage(brandList?.data?.pagination?.totalCount);
-    } else if (brandList?.status === false) {
-      // fakeActionUser()
+      setTotalPage(brandList.count);
     }
   }, [brandList]);
 
-  // useEffect(() => {
-  //   if (switchUser.role && switchUser.role === 'User') {
-  //     let user = localStorage.getItem("user");
-
-  //     const admin = JSON.parse(user).role === 'Admin';
-
-  //     admin && localStorage.setItem("adminData", user);
-
-  //     setTimeout(() => {
-  //       localStorage.setItem("user", JSON.stringify(switchUser));
-  //       router.push("/dashboard");
-  //     }, 1000);
-  //   } else if (switchUser.status === false) {
-  //     message.error(switchUser.message);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [switchUser]);
-
-  const switchUser = (brand) => {
-    if (isClient) {
-      localStorage.setItem("brand", brand);
-      localStorage.setItem("switchUser", "true");
-    }
-
-    setTimeout(() => {
-      router.push("/sales-analytics/sku");
-    }, 1000);
+  const switchBrand = (brand) => {
+    localStorage.setItem("brand", JSON.stringify(brand));
+    router.push("/sales-analytics/sku");
   };
 
   useEffect(() => {
@@ -152,7 +125,7 @@ export default function Users() {
             onClick={() => {
               message.destroy();
               message.loading("Loading...");
-              switchUser(text);
+              switchBrand(text);
             }}
           >
             <Icons type="switchUser" />

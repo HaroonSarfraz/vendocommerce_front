@@ -39,7 +39,7 @@ export default function Users() {
   const user = router?.query ?? {};
 
   useEffect(() => {
-    dispatch(getBrandList());
+    dispatch(getBrandList({ perPage: 1000}));
   }, []);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function Users() {
     "Settings",
   ];
 
-  const options = brandList.map((user) => {
+  const options = brandList.data.map((user) => {
     return { label: user.u_amazon_seller_name, value: user.id };
   });
 

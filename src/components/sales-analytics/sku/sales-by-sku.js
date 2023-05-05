@@ -12,6 +12,7 @@ export default function SalesBySkuTable({ loading, list }) {
       title: 'Row Labels',
       width: 500,
       align: 'left',
+      sorter: (a, b) => a.title.localeCompare(b.title),
       render: (text) => {
         return (
           <div className='d-flex align-items-center position-relative'>
@@ -68,6 +69,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 175,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_units_ordered_sum - b.astr_units_ordered_sum,
       render: (text) => {
         return <span>{text?.astr_units_ordered_sum || 0}</span>;
       }
@@ -77,6 +79,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 225,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.ordered_product_sales_sum - b.ordered_product_sales_sum,
       render: (text) => {
         return <span>${text?.ordered_product_sales_sum || 0}</span>;
       }
@@ -86,6 +89,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 150,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_buy_box_percentage_sum - b.astr_buy_box_percentage_sum,
       render: (text) => {
         return <span>{text?.astr_buy_box_percentage_sum || '0%'}</span>;
       }
@@ -95,6 +99,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 150,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.unit_session_percentage_sum - b.unit_session_percentage_sum,
       render: (text) => {
         return <span>{text?.unit_session_percentage_sum || '0%'}</span>;
       }
@@ -104,6 +109,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 150,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_sessions_sum - b.astr_sessions_sum,
       render: (text) => {
         return <span>{text?.astr_sessions_sum || 0}</span>;
       }
@@ -113,6 +119,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 175,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_page_views_sum - b.astr_page_views_sum,
       render: (text) => {
         return <span>{text?.astr_page_views_sum || 0}</span>;
       }
@@ -122,6 +129,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 200,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_session_percentage_sum - b.astr_session_percentage_sum,
       render: (text) => {
         return <span>{text?.astr_session_percentage_sum || '0%'}</span>;
       }
@@ -131,6 +139,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 200,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.total_order_items_sum - b.total_order_items_sum,
       render: (text) => {
         return <span>{text?.total_order_items_sum || '0'}</span>;
       }
@@ -140,6 +149,7 @@ export default function SalesBySkuTable({ loading, list }) {
       width: 225,
       align: 'left',
       ellipsis: true,
+      sorter: (a, b) => a.astr_page_view_percentage_sum - b.astr_page_view_percentage_sum,
       render: (text) => {
         return <span>{text?.astr_page_view_percentage_sum || '0%'}</span>;
       }

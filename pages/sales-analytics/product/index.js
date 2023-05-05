@@ -10,6 +10,7 @@ import VendoTooltip from "@/src/components/tooltip";
 import Drawer from "@/src/components/sales-analytics/product/drawer";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import _ from "lodash";
+import { defaultWeek, defaultYear } from "@/src/config";
 
 const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
@@ -35,14 +36,13 @@ export default function SalesByProducts() {
   const [tableLoading, setTableLoading] = useState(true);
   const [list, setList] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
-  const [selectedColumnsList, setSelectedColumnsList] = useState([]);
-
   const [columnConfig, setColumnConfig] = useState([]);
+  const [expandedWeek, setExpendedWeek] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: [defaultWeek()],
+    year: defaultYear(),
   });
 
   const columnsList = [
@@ -114,12 +114,10 @@ export default function SalesByProducts() {
 
   useEffect(() => {
     if (!_.isEmpty(SalesByProductListRes)) {
-      const getMax = Object.values(SalesByProductListRes).map(
-        (d, i) => {
-          // delete d?.GrandTotal;
-          return Object.keys(d);
-        }
-      );
+      const getMax = Object.values(SalesByProductListRes).map((d, i) => {
+        // delete d?.GrandTotal;
+        return Object.keys(d);
+      });
       var index = getMax
         ?.map((d) => d?.length)
         .indexOf(Math.max(...getMax?.map((d) => d?.length)));
@@ -212,9 +210,7 @@ export default function SalesByProducts() {
                     {tableLoading ? (
                       <Loading />
                     ) : (
-                      <table
-                        className="table align-middle table-row-dashed  table-row-gray-300 fs-7 gy-4 gx-5 border-top-d"
-                      >
+                      <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">
                             <th className="min-w-300px " colSpan="2">
@@ -223,21 +219,31 @@ export default function SalesByProducts() {
                             {tableColumns?.map((d, i) => (
                               <th className="min-w-150px" key={i}>
                                 {d}
-                                <a
-                                  href="#"
-                                  data-bs-toggle="collapse"
-                                  data-bs-target={`#kt_accordion_1_body_${
-                                    i + 1
-                                  }`}
-                                  aria-expanded="false"
-                                  aria-controls={`kt_accordion_1_body_${i + 1}`}
-                                  className="open-arrow rounded-sm w-20px h-20px d-inline-flex justify-content-center align-items-center bg-light collapsed"
-                                >
-                                  <FontAwesomeIcon
-                                    icon={faPlus}
-                                    color="black"
-                                  />
-                                </a>
+                                {d !== "GrandTotal" && (
+                                  <div
+                                    data-bs-toggle="collapse"
+                                    data-bs-target={`#kt_accordion_1_body_${
+                                      i + 1
+                                    }`}
+                                    aria-expanded="false"
+                                    aria-controls={`kt_accordion_1_body_${
+                                      i + 1
+                                    }`}
+                                    onClick={() => {
+                                      expandedWeek === null
+                                        ? setExpendedWeek(i)
+                                        : expandedWeek === i
+                                        ? setExpendedWeek(null)
+                                        : setExpendedWeek(i);
+                                    }}
+                                    className="open-arrow rounded-sm w-20px h-20px d-inline-flex justify-content-center align-items-center bg-light cursor-pointer"
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faPlus}
+                                      color="black"
+                                    />
+                                  </div>
+                                )}
                               </th>
                             ))}
                             {/* <th className='min-w-150px '>Grand Total</th> */}
@@ -245,11 +251,14 @@ export default function SalesByProducts() {
                           <tr className="fw-boldest text-dark">
                             <th className="p-0 " />
                             <th className="p-0 " />
-                            {tableColumns?.map((d, i) => (
+                            {columnConfig?.map((d, i) => (
                               <th className="p-0 " key={i}>
                                 <div
                                   id={`kt_accordion_1_body_${i + 1}`}
-                                  className="accordion-collapse collapse"
+                                  className={
+                                    expandedWeek !== i &&
+                                    "accordion-collapse collapse"
+                                  }
                                   aria-labelledby={`kt_accordion_1_header_${
                                     i + 1
                                   }`}
@@ -265,11 +274,29 @@ export default function SalesByProducts() {
                                       }}
                                     >
                                       <tr>
-                                        {selectedColumnsList?.map((t, y) => (
-                                          <th className=" min-w-300px" key={y}>
-                                            {t.label}
-                                          </th>
-                                        ))}
+                                        <th
+                                          className=" min-w-300px"
+                                        >
+                                          {
+                                            columnConfig?.find(
+                                              (config) =>
+                                                config.value == selectedColumn
+                                            )?.label
+                                          }
+                                        </th>
+                                        {columnConfig?.map((t, y) => {
+                                          if (selectedColumn === t.value) {
+                                            return;
+                                          }
+                                          return (
+                                            <th
+                                              className=" min-w-300px"
+                                              key={y}
+                                            >
+                                              {t.label}
+                                            </th>
+                                          );
+                                        })}
                                       </tr>
                                     </thead>
                                   </table>
@@ -339,11 +366,16 @@ export default function SalesByProducts() {
                                           className="d-block"
                                           style={{ width: 150 }}
                                         >
-                                          {defaultValue || 0}%
+                                          {defaultValue || 0}
+                                          {selectedColumn.startsWith("avg") &&
+                                            "%"}
                                         </span>
                                         <div
                                           id={`kt_accordion_1_body_${t + 1}`}
-                                          className="accordion-collapse collapse"
+                                          className={
+                                            expandedWeek !== t &&
+                                            "accordion-collapse collapse"
+                                          }
                                           aria-labelledby={`kt_accordion_1_header_${
                                             t + 1
                                           }`}
@@ -353,25 +385,25 @@ export default function SalesByProducts() {
                                           <table className="table mb-0">
                                             <tbody>
                                               <tr>
-                                                <td className=" min-w-300px" />
-                                                {selectedColumnsList?.map(
-                                                  (h, j) => {
-                                                    if (
-                                                      selectedColumn === h.value
-                                                    ) {
-                                                      return;
-                                                    }
-                                                    return (
-                                                      <td
-                                                        key={j}
-                                                        className=" min-w-300px"
-                                                      >
-                                                        {r?.[1]?.[h.value] || 0}
-                                                        {j === 0 ? "%" : ""}
-                                                      </td>
-                                                    );
+                                                <td className="min-w-300px" />
+                                                {columnConfig?.map((h, j) => {
+                                                  if (
+                                                    selectedColumn === h.value
+                                                  ) {
+                                                    return;
                                                   }
-                                                )}
+                                                  return (
+                                                    <td
+                                                      key={j}
+                                                      className="min-w-300px"
+                                                    >
+                                                      {r?.[1]?.[h.value] ?? 0}
+                                                      {h.value.startsWith(
+                                                        "avg"
+                                                      ) && "%"}
+                                                    </td>
+                                                  );
+                                                })}
                                               </tr>
                                             </tbody>
                                           </table>

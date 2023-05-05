@@ -3,6 +3,7 @@ import { Select, Skeleton } from "antd";
 import { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import { defaultWeek, defaultYear } from "@/src/config";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Details from "@/src/components/Details";
 import Loading from "@/src/components/loading";
@@ -29,8 +30,8 @@ export default function SalesByWeek() {
   const dispatch = useDispatch();
   const [expand, setExpand] = useState(null);
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: [defaultWeek()],
+    year: defaultYear(),
   });
 
   const [graphFilter, setGraphFilter] = useState("child_asin");
@@ -62,15 +63,15 @@ export default function SalesByWeek() {
     dispatch(
       getSalesWeekDetailList({
         search_year: year,
-        search_week: week?.join(","),
+        search_week: week?.sort()?.join(","),
       })
     );
-    dispatch(
-      getSalesWeekGraph({
-        graph_filter_type: graphFilter,
-        search_year: year,
-      })
-    );
+    // dispatch(
+    //   getSalesWeekGraph({
+    //     graph_filter_type: graphFilter,
+    //     search_year: year,
+    //   })
+    // );
     dispatch(
       getSalesWeekData({
         search_week: week?.join(","),
@@ -122,7 +123,7 @@ export default function SalesByWeek() {
 
   useEffect(() => {
     if (SalesByWeekDataRes?.status === true) {
-      setIsWeekList(SalesByWeekDataRes?.data?.[0] || {});
+      setIsWeekList(SalesByWeekDataRes?.data || {});
       setTableLoading(false);
     } else if (SalesByWeekDataRes?.status === false) {
       setTableLoading(false);
@@ -305,39 +306,39 @@ export default function SalesByWeek() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: isWeekList?.total_ordered_product_sales,
+                          value: isWeekList?.totalOrderedProductSales,
                         },
                         {
                           title: "Sum of Sessions",
-                          value: isWeekList?.total_session,
+                          value: isWeekList?.totalSession,
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: isWeekList?.avg_session_percentage,
+                          value: isWeekList?.totalSessionPercentage,
                         },
                         {
                           title: "Sum of Page Views",
-                          value: isWeekList?.total_page_views,
+                          value: isWeekList?.totalPageViews,
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: isWeekList?.avg_page_view_percentage,
+                          value: isWeekList?.avgPageViewPercentage,
                         },
                         {
                           title: "Average of Buy Box",
-                          value: isWeekList?.avg_buy_box_percentage,
+                          value: isWeekList?.avgBuyBox,
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: isWeekList?.total_ordered_units,
+                          value: isWeekList?.totalUnitOrdered,
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: isWeekList?.avg_unit_session_percentage,
+                          value: isWeekList?.avgUnitSession,
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: isWeekList?.total_order_items,
+                          value: isWeekList?.totalOrderItems,
                         },
                       ]}
                     />
@@ -427,15 +428,15 @@ export default function SalesByWeek() {
                                     {d?.week_name}
                                   </span>
                                 </td>
-                                <td>{d?.total_ordered_product_sales}</td>
-                                <td>{d?.total_session}</td>
-                                <td>{d?.avg_session_percentage}</td>
-                                <td>{d?.total_page_views}</td>
-                                <td>{d?.avg_page_view_percentage}</td>
-                                <td>{d?.avg_buy_box_percentage}</td>
-                                <td>{d?.total_ordered_units}</td>
-                                <td>{d?.avg_unit_session_percentage}</td>
-                                <td>{d?.total_order_items}</td>
+                                <td>{d?.totalOrderedProductSales}</td>
+                                <td>{d?.totalSession}</td>
+                                <td>{d?.totalSessionPercentage}</td>
+                                <td>{d?.totalPageViews}</td>
+                                <td>{d?.avgPageViewPercentage}</td>
+                                <td>{d?.avgBuyBox}</td>
+                                <td>{d?.totalUnitOrdered}</td>
+                                <td>{d?.avgUnitSession}</td>
+                                <td>{d?.totalOrderItems}</td>
                               </tr>
                               <tr>
                                 <td
@@ -491,7 +492,9 @@ export default function SalesByWeek() {
                                                     <b className="fw-boldest me-2 text-dark">
                                                       Child ASIN:{" "}
                                                     </b>{" "}
-                                                    <a href='#'>{r?.child_asin}</a>
+                                                    <a href="#">
+                                                      {r?.child_asin}
+                                                    </a>
                                                   </span>
                                                   <span className="d-flex mt-1">
                                                     <b className="fw-boldest me-2 text-dark">
@@ -501,6 +504,7 @@ export default function SalesByWeek() {
                                                   </span>
                                                 </div>
                                               </td>
+                                              <td />
                                               <td>
                                                 {r?.total_ordered_product_sales}
                                               </td>

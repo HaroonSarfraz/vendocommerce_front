@@ -11,6 +11,8 @@ import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
 import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
 import { isClient } from "@/src/helpers/isClient";
+import { deleteCookie } from "cookies-next";
+import { cookies } from "@/src/constants/cookies";
 
 export default function Sidebar(props) {
   const router = useRouter();
@@ -211,6 +213,7 @@ export default function Sidebar(props) {
           onClick={() => {
             dispatch(setSwitchUser({}));
             isClient && localStorage.clear();
+            deleteCookie(cookies["TOKEN"]);
             router.push("/login");
           }}
         >

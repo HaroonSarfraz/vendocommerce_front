@@ -50,24 +50,8 @@ export default function DashboardLayout({ children }) {
   }, []);
 
   const backToAdmin = () => {
-    let adminDataLocal = localStorage.getItem("adminData");
-    if (adminDataLocal) {
-      dispatch(setSwitchUser({}));
-
-      localStorage.setItem("user", adminDataLocal);
-
-      setTimeout(() => {
-        localStorage.removeItem("adminData");
-        dispatch(setSwitchUser({}));
-        router.push("/brands");
-      }, 1000);
-    } else if (localStorage.getItem("brand")) {
-      setTimeout(() => {
-        localStorage.removeItem("switchUser");
-        localStorage.removeItem("brand");
-        router.push("/brands");
-      }, 1000);
-    }
+    localStorage.removeItem("brand");
+    router.push("/brands");
   };
 
   const GetModules = () =>

@@ -14,10 +14,10 @@ export const getSalesByMonthData = (data) => {
   return (dispatch) => {
     fetchSalesByMonthData(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesByMonthData(res.data));
+        if (res.data) {
+          dispatch(setSalesByMonthData({status: true, data: res.data}));
         } else {
-          message.error(res.data.message);
+          message.error(res.message);
         }
       })
       .catch((err) => {
@@ -30,8 +30,8 @@ export const getSalesByMonthDetail = (data) => {
   return (dispatch) => {
     fetchSalesByMonthDetail(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesByMonthDetail(res.data));
+        if (res.status == 200 && res.data) {
+          dispatch(setSalesByMonthDetail({status: true, data: res.data.sort((a, b) => a.month - b.month)}));
         } else {
           message.error(res.data.message);
         }

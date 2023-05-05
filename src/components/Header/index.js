@@ -50,7 +50,8 @@ export default function Header(props) {
           className="container-fluid d-flex align-items-center flex-wrap justify-content-between"
           id="kt_header_container"
         >
-          {((isClient && window.innerWidth < 690) || hideMenus) && (
+          {((typeof window !== "undefined" && window.innerWidth < 690) ||
+            hideMenus) && (
             <div
               onClick={() => setHideMenus(!hideMenus)}
               style={{
@@ -114,8 +115,9 @@ export default function Header(props) {
 
           <div className="d-flex d-lg-none align-items-center ms-p1 me-2"></div>
 
-          {(isClient && localStorage.getItem("adminData")) ||
-            (isClient && localStorage.getItem("switchUser") && (
+          {isClient &&
+            JSON.parse(localStorage.getItem("user")).role != "User" &&
+            localStorage.getItem("brand") && (
               <div className="d-flex">
                 <button
                   className="btn btn-secondary ml-auto mr-10px"
@@ -124,7 +126,7 @@ export default function Header(props) {
                   Back to admin
                 </button>
               </div>
-            ))}
+            )}
         </div>
       </Wrapper>
     </>

@@ -2,17 +2,17 @@ import request from "./request";
 
 export const fetchSalesByMonthData = (data) => {
   return request.get(
-    `get-sales-by-month-data?search_year=${
+    `/sales/sales-by-month-summary?year=${
       data?.search_year || ""
-    }&search_month=${data?.search_month || ""}`
+    }&months=${data?.search_month || ""}`
   );
 };
 
 export const fetchSalesByMonthDetail = (data) => {
   return request.get(
-    `get-sales-by-month-detail?search_year=${
+    `/sales/sales-by-month-data?year=${
       data?.search_year || ""
-    }&search_month=${data?.search_month || ""}`
+    }&months=${data?.search_month || ""}`
   );
 };
 

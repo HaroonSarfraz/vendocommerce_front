@@ -33,7 +33,7 @@ export default function Users() {
   const brandList = useSelector((state) => state.brands.brandList);
 
   useEffect(() => {
-    dispatch(getBrandList());
+    dispatch(getBrandList({ perPage: 1000}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,7 +74,7 @@ export default function Users() {
     "Settings",
   ];
 
-  const options = brandList.map((user) => {
+  const options = brandList.data.map((user) => {
     return { label: user.u_amazon_seller_name, value: user.id };
   });
 

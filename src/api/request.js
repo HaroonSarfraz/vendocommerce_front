@@ -13,6 +13,11 @@ request.interceptors.request.use(
 
     config.headers["Authorization"] = `Bearer ${user?.access_token}`;
 
+    if (config.url.startsWith("/sales/")) {
+      const brand = JSON.parse(localStorage.getItem("brand"));
+      config.url = "/brands/" + brand.id + config.url;
+    }
+
     return config;
   },
   (error) => {
