@@ -31,6 +31,9 @@ const initialState = {
     salesByProductColumnList: {},
     saveTableConfiguration: {},
   },
+  categoryPerformanceReport: {
+    categoryPerformanceList: {},
+  },
   salesByWeek: {
     salesWeekDetailList: {
       status: false,
