@@ -6,7 +6,6 @@ import NoData from '../../no-data';
 import Image from 'rc-image';
 
 export default function SalesBySkuTable({ loading, list }) {
-  console.log(list);
   const columns = [
     {
       title: 'Row Labels',

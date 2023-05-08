@@ -7,6 +7,7 @@ import SalesByWeek from "./slice/salesByWeek.slice";
 import SalesByMonth from "./slice/salesByMonth.slice";
 import InventoryPlanning from "./slice/planning.slice";
 import shipping from "./slice/shipping.slice";
+import CategoryPerformanceReport from './slice/categoryPerformanceReport.slice';
 
 export const rootReducer = {
   users: UsersReducer,
@@ -17,5 +18,6 @@ export const rootReducer = {
   salesByWeek: SalesByWeek,
   salesByMonth: SalesByMonth,
   planning: InventoryPlanning,
-  shipping: shipping
+  shipping: shipping,
+  categoryPerformanceReport: CategoryPerformanceReport,
 };

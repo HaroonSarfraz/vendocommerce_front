@@ -14,8 +14,8 @@ export const getSalesGraphData = (data) => {
   return (dispatch) => {
     fetchSalesGraphData(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesGraphData(res.data));
+        if (res.data) {
+          dispatch(setSalesGraphData({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }

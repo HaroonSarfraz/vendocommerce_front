@@ -190,7 +190,6 @@ export default function ShippingFromAddress() {
                 )}
               </div>
               <div className="card-body pt-2">
-                {console.log(list)}
                 {loading ? (
                   <Loading />
                 ) : list?.length !== 0 && list != undefined ? (

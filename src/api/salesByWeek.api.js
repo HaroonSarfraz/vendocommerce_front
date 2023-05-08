@@ -10,9 +10,9 @@ export const fetchSalesWeekDetailList = (data) => {
 
 export const fetchSalesWeekGraph = (data) => {
   return request.get(
-    `sales-by-week-graph-filter?graph_filter_type=${
-      data?.graph_filter_type || ""
-    }&search_year=${data?.search_year || ""}`
+    `/sales/sales-graph-data?year=${data?.search_year || ""}&weeks=${
+      data?.search_week || ""
+    }&graph_filter_type=${data?.graph_filter_type || "week"}`
   );
 };
 

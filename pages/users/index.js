@@ -101,7 +101,6 @@ export default function Users() {
   const changeUserStatus = (id, status) => {
     updateUserRequest(id, { user_status: status })
       .then((res) => {
-        console.log(res)
         if (res.status === 200) {
           const list_ = _.cloneDeep(list);
           const index = list_.findIndex((user) => user.id === res.data.id);

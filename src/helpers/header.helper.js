@@ -61,6 +61,10 @@ export const nameObject = {
     name: "Total Revenue ACoS",
     parent: "Advertisement Analytics",
   },
+  "/category-reports/category-performance-report": {
+    name: "Category Performance Report",
+    parent: "Category Reports",
+  },
   "/customer-acquisition/new-vs-repeat": {
     name: "New v/s Repeat",
     parent: "Customer Acquisition",
