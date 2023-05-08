@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import dynamic from "next/dynamic";
+import { defaultWeek, defaultYear } from "@/src/config";
 import {
   getSalesGraphData,
   getSalesByWeekData,
@@ -27,8 +28,8 @@ export default function Sales() {
   const salesReportCallOuts = useSelector((state) => state.sales.salesReportCallOuts);
 
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: [defaultWeek()],
+    year: defaultYear(),
   });
 
   const [chartData, setChartData] = useState({});
@@ -91,10 +92,6 @@ export default function Sales() {
     );
   }, [filter]);
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
@@ -105,7 +102,7 @@ export default function Sales() {
               className="col-xl-6 mb-5 mb-xl-5"
               data-select2-id="select2-data-17-s07q"
             >
-              {SalesByWeek(handleChange, salesGraphLoading, chartData)}
+              {SalesByWeek(salesGraphLoading, chartData)}
             </div>
             <div className="col-xl-6 mb-5 mb-xl-5">
               {ReportCallOuts(reportData, reportCallOutLoading)}
