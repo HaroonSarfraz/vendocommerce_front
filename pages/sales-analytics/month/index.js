@@ -19,13 +19,12 @@ import {
   faAngleUp,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+
 
 export default function SalesByMonth() {
   const dispatch = useDispatch();

@@ -16,10 +16,7 @@ import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import { isClient } from "@/src/helpers/isClient";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -45,7 +42,7 @@ export default function Users() {
   }, [brandList]);
 
   const switchBrand = (brand) => {
-    localStorage.setItem("brand", JSON.stringify(brand));
+    isClient && localStorage.setItem("brand", JSON.stringify(brand));
     router.push("/sales-analytics/sku");
   };
 

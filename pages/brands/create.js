@@ -9,9 +9,7 @@ import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import { selectUserList } from "@/src/store/slice/users.slice";
 
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const formItemLayout = {
   labelCol: {

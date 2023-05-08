@@ -5,10 +5,7 @@ import { fetchMeRequest } from "@/src/api/auth.api";
 import { fetchUserBrandList } from "@/src/api/brands.api";
 import { useRouter } from "next/router";
 import { isClient } from "@/src/helpers/isClient";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function Dashboard() {
   const router = useRouter();

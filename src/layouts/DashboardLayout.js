@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { setSwitchUser } from "../store/slice/users.slice";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
@@ -9,7 +7,6 @@ import { isClient } from "../helpers/isClient";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(false);
   const [hideMenus, setHideMenus] = useState(false);
@@ -34,7 +31,7 @@ export default function DashboardLayout({ children }) {
     }
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isClient) {
       function updateSize() {
         if (window.innerWidth < 992) {

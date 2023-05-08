@@ -16,10 +16,7 @@ import {
   RSales,
   SalesBySKU,
 } from "@/src/components/sales-analytics/sales";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function Sales() {
   const dispatch = useDispatch();

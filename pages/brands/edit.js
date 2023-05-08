@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, message, Select } from "antd";
 import { getUserList } from "@/src/services/users.services";
-import { createBrandRequest, updateBrandRequest } from "@/src/api/brands.api";
+import { updateBrandRequest } from "@/src/api/brands.api";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
+import selectFilter from "@/src/helpers/selectFilter";
 
 const formItemLayout = {
   labelCol: {
@@ -150,6 +147,7 @@ export default function EditBrand() {
                             size="large"
                             placeholder="Select Brand Account(s) ..."
                             options={options}
+                            filterOption={selectFilter}
                           />
                         </Form.Item>
                       </div>

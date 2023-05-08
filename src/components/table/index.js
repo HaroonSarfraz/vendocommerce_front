@@ -21,7 +21,7 @@ const ASINTable = (props) => {
         return { ...d, ellipsis: d?.ellipsis || ellipsis };
       })}
       fixed={fixed}
-      dataSource={dataSource.data?.map((d, i) => {
+      dataSource={dataSource?.map((d, i) => {
         return { ...d, key: i };
       })}
       rowKey={rowKey}

@@ -10,7 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     const user = JSON.parse(isClient ? localStorage.getItem("user") : {});
-    console.log(user);
     user?.access_token
       ? user.role === "User"
         ? router.push("/dashboard")
