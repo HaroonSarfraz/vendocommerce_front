@@ -123,6 +123,22 @@ export const userMenus = [
     ]
   ),
   getItem(
+    "Category Reports",
+    "category-reports",
+    <Icons type="clipboard" />,
+    [
+      getItem(
+        "Category Performance Report",
+        "category-performance-report",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "category-reports"
+      ),
+    ]
+  ),
+  getItem(
     "Customer Acquisition",
     "customer-acquisition",
     <Icons type="user-lg" />,
