@@ -18,10 +18,7 @@ import ModulesModal from "@/src/components/permissions/ModulesModal";
 import { updateUserRequest } from "@/src/api/users.api";
 import { Input } from "antd";
 import _ from "lodash";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function Users() {
   const dispatch = useDispatch();

@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import { nameObject } from "@/src/helpers/header.helper";
 import Icons from "@/src/assets/icons";
 import Wrapper from "./style";
-import { isClient } from "@/src/helpers/isClient";
+import useMount from "@/src/hooks/useMount";
 
 export default function Header(props) {
   const router = useRouter();
+  const isMount = useMount();
+
   const { backToAdmin, hideMenus, setHideMenus, collapsed, setCollapsed } =
     props;
 
@@ -33,25 +35,20 @@ export default function Header(props) {
   return (
     <>
       <Wrapper id="kt_header" className="header">
-        {isClient && window.innerWidth >= 992 ? (
-          <>
-            <div className="arrow" onClick={() => setCollapsed()}>
-              {!collapsed ? (
-                <Icons type="backArrow" />
-              ) : (
-                <Icons type="forwardArrow" />
-              )}
-            </div>
-          </>
-        ) : (
-          ""
+        {isMount && window.innerWidth >= 992 && (
+          <div className="arrow" onClick={() => setCollapsed()}>
+            {!collapsed ? (
+              <Icons type="backArrow" />
+            ) : (
+              <Icons type="forwardArrow" />
+            )}
+          </div>
         )}
         <div
           className="container-fluid d-flex align-items-center flex-wrap justify-content-between"
           id="kt_header_container"
         >
-          {((typeof window !== "undefined" && window.innerWidth < 690) ||
-            hideMenus) && (
+          {((isMount && window.innerWidth < 690) || hideMenus) && (
             <div
               onClick={() => setHideMenus(!hideMenus)}
               style={{
@@ -115,7 +112,7 @@ export default function Header(props) {
 
           <div className="d-flex d-lg-none align-items-center ms-p1 me-2"></div>
 
-          {isClient &&
+          {isMount &&
             JSON.parse(localStorage.getItem("user") || "{}")?.role != "User" &&
             localStorage.getItem("brand") && (
               <div className="d-flex">

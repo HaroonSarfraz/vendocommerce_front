@@ -1,13 +1,19 @@
 const initialState = {
   users: {
     userList: {
-      items: []
+      items: [],
+      count: 0,
+      page: 1,
+      limit: 10
     },
     switchUser: {},
   },
   brands: {
     brandList: {
-      data: []
+      data: [],
+      count: 0,
+      page: 1,
+      limit: 10
     },
   },
   sales: {
@@ -16,8 +22,14 @@ const initialState = {
     salesReportCallOuts: {},
   },
   salesBySku: {
-    salesSkuDetailsList: {},
-    salesBySkuDetails: {},
+    salesSkuDetailsList: {
+      status: false,
+      data: []
+    },
+    salesBySkuDetails: {
+      status: false,
+      data: {}
+    },
   },
   salesByProduct: {
     salesByProductList: {},
@@ -29,13 +41,25 @@ const initialState = {
     categoryPerformanceList: {},
   },
   salesByWeek: {
-    salesWeekDetailList: {},
+    salesWeekDetailList: {
+      status: false,
+      data: []
+    },
     salesWeekGraph: {},
-    salesWeekData: {},
+    salesWeekData: {
+      status: false,
+      data: {}
+    },
   },
   salesByMonth: {
-    salesByMonthData: {},
-    salesByMonthDetail: {},
+    salesByMonthData: {
+      status: false,
+      data: {}
+    },
+    salesByMonthDetail: {
+      status: false,
+      data: []
+    },
     salesByMonthGraph: {},
   },
   planning: {

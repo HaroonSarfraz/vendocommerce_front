@@ -11,10 +11,7 @@ import Drawer from "@/src/components/sales-analytics/product/drawer";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import _ from "lodash";
 import { defaultWeek, defaultYear } from "@/src/config";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const { useToken } = theme;
 

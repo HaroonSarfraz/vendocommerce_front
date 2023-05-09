@@ -14,10 +14,7 @@ import NoData from "@/src/components/no-data";
 import ASINTable from "@/src/components/table";
 import Loading from "@/src/components/loading";
 import VendoTooltip from "@/src/components/tooltip";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const { useToken } = theme;
 const DefaultPerPage = 10;

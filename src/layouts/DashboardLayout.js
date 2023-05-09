@@ -1,27 +1,24 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { setSwitchUser } from "../store/slice/users.slice";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import { isClient } from "../helpers/isClient";
+import useMount from "../hooks/useMount";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const dispatch = useDispatch();
-
+  const isMount = useMount();
   const [collapsed, setCollapsed] = useState(false);
   const [hideMenus, setHideMenus] = useState(false);
 
-  const user = isClient && JSON.parse(localStorage.getItem("user"));
+  const user = isMount ? JSON.parse(localStorage.getItem("user") || "{}") : {};
 
   const checkWidth = () => {
-    isClient && setHideMenus(690 > window.innerWidth);
+    isMount && setHideMenus(690 > window.innerWidth);
   };
 
   useEffect(() => {
-    if (isClient) {
+    if (isMount) {
       setHideMenus(690 > window.innerWidth);
 
       window.addEventListener("resize", (e) => {
@@ -34,8 +31,8 @@ export default function DashboardLayout({ children }) {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    if (isClient) {
+  useEffect(() => {
+    if (isMount) {
       function updateSize() {
         if (window.innerWidth < 992) {
           setCollapsed(true);
@@ -55,7 +52,7 @@ export default function DashboardLayout({ children }) {
   };
 
   const GetModules = () =>
-    isClient && localStorage.getItem("brand")
+    isMount && localStorage.getItem("brand")
       ? false
       : user?.role === "User"
       ? false
@@ -68,7 +65,7 @@ export default function DashboardLayout({ children }) {
         style={{ height: "100vh" }}
       >
         <Sidebar
-          user={user || {}}
+          user={user}
           hideMenus={hideMenus}
           collapsed={collapsed}
           userType={GetModules()}
