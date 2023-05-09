@@ -42,7 +42,7 @@ export default function Users(props) {
 
   const switchBrand = (brand) => {
     isClient && localStorage.setItem("brand", JSON.stringify(brand));
-    router.push("/sales-analytics/sku");
+    router.push("/sales-analytics/sales");
   };
 
   useEffect(() => {

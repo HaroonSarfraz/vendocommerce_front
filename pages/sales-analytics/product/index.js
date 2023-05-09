@@ -90,7 +90,6 @@ export default function SalesByProducts() {
     },
   ];
 
-  console.log(tableColumns);
   useEffect(() => {
     setColumnConfig(columnsList);
     setSelectedColumn(columnsList[1].value);

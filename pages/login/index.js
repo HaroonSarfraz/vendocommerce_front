@@ -46,7 +46,7 @@ export default function Login() {
                         "brand",
                         JSON.stringify(res.data.Brands[0])
                       );
-                      router.push(from || "/sales-analytics/sku");
+                      router.push(from || "/sales-analytics/sales");
                     } else {
                       router.push("/dashboard");
                     }

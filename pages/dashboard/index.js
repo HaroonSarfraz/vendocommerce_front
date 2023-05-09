@@ -26,7 +26,7 @@ export default function Dashboard() {
               res.data.Brands.length > 0
             ) {
               localStorage.setItem("brand", JSON.stringify(res.data.Brands[0]));
-              router.push("/sales-analytics/sku");
+              router.push("/sales-analytics/sales");
             } else {
               setLoading(false);
             }

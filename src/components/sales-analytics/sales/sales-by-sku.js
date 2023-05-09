@@ -1,7 +1,6 @@
 import { Skeleton } from "antd";
 
 export default function SalesBySKU(tableList, loading) {
-  console.log(tableList)
   return (
     <div className="row fadeInRight">
       <div className="col-lg-12">
