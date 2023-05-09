@@ -1,5 +1,7 @@
 import axios from "axios";
 import { isClient } from "../helpers/isClient";
+import { deleteCookie } from "cookies-next";
+import { cookies } from "../constants/cookies";
 
 const request = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -31,8 +33,9 @@ request.interceptors.response.use(
   },
   (error) => {
     if (error?.response?.status === 401) {
-      isClient && window.location.assign("/login");
       isClient && localStorage.clear();
+      isClient && deleteCookie(cookies["TOKEN"]);
+      isClient && window.location.assign("/login");
     }
     return error.response;
   }
