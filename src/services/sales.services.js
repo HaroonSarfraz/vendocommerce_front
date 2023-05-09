@@ -30,8 +30,10 @@ export const getSalesReportCallOuts = (data) => {
   return (dispatch) => {
     fetchSalesReportCallOuts(data)
       .then((res) => {
-        if (res.data.status) {
-          dispatch(setSalesReportCallOuts(res.data));
+        if (res.data) {
+          const {weekDetail, ...reportCallout} = res.data;
+          dispatch(setSalesReportCallOuts({status: true, data: reportCallout}));
+          dispatch(setSalesByWeekData({status: true, data: weekDetail}));
         } else {
           message.error(res.data.message);
         }

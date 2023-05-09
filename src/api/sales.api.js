@@ -10,9 +10,9 @@ export const fetchSalesGraphData = (data) => {
 
 export const fetchSalesReportCallOuts = (data) => {
   return request.get(
-    `/get-sales-report-call-outs?search_year=${
+    `/sales/sales-callout-data?year=${
       data?.search_year || ""
-    }&search_week=${data?.search_week || ""}`,
+    }&weeks=${data?.search_week || ""}`,
     data
   );
 };

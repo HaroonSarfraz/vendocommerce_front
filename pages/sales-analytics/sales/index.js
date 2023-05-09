@@ -48,7 +48,7 @@ export default function Sales() {
 
   useEffect(() => {
     if (salesReportCallOuts?.status === true) {
-      setReportData(salesReportCallOuts?.data?.[0] || {});
+      setReportData(salesReportCallOuts?.data || {});
       setReportCallOutLoading(false);
     } else if (salesReportCallOuts?.status === false) {
       setReportCallOutLoading(false);
@@ -57,7 +57,7 @@ export default function Sales() {
 
   useEffect(() => {
     if (salesByWeekData?.status === true) {
-      setTableList(Object.values(salesByWeekData?.data?.[0] || {}));
+      setTableList(Object.values(salesByWeekData?.data || []));
       setSalesByWeekLoading(false);
     } else if (salesByWeekData?.status === false) {
       setSalesByWeekLoading(false);
@@ -81,12 +81,12 @@ export default function Sales() {
         search_week: filter?.week?.join(","),
       })
     );
-    dispatch(
-      getSalesByWeekData({
-        search_year: filter?.year,
-        search_week: filter?.week?.join(","),
-      })
-    );
+    // dispatch(
+    //   getSalesByWeekData({
+    //     search_year: filter?.year,
+    //     search_week: filter?.week?.join(","),
+    //   })
+    // );
   }, [filter]);
 
   return (

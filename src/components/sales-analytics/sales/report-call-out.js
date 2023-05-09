@@ -124,7 +124,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.sessionsChange || "0%"}
+                      {reportData?.upVsLwSession || "0%"}
                     </h6>
                   </div>
                 </>

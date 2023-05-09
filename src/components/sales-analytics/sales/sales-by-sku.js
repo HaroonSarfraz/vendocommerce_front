@@ -1,6 +1,7 @@
 import { Skeleton } from "antd";
 
 export default function SalesBySKU(tableList, loading) {
+  console.log(tableList)
   return (
     <div className="row fadeInRight">
       <div className="col-lg-12">
@@ -161,51 +162,51 @@ export default function SalesBySKU(tableList, loading) {
                       <tr key={i}>
                         <td>
                           <a className="fw-boldest text-dark fs13">
-                            {d?.week_name || ""}
+                            {`WK${d?.week}`}
                           </a>
                         </td>
                         <td>
-                          {d?.week_start_date || ""} to {d?.week_end_date || ""}
+                          {d?.startdate || ""} to {d?.enddate || ""}
                         </td>
-                        <td>${d?.twSales || "0"}</td>
-                        <td>${d?.salesDiff || "0"}</td>
+                        <td>${d?.sales?.twSales || "0"}</td>
+                        <td>${d?.sales?.salesDiff || "0"}</td>
                         <td
                           className={`${
-                            d?.salesChange < 0 ? "text-danger" : "text-success"
+                            d?.sales?.salesChange < 0 ? "text-danger" : "text-success"
                           }`}
                         >
-                          {d?.salesChange || "0"}%
+                          {d?.sales?.salesChange || "0"}%
                         </td>
-                        <td>{d?.twUnits || "0"}</td>
-                        <td>{d?.unitsDiff || "0"}</td>
+                        <td>{d?.units?.twUnits || "0"}</td>
+                        <td>{d?.units?.unitsDiff || "0"}</td>
                         <td
                           className={`${
-                            d?.unitsChange < 0 ? "text-danger" : "text-success"
+                            d?.units?.unitsChange < 0 ? "text-danger" : "text-success"
                           }`}
                         >
-                          {d?.unitsChange || "0"}%
+                          {d?.units?.unitsChange || "0"}%
                         </td>
-                        <td>${d?.lastYearSales || "0"}</td>
-                        <td>${d?.salesDiffLy || "0"}</td>
+                        <td>${d?.sales?.prevWeekSales || "0"}</td>
+                        <td>${d?.sales?.salesDiffLy || "0"}</td>
                         <td
                           className={`${
-                            d?.salesChangeLy < 0
+                            d?.sales?.salesChangeLy < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {d?.salesChangeLy || "0"}%
+                          {d?.sales?.salesChangeLy || "0"}%
                         </td>
-                        <td>{d?.lastYearUnits || "0"}</td>
-                        <td>{d?.unitsDiffLy || "0"}</td>
+                        <td>{d?.units?.prevWeekUnits || "0"}</td>
+                        <td>{d?.units?.unitsDiffLy || "0"}</td>
                         <td
                           className={`${
-                            d?.unitsChangeLy < 0
+                            d?.units?.unitsChangeLy < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {d?.unitsChangeLy || "0"}%
+                          {d?.units?.unitsChangeLy || "0"}%
                         </td>
                       </tr>
                     ))
