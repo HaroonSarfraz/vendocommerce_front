@@ -28,7 +28,7 @@ export default function SalesBySku() {
   const [searchText, setSearchText] = useState('');
 
   const salesBySKUDetails = useSelector((state) => state.salesBySku.salesBySkuDetails);
-  const salesSKUDetailsLists = useSelector((state) => state.salesBySku.salesSkuDetailsList);
+  const salesSKUDetailsList = useSelector((state) => state.salesBySku.salesSkuDetailsList);
 
   const getList = (e) => {
     setDetailsLoading(true);
@@ -67,13 +67,13 @@ export default function SalesBySku() {
   }, [salesBySKUDetails]);
 
   useEffect(() => {
-    if (salesSKUDetailsLists?.status) {
-      setList(salesSKUDetailsLists?.data || []);
+    if (salesSKUDetailsList?.status) {
+      setList(salesSKUDetailsList?.data || []);
       setLoading(false);
-    } else if (salesSKUDetailsLists?.status === false) {
+    } else if (salesSKUDetailsList?.status === false) {
       setLoading(false);
     }
-  }, [salesSKUDetailsLists]);
+  }, [salesSKUDetailsList]);
 
   return (
     <DashboardLayout>
