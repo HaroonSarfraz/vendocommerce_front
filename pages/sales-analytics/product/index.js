@@ -443,7 +443,15 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
-                                    {d?.GrandTotal || 0}%
+                                    {Math.round(
+                                      Object.values(d || {}).reduce(
+                                        (partialSum, a) =>
+                                          partialSum +
+                                          Number(a?.[selectedColumn] || 0),
+                                        0
+                                      ) * 100
+                                    ) / 100}
+                                    {selectedColumn.startsWith("avg") && "%"}
                                   </span>
                                 </td>
                               </tr>
