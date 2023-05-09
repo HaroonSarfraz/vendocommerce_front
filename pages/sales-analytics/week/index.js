@@ -19,6 +19,7 @@ import {
   faAngleUp,
 } from "@fortawesome/free-solid-svg-icons";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectSalesWeekData, selectSalesWeekDetail, selectSalesWeekGraph } from "@/src/store/slice/salesByWeek.slice";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -43,15 +44,9 @@ export default function SalesByWeek() {
   const [isDetails, setIsDetails] = useState([]);
   const [isWeekList, setIsWeekList] = useState({});
 
-  const SalesWeekDetailsListRes = useSelector(
-    (state) => state.salesByWeek.salesWeekDetailList
-  );
-  const SalesWeekGraphRes = useSelector(
-    (state) => state.salesByWeek.salesWeekGraph
-  );
-  const SalesByWeekDataRes = useSelector(
-    (state) => state.salesByWeek.salesWeekData
-  );
+  const SalesWeekDetailsListRes = useSelector(selectSalesWeekDetail);
+  const SalesWeekGraphRes = useSelector(selectSalesWeekGraph);
+  const SalesByWeekDataRes = useSelector(selectSalesWeekData);
 
   const graphOptions = isGraph?.label?.map((name, index) => {
     return { label: name, value: index };

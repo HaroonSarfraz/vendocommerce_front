@@ -1,4 +1,4 @@
-import Icons from "@/src/assets/icons";
+import { CategoriesSvg, ClipboardSvg, DashboardSvg, GraphSvg, LockSvg, UserLgSvg, UsersSvg } from "../assets";
 
 function getItem(label, key, icon, children, parent = "") {
   return {
@@ -10,13 +10,13 @@ function getItem(label, key, icon, children, parent = "") {
 }
 
 export const adminMenus = [
-  getItem("Manage Brands", "brands", <Icons type="users" />),
-  getItem("Manage Users", "users", <Icons type="lock" />),
+  getItem("Manage Brands", "brands", <UsersSvg />),
+  getItem("Manage Users", "users", <LockSvg />),
 ];
 
 export const userMenus = [
-  getItem("Dashboard", "dashboard", <Icons type="dashboard" />),
-  getItem("Sales Analytics", "sales-analytics", <Icons type="graph" />, [
+  getItem("Dashboard", "dashboard", <DashboardSvg />),
+  getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
     getItem(
       "Sales",
       "sales",
@@ -66,7 +66,7 @@ export const userMenus = [
   getItem(
     "Inventory Management",
     "inventory-management",
-    <Icons type="categories" />,
+    <CategoriesSvg />,
     [
       getItem(
         "Inventory Dashboard",
@@ -100,7 +100,7 @@ export const userMenus = [
   getItem(
     "Advertisement Analytics",
     "advertising-analytics",
-    <Icons type="clipboard" />,
+    <ClipboardSvg />,
     [
       getItem(
         "Amazon Advertising",
@@ -125,7 +125,7 @@ export const userMenus = [
   getItem(
     "Category Reports",
     "category-reports",
-    <Icons type="clipboard" />,
+    <ClipboardSvg />,
     [
       getItem(
         "Category Performance Report",
@@ -141,7 +141,7 @@ export const userMenus = [
   getItem(
     "Customer Acquisition",
     "customer-acquisition",
-    <Icons type="user-lg" />,
+    <UserLgSvg />,
     [
       getItem(
         "New v/s Repeat",

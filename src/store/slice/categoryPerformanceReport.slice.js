@@ -14,3 +14,7 @@ export const CategoryPerformanceSlice = createSlice({
 export const { setCategoryPerformanceList } = CategoryPerformanceSlice.actions;
 
 export default CategoryPerformanceSlice.reducer;
+
+const selectCategoryPerformanceList = (state) => state.categoryPerformanceReport.categoryPerformanceList;
+
+export { selectCategoryPerformanceList };

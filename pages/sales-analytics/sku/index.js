@@ -13,6 +13,7 @@ import {
   SalesBySkuTable,
   TopBarFilterSku
 } from '@/src/components/sales-analytics/sku';
+import { selectSalesBySkuDetails, selectSalesBySkuDetailsList } from '@/src/store/slice/salesBySku.slice';
 
 const DashboardLayout = dynamic(() => import('@/src/layouts/DashboardLayout'), {
   ssr: false
@@ -27,8 +28,8 @@ export default function SalesBySku() {
   const [dateFilter, setDateFilter] = useState(defaultDateRange());
   const [searchText, setSearchText] = useState('');
 
-  const salesBySKUDetails = useSelector((state) => state.salesBySku.salesBySkuDetails);
-  const salesSKUDetailsList = useSelector((state) => state.salesBySku.salesSkuDetailsList);
+  const salesBySKUDetails = useSelector(selectSalesBySkuDetails);
+  const salesSKUDetailsList = useSelector(selectSalesBySkuDetailsList);
 
   const getList = (e) => {
     setDetailsLoading(true);

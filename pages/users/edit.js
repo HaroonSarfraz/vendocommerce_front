@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Checkbox, Form, Input, message, Select } from "antd";
 import { addBrandsRequest, fetchUserBrands, updateUserRequest } from "@/src/api/users.api";
 import { getBrandList } from "@/src/services/brands.services";
-import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectBrandList } from "@/src/store/slice/brands.slice";
+import { LockSvg, UserLgSvg } from "@/src/assets";
 
 const formItemLayout = {
   labelCol: {
@@ -31,7 +32,7 @@ export default function Users() {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const brandList = useSelector((state) => state.brands.brandList);
+  const brandList = useSelector(selectBrandList);
 
   const user = router?.query ?? {};
 
@@ -124,7 +125,7 @@ export default function Users() {
               <div className="card mb-7">
                 <div className="card-body">
                   <div className="col-12 d-flex flex-row mb-5">
-                    <Icons type="user-lg" />
+                    <UserLgSvg />
                     <h4 className="mx-5 mt-1">Personal Information</h4>
                   </div>
                   {loading || brandList.length < 1 ? (
@@ -210,7 +211,7 @@ export default function Users() {
                             <div className="h-50px px-5 d-flex justify-content-between align-items-center">
                               <div>
                                 <h6 className="py-1 mx-1 mb-0 font-medium-2">
-                                  <Icons type="lock" />
+                                  <LockSvg />
                                   <span className="mx-2 align-middle">
                                     Permission
                                   </span>

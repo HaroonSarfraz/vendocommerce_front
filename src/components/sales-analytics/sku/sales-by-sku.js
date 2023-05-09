@@ -2,8 +2,8 @@
 import { Tooltip } from 'antd';
 import Loading from '../../loading';
 import ASINTable from '../../table';
-import NoData from '../../no-data';
 import Image from 'rc-image';
+import { NoDataSvg } from '@/src/assets';
 
 export default function SalesBySkuTable({ loading, list }) {
   const columns = [
@@ -210,7 +210,7 @@ export default function SalesBySkuTable({ loading, list }) {
                 }}
               />
             ) : (
-              <NoData />
+              <NoDataSvg />
             )}
           </div>
         </div>

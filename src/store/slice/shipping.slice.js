@@ -14,3 +14,7 @@ export const shipping = createSlice({
 export const { setShippingList } = shipping.actions;
 
 export default shipping.reducer;
+
+const selectShippingList = (state) => state.shipping.shippingList;
+
+export { selectShippingList };

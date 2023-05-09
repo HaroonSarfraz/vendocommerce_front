@@ -11,9 +11,14 @@ export const salesBySkuSlice = createSlice({
     setSalesBySkuDetails: (state, action) => {
       state.salesBySkuDetails = action.payload;
     },
-  }
+  },
 });
 
 export const { setSalesSkuDetailsList, setSalesBySkuDetails } = salesBySkuSlice.actions;
 
 export default salesBySkuSlice.reducer;
+
+const selectSalesBySkuDetails = (state) => state.salesBySku.salesBySkuDetails;
+const selectSalesBySkuDetailsList = (state) => state.salesBySku.salesSkuDetailsList;
+
+export { selectSalesBySkuDetails, selectSalesBySkuDetailsList };

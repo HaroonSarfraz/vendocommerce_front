@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ModalWrapper from "@/src/components/ModalWrapper";
 import Icons from "@/src/assets/icons";
+import { ArrowSvg } from "@/src/assets";
 
 export default function ModulesModal({ isOpen, closeModal, account }) {
   return (
@@ -19,19 +20,19 @@ export default function ModulesModal({ isOpen, closeModal, account }) {
         </div>
         <div className="min-h-200px p-5">
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="arrow" />
+            <ArrowSvg />
             {'  '}Sales Analytics
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="arrow" />
+            <ArrowSvg />
             {'  '}Inventory Management
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="arrow" />
+            <ArrowSvg />
             {'  '}Category Reports
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="arrow" />
+            <ArrowSvg />
             {'  '}Advertising Analytics
           </h5>
         </div>

@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
-import initialState from "../initialState";
+import { createSlice } from '@reduxjs/toolkit';
+import initialState from '../initialState';
 
 export const planningSlice = createSlice({
   initialState: initialState.planning,
-  name: "planning",
+  name: 'planning',
   reducers: {
     setInventoryPlaning: (state, action) => {
       state.inventoryPlaning = action.payload;
@@ -17,10 +17,13 @@ export const planningSlice = createSlice({
   },
 });
 
-export const {
-  setInventoryPlaning,
-  setInventoryPlaningColumnsList,
-  setInventoryPlaningColumnsSave,
-} = planningSlice.actions;
+export const { setInventoryPlaning, setInventoryPlaningColumnsList, setInventoryPlaningColumnsSave } =
+  planningSlice.actions;
 
 export default planningSlice.reducer;
+
+const selectInventoryPlanningList = (state) => state.planning.inventoryPlaning || {};
+const selectInventoryPlanningColumnList = (state) => state.planning.inventoryPlaningColumnsList || {};
+const selectInventoryPlanningColumnSave = (state) => state.planning.inventoryPlaningColumnsSave || {};
+
+export { selectInventoryPlanningList, selectInventoryPlanningColumnList, selectInventoryPlanningColumnSave };

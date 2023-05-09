@@ -28,3 +28,7 @@ export const {
 } = salesByProductSlice.actions;
 
 export default salesByProductSlice.reducer;
+
+const selectSalesByProductList = (state) => state.salesByProduct.salesByProductList;
+
+export { selectSalesByProductList };

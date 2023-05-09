@@ -13,11 +13,16 @@ export const salesByWeekSlice = createSlice({
     },
     setSalesWeekData: (state, action) => {
       state.salesWeekData = action.payload;
-    }
-  }
+    },
+  },
 });
 
-export const { setSalesWeekData, setSalesWeekDetailList, setSalesWeekGraph } =
-  salesByWeekSlice.actions;
+export const { setSalesWeekData, setSalesWeekDetailList, setSalesWeekGraph } = salesByWeekSlice.actions;
 
 export default salesByWeekSlice.reducer;
+
+const selectSalesWeekData = (state) => state.salesByWeek.salesWeekData;
+const selectSalesWeekGraph = (state) => state.salesByWeek.salesWeekGraph;
+const selectSalesWeekDetail = (state) => state.salesByWeek.salesWeekDetailList;
+
+export { selectSalesWeekData, selectSalesWeekGraph, selectSalesWeekDetail };

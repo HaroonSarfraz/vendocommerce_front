@@ -6,11 +6,12 @@ import _ from 'lodash';
 import { defaultWeek, defaultYear } from '@/src/config';
 import { getCategoryPerformanceList } from '@/src/services/categoryPerformance.services';
 import ImportFileModal from '@/src/modals/importFile.modal';
+import { selectCategoryPerformanceList } from '@/src/store/slice/categoryPerformanceReport.slice';
 
 export default function CategoryPerformanceReport() {
   const dispatch = useDispatch();
 
-  const CategoryPerformanceListRes = useSelector((state) => state.categoryPerformanceReport.categoryPerformanceList);
+  const CategoryPerformanceListRes = useSelector(selectCategoryPerformanceList);
 
   const [modalOpen, setModalOpen] = useState(false);
 

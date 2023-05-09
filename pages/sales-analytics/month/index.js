@@ -20,6 +20,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectSalesByMonthData, selectSalesByMonthDetail, selectSalesByMonthGraph } from "@/src/store/slice/salesByMonth.slice";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -50,15 +51,9 @@ export default function SalesByMonth() {
     label: [],
   });
 
-  const SalesByMonthDataRes = useSelector(
-    (state) => state.salesByMonth.salesByMonthData
-  );
-  const SalesByMonthDetailRes = useSelector(
-    (state) => state.salesByMonth.salesByMonthDetail
-  );
-  const SalesByMonthGraphRes = useSelector(
-    (state) => state.salesByMonth.salesByMonthGraph
-  );
+  const SalesByMonthDataRes = useSelector(selectSalesByMonthData);
+  const SalesByMonthDetailRes = useSelector(selectSalesByMonthDetail);
+  const SalesByMonthGraphRes = useSelector(selectSalesByMonthGraph);
 
   const graphOptions = salesByMonthGraph?.label.map((name, index) => {
     return { label: name, value: index };

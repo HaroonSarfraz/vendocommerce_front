@@ -20,3 +20,9 @@ export const salesSlice = createSlice({
 export const { setSalesGraphData, setSalesByWeekData, setSalesReportCallOuts } = salesSlice.actions;
 
 export default salesSlice.reducer;
+
+const selectSalesByWeekData = (state) => state.sales.salesByWeekData;
+const selectSalesGraphData = (state) => state.sales.salesGraphData;
+const selectSalesByReportCallOuts = (state) => state.sales.salesReportCallOuts;
+
+export { selectSalesByWeekData , selectSalesGraphData , selectSalesByReportCallOuts };

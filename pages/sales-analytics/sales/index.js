@@ -1,13 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import dynamic from "next/dynamic";
-import { defaultWeek, defaultYear } from "@/src/config";
-import {
-  getSalesGraphData,
-  getSalesByWeekData,
-  getSalesReportCallOuts,
-} from "@/src/services/sales.services";
+import { defaultWeek, defaultYear } from '@/src/config';
+import { getSalesGraphData, getSalesByWeekData, getSalesReportCallOuts } from '@/src/services/sales.services';
 import {
   TopBarFilter,
   SalesByWeek,
@@ -15,14 +10,19 @@ import {
   LSales,
   RSales,
   SalesBySKU,
-} from "@/src/components/sales-analytics/sales";
-import DashboardLayout from "@/src/layouts/DashboardLayout";
+} from '@/src/components/sales-analytics/sales';
+import DashboardLayout from '@/src/layouts/DashboardLayout';
+import {
+  selectSalesByReportCallOuts,
+  selectSalesByWeekData,
+  selectSalesGraphData,
+} from '@/src/store/slice/sales.slice';
 
 export default function Sales() {
   const dispatch = useDispatch();
-  const salesGraphData = useSelector((state) => state.sales.salesGraphData);
-  const salesByWeekData = useSelector((state) => state.sales.salesByWeekData);
-  const salesReportCallOuts = useSelector((state) => state.sales.salesReportCallOuts);
+  const salesGraphData = useSelector(selectSalesGraphData);
+  const salesByWeekData = useSelector(selectSalesByWeekData);
+  const salesReportCallOuts = useSelector(selectSalesByReportCallOuts);
 
   const [filter, setFilter] = useState({
     week: [defaultWeek()],
@@ -72,13 +72,13 @@ export default function Sales() {
     dispatch(
       getSalesGraphData({
         search_year: filter?.year,
-        search_week: filter?.week?.join(","),
+        search_week: filter?.week?.join(','),
       })
     );
     dispatch(
       getSalesReportCallOuts({
         search_year: filter?.year,
-        search_week: filter?.week?.join(","),
+        search_week: filter?.week?.join(','),
       })
     );
     // dispatch(
@@ -91,21 +91,16 @@ export default function Sales() {
 
   return (
     <DashboardLayout>
-      <div className="content d-flex flex-column flex-column-fluid">
-        <div className="container-fluid" id="kt_content_container">
-          {TopBarFilter(filter, setFilter, "Week")}
-          <div className="row gx-5 gx-xl-5">
-            <div
-              className="col-xl-6 mb-5 mb-xl-5"
-              data-select2-id="select2-data-17-s07q"
-            >
+      <div className='content d-flex flex-column flex-column-fluid'>
+        <div className='container-fluid' id='kt_content_container'>
+          {TopBarFilter(filter, setFilter, 'Week')}
+          <div className='row gx-5 gx-xl-5'>
+            <div className='col-xl-6 mb-5 mb-xl-5' data-select2-id='select2-data-17-s07q'>
               {SalesByWeek(salesGraphLoading, chartData)}
             </div>
-            <div className="col-xl-6 mb-5 mb-xl-5">
-              {ReportCallOuts(reportData, reportCallOutLoading)}
-            </div>
+            <div className='col-xl-6 mb-5 mb-xl-5'>{ReportCallOuts(reportData, reportCallOutLoading)}</div>
           </div>
-          <div className="row gx-5 gx-xl-5">
+          <div className='row gx-5 gx-xl-5'>
             {LSales(reportData, salesByWeekLoading)}
             {RSales(reportData, salesByWeekLoading)}
           </div>

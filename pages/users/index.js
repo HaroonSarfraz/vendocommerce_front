@@ -5,7 +5,6 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
 import ASINTooltip from "@/src/components/tooltip";
 import { DefaultPerPage, timeSince } from "@/src/config";
@@ -19,6 +18,8 @@ import { updateUserRequest } from "@/src/api/users.api";
 import { Input } from "antd";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectUserList } from "@/src/store/slice/users.slice";
+import { NoDataSvg } from "@/src/assets";
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ export default function Users() {
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
-  const userList = useSelector((state) => state.users.userList);
+  const userList = useSelector(selectUserList);
 
   useEffect(() => {
     if (userList) {
@@ -327,7 +328,7 @@ export default function Users() {
                       />
                     </div>
                   ) : (
-                    <NoData />
+                    <NoDataSvg />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}
