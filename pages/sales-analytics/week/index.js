@@ -14,10 +14,7 @@ import {
   getSalesWeekGraph,
 } from "@/src/services/salesByWeek.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleDown,
-  faAngleUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -59,7 +56,7 @@ export default function SalesByWeek() {
 
   const graphSelectedLabels = isGraph?.label?.filter((_, index) => {
     return (
-      graphFilter === "month" ||
+      graphFilter === "week" ||
       graphSelected.length === 0 ||
       graphSelected.includes(index)
     );
@@ -68,7 +65,7 @@ export default function SalesByWeek() {
   const graphSelectedSeries = cloneDeep(isGraph?.series)?.map((data) => {
     data.data = data.data?.filter((_, index) => {
       return (
-        graphFilter === "month" ||
+        graphFilter === "week" ||
         graphSelected.length === 0 ||
         graphSelected.includes(index)
       );
@@ -224,12 +221,6 @@ export default function SalesByWeek() {
       "#108a9c",
       "#16050f",
     ],
-    yaxis: {
-      title: {
-        text: "",
-      },
-      min: 0,
-    },
     grid: {
       row: {
         colors: ["transparent", "transparent"],
@@ -279,24 +270,23 @@ export default function SalesByWeek() {
                         />
                       </div>
                       <div className="col-10">
-                        {graphFilter !== "week" &&
-                          !graphLoading && (
-                            <Select
-                              mode="multiple"
-                              allowClear
-                              style={{
-                                width: "100%",
-                              }}
-                              size="large"
-                              filterOption={(input, option) =>
-                                option.label
-                                  .toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                              }
-                              options={graphOptions}
-                              onChange={(e) => setGraphSelected(e)}
-                            />
-                          )}
+                        {graphFilter !== "week" && !graphLoading && (
+                          <Select
+                            mode="multiple"
+                            allowClear
+                            style={{
+                              width: "100%",
+                            }}
+                            size="large"
+                            filterOption={(input, option) =>
+                              option.label
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                            options={graphOptions}
+                            onChange={(e) => setGraphSelected(e)}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
