@@ -7,10 +7,9 @@ import { getUserList } from "@/src/services/users.services";
 import { createBrandRequest } from "@/src/api/brands.api";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
+import { selectUserList } from "@/src/store/slice/users.slice";
 
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const formItemLayout = {
   labelCol: {
@@ -29,10 +28,10 @@ export default function Users() {
   const [form] = Form.useForm();
   const [submit, setSubmit] = useState(false);
 
-  const userList = useSelector((state) => state.users.userList);
+  const userList = useSelector(selectUserList);
 
   useEffect(() => {
-    dispatch(getUserList({ perPage: 1000}));
+    dispatch(getUserList({ perPage: 1000 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

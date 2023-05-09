@@ -15,7 +15,6 @@ const ASINTable = (props) => {
     ellipsis = false,
     ...rest
   } = props;
-
   return (
     <Table
       columns={columns?.map((d) => {

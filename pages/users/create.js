@@ -7,10 +7,7 @@ import { addBrandsRequest, createUserRequest } from "@/src/api/users.api";
 import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const formItemLayout = {
   labelCol: {

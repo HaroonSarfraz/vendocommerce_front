@@ -11,10 +11,8 @@ import Drawer from "@/src/components/sales-analytics/product/drawer";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import _ from "lodash";
 import { defaultWeek, defaultYear } from "@/src/config";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { NoDataSvg } from "@/src/assets";
 
 const { useToken } = theme;
 
@@ -27,7 +25,7 @@ export default function SalesByProducts() {
     boxShadow: token.boxShadowSecondary,
   };
 
-  const SalesByProductListRes = useSelector(
+  const salesByProductList = useSelector(
     (state) => state.salesByProduct.salesByProductList
   );
 
@@ -113,22 +111,22 @@ export default function SalesByProducts() {
   }, [filter]);
 
   useEffect(() => {
-    if (!_.isEmpty(SalesByProductListRes)) {
-      const getMax = Object.values(SalesByProductListRes).map((d, i) => {
-        // delete d?.GrandTotal;
-        return Object.keys(d);
-      });
-      var index = getMax
-        ?.map((d) => d?.length)
-        .indexOf(Math.max(...getMax?.map((d) => d?.length)));
-      setTableColumns(getMax[index]);
-      setList(Object.values(SalesByProductListRes || {}));
+    if (salesByProductList?.status) {
+      if (salesByProductList?.data) {
+        const getMax = Object.values(salesByProductList?.data).map((d, i) => {
+          return Object.keys(d);
+        });
+        var index = getMax
+          ?.map((d) => d?.length)
+          .indexOf(Math.max(...getMax?.map((d) => d?.length)));
+        setTableColumns(getMax[index]);
+      }
+      setList(salesByProductList?.data || []);
       setTableLoading(false);
-    } else if (SalesByProductListRes?.status === false) {
-      setList([]);
+    } else if (salesByProductList?.status === false) {
       setTableLoading(false);
     }
-  }, [SalesByProductListRes]);
+  }, [salesByProductList]);
 
   return (
     <DashboardLayout>
@@ -209,6 +207,32 @@ export default function SalesByProducts() {
                   <div className="table-responsive">
                     {tableLoading ? (
                       <Loading />
+                    ) : Object.keys(list || {}).length === 0 ? (
+                      <div style={{ height: 200 }}>
+                        <div
+                          style={{
+                            transform: "translate(-50%, -50%)",
+                            top: "50%",
+                            left: "50%",
+                            position: "absolute",
+                            textAlign: "center",
+                          }}
+                        >
+                          <NoDataSvg />
+                          <div
+                            style={{
+                              fontSize: "14px",
+                              color: "#363a3e",
+                              opacity: "0.51",
+                              paddingTop: "3px",
+                              fontWeight: "bold",
+                              letterSpacing: "-0.36px",
+                            }}
+                          >
+                            Nothing to see here !
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
@@ -218,31 +242,35 @@ export default function SalesByProducts() {
                             </th>
                             {tableColumns?.map((d, i) => (
                               <th className="min-w-150px" key={i}>
-                                {d}
-                                {d !== "GrandTotal" && (
-                                  <div
-                                    data-bs-toggle="collapse"
-                                    data-bs-target={`#kt_accordion_1_body_${
-                                      i + 1
-                                    }`}
-                                    aria-expanded="false"
-                                    aria-controls={`kt_accordion_1_body_${
-                                      i + 1
-                                    }`}
-                                    onClick={() => {
-                                      expandedWeek === null
-                                        ? setExpendedWeek(i)
-                                        : expandedWeek === i
-                                        ? setExpendedWeek(null)
-                                        : setExpendedWeek(i);
-                                    }}
-                                    className="open-arrow rounded-sm w-20px h-20px d-inline-flex justify-content-center align-items-center bg-light cursor-pointer"
-                                  >
-                                    <FontAwesomeIcon
-                                      icon={faPlus}
-                                      color="black"
-                                    />
-                                  </div>
+                                {d === "GrandTotal" ? (
+                                  <>{d}</>
+                                ) : (
+                                  <>
+                                    {`WK${d}`}
+                                    <div
+                                      data-bs-toggle="collapse"
+                                      data-bs-target={`#kt_accordion_1_body_${
+                                        i + 1
+                                      }`}
+                                      aria-expanded="false"
+                                      aria-controls={`kt_accordion_1_body_${
+                                        i + 1
+                                      }`}
+                                      onClick={() => {
+                                        expandedWeek === null
+                                          ? setExpendedWeek(i)
+                                          : expandedWeek === i
+                                          ? setExpendedWeek(null)
+                                          : setExpendedWeek(i);
+                                      }}
+                                      className="open-arrow rounded-sm w-20px h-20px d-inline-flex justify-content-center align-items-center bg-light cursor-pointer"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faPlus}
+                                        color="black"
+                                      />
+                                    </div>
+                                  </>
                                 )}
                               </th>
                             ))}
@@ -274,9 +302,7 @@ export default function SalesByProducts() {
                                       }}
                                     >
                                       <tr>
-                                        <th
-                                          className=" min-w-300px"
-                                        >
+                                        <th className=" min-w-300px">
                                           {
                                             columnConfig?.find(
                                               (config) =>
@@ -417,7 +443,15 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
-                                    {d?.GrandTotal || 0}%
+                                    {Math.round(
+                                      Object.values(d || {}).reduce(
+                                        (partialSum, a) =>
+                                          partialSum +
+                                          Number(a?.[selectedColumn] || 0),
+                                        0
+                                      ) * 100
+                                    ) / 100}
+                                    {selectedColumn.startsWith("avg") && "%"}
                                   </span>
                                 </td>
                               </tr>

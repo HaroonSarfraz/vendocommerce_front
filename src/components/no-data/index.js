@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { NoDataWrapper } from "./style";
 import Icons from "@/src/assets/icons";
+import { isClient } from "@/src/helpers/isClient";
 
 const NoData = (props) => {
   const {
@@ -13,15 +14,17 @@ const NoData = (props) => {
     ...rest
   } = props;
   const checkHeight = () => {
-    return window.innerHeight;
+    return isClient ? window.innerHeight : 0;
   };
   useEffect(() => {
-    window.addEventListener("resize", (e) => {
-      checkHeight();
-    });
-    return () => {
-      window.removeEventListener("resize", () => {});
-    };
+    if (isClient) {
+      window.addEventListener("resize", (e) => {
+        checkHeight();
+      });
+      return () => {
+        window.removeEventListener("resize", () => {});
+      };
+    }
   }, []);
 
   return (

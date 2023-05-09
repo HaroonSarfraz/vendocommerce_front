@@ -5,6 +5,11 @@ import { Input, message } from "antd";
 import { useRouter } from "next/router";
 import { signInRequest } from "@/src/api/auth.api";
 import { fetchUserBrandList } from "@/src/api/brands.api";
+import { isClient } from "@/src/helpers/isClient";
+import { setCookie } from "cookies-next";
+import { cookies } from "@/src/constants/cookies";
+import jwt_decode from "jwt-decode";
+import { NoDataSvg } from "@/src/assets";
 
 export default function Login() {
   const router = useRouter();
@@ -23,8 +28,14 @@ export default function Login() {
     signInRequest(body)
       .then((res) => {
         setSending(false);
-        if (res.status >= 200 && res.status <= 299) {
+        if (res.status >= 200 && res.status <= 299 && isClient) {
           localStorage.setItem("user", JSON.stringify(res.data));
+          var decoded = jwt_decode(res.data.access_token);
+          setCookie(cookies["TOKEN"], res.data.access_token, {
+            maxAge: decoded.exp,
+          });
+          const from = router.query.from;
+
           res.data.role === "User"
             ? res.data.user_status === 0
               ? router.push("/dashboard")
@@ -35,7 +46,7 @@ export default function Login() {
                         "brand",
                         JSON.stringify(res.data.Brands[0])
                       );
-                      router.push("/sales-analytics/sku");
+                      router.push(from || "/sales-analytics/sales");
                     } else {
                       router.push("/dashboard");
                     }
@@ -43,7 +54,7 @@ export default function Login() {
                     setLoading(false);
                   }
                 })
-            : router.push("/brands");
+            : router.push(from || "/brands");
         } else {
           message.error(res.data.message);
         }
@@ -81,6 +92,7 @@ export default function Login() {
                   className="fs-2qx pb-5 pb-md-4 fw-normal"
                   style={{ color: "#494951" }}
                 >
+                  <NoDataSvg />
                   Welcome to <b className="fw-boldest">Vendo!!</b>
                 </h1>
                 <p className="fw-normal fs-3" style={{ color: "#494951" }}>

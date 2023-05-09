@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { isClient } from "@/src/helpers/isClient";
+import { cookies } from "@/src/constants/cookies";
+import jwt_decode from "jwt-decode";
+import { getCookie } from "cookies-next";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
+    const user = JSON.parse(isClient ? localStorage.getItem("user") : {});
     user?.access_token
       ? user.role === "User"
         ? router.push("/dashboard")
@@ -15,4 +18,29 @@ export default function Home() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+}
+
+export async function getServerSideProps({ req, res }) {
+  const tokenCookie = getCookie(cookies["TOKEN"], { req, res });
+  if (tokenCookie) {
+    var decoded = jwt_decode(tokenCookie);
+
+    const isUser = decoded.role === "User";
+
+    return {
+      props: {},
+      redirect: {
+        destination: isUser ? "/dashboard" : "/brands",
+        permanent: false,
+      },
+    };
+  } else {
+    return {
+      props: {},
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
 }

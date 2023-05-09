@@ -1,7 +1,12 @@
 import request from "./request";
 
-export const fetchBrandList = (data) => {
-  return request.get(`/brands/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&search=${data?.search_term || ''}`);
+export const fetchBrandList = (data, headers = {}) => {
+  return request.get(
+    `/brands/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&search=${
+      data?.search_term || ""
+    }`,
+    { headers }
+  );
 };
 
 export const createBrandRequest = (data) => {

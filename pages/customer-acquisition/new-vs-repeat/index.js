@@ -4,10 +4,7 @@ import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Details from "@/src/components/customer-acquisition/Details";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function SalesByMonth() {
   const [loading, setLoading] = useState(false);

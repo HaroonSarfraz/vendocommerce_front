@@ -17,13 +17,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
   faAngleUp,
-  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
-  ssr: false,
-});
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
   ssr: false,
 });
 

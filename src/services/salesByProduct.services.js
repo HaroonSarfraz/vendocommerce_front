@@ -17,7 +17,7 @@ export const getSalesByProductList = (data) => {
     fetchSalesByProductList(data)
       .then((res) => {
         if (res.status === 200) {
-          dispatch(setSalesByProductList(res.data));
+          dispatch(setSalesByProductList({status: true, data: res.data}));
         } else {
           message.error(res.data.message);
         }

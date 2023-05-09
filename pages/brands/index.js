@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, message } from "antd";
 import moment from "moment";
-import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import NoData from "@/src/components/no-data";
@@ -15,12 +14,10 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getBrandList } from "@/src/services/brands.services";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
+import { isClient } from "@/src/helpers/isClient";
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
-
-export default function Users() {
+export default function Users(props) {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -44,8 +41,8 @@ export default function Users() {
   }, [brandList]);
 
   const switchBrand = (brand) => {
-    localStorage.setItem("brand", JSON.stringify(brand));
-    router.push("/sales-analytics/sku");
+    isClient && localStorage.setItem("brand", JSON.stringify(brand));
+    router.push("/sales-analytics/sales");
   };
 
   useEffect(() => {

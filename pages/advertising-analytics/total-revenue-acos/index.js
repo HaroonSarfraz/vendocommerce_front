@@ -5,10 +5,7 @@ import Graph from "@/src/components/advertising-analytics/total-revenue/Graph";
 import Drawers from "@/src/components/advertising-analytics/total-revenue/Drawer";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 
 export default function Users() {
   const [loading, setLoading] = useState(false);

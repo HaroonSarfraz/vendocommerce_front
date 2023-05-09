@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { signUpRequest } from "@/src/api/auth.api";
 import { Button, Form, Input, message } from "antd";
+import { isClient } from "@/src/helpers/isClient";
 
 const formItemLayout = {
   labelCol: {
@@ -28,7 +29,7 @@ export default function Signup() {
     signUpRequest(values)
       .then((res) => {
         setSubmit(false);
-        if (res.status >= 200 && res.status <= 299) {
+        if (res.status >= 200 && res.status <= 299 && isClient) {
           res.data.role === "User" && router.push("/dashboard");
           localStorage.setItem("user", JSON.stringify(res.data));
         } else {
@@ -163,10 +164,7 @@ export default function Signup() {
                       ]}
                       hasFeedback
                     >
-                      <Input.Password
-                        size="large"
-                        autoComplete="off"
-                      />
+                      <Input.Password size="large" autoComplete="off" />
                     </Form.Item>
 
                     <Form.Item
@@ -181,7 +179,10 @@ export default function Signup() {
                         },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
-                            if (!value || getFieldValue("u_password") === value) {
+                            if (
+                              !value ||
+                              getFieldValue("u_password") === value
+                            ) {
                               return Promise.resolve();
                             }
                             return Promise.reject(

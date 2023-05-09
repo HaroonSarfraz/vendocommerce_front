@@ -1,47 +1,49 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";
-import { setSwitchUser } from "../store/slice/users.slice";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import useMount from "../hooks/useMount";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const dispatch = useDispatch();
-
+  const isMount = useMount();
   const [collapsed, setCollapsed] = useState(false);
   const [hideMenus, setHideMenus] = useState(false);
 
-  const user = typeof window !== "undefined" && JSON.parse(localStorage.getItem("user"));
+  const user = isMount ? JSON.parse(localStorage.getItem("user") || "{}") : {};
 
   const checkWidth = () => {
-    setHideMenus(690 > window.innerWidth);
+    isMount && setHideMenus(690 > window.innerWidth);
   };
 
   useEffect(() => {
-    setHideMenus(690 > window.innerWidth);
+    if (isMount) {
+      setHideMenus(690 > window.innerWidth);
 
-    window.addEventListener("resize", (e) => {
-      checkWidth();
-    });
+      window.addEventListener("resize", (e) => {
+        checkWidth();
+      });
 
-    return () => {
-      window.removeEventListener("resize", () => { });
-    };
+      return () => {
+        window.removeEventListener("resize", () => {});
+      };
+    }
   }, []);
 
-  useLayoutEffect(() => {
-    function updateSize() {
-      if (window.innerWidth < 992) {
-        setCollapsed(true);
-      } else {
-        setCollapsed(false);
+  useEffect(() => {
+    if (isMount) {
+      function updateSize() {
+        if (window.innerWidth < 992) {
+          setCollapsed(true);
+        } else {
+          setCollapsed(false);
+        }
       }
+      window.addEventListener("resize", updateSize);
+      updateSize();
+      return () => window.removeEventListener("resize", updateSize);
     }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   const backToAdmin = () => {
@@ -49,7 +51,12 @@ export default function DashboardLayout({ children }) {
     router.push("/brands");
   };
 
-  const GetModules = () => (localStorage.getItem("brand") ? false : user?.role === 'User' ? false : true);
+  const GetModules = () =>
+    isMount && localStorage.getItem("brand")
+      ? false
+      : user?.role === "User"
+      ? false
+      : true;
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>
@@ -58,7 +65,7 @@ export default function DashboardLayout({ children }) {
         style={{ height: "100vh" }}
       >
         <Sidebar
-          user={user || {}}
+          user={user}
           hideMenus={hideMenus}
           collapsed={collapsed}
           userType={GetModules()}
@@ -83,9 +90,7 @@ export default function DashboardLayout({ children }) {
             className="d-flex flex-column flex-row-fluid"
             id="kt_wrapper"
           >
-            <div className="flex-column flex-column-fluid">
-              {children}
-            </div>
+            <div className="flex-column flex-column-fluid">{children}</div>
             <Footer />
           </div>
         </div>
