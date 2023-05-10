@@ -9,6 +9,7 @@ import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectBrandList } from "@/src/store/slice/brands.slice";
 import { LockSvg, UserLgSvg } from "@/src/assets";
+import { selectFilter } from "@/src/helpers/selectFilter";
 
 const formItemLayout = {
   labelCol: {
@@ -181,6 +182,7 @@ export default function Users() {
                             // defaultValue={[]}
                             onChange={handleChange}
                             options={options}
+                            filterOption={selectFilter}
                           />
                         </Form.Item>
                       </div>

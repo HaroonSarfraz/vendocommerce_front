@@ -7,7 +7,7 @@ import { updateBrandRequest } from "@/src/api/brands.api";
 import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import selectFilter from "@/src/helpers/selectFilter";
+import { selectFilter } from "@/src/helpers/selectFilter";
 import { selectUserList } from "@/src/store/slice/users.slice";
 import { UserLgSvg } from "@/src/assets";
 

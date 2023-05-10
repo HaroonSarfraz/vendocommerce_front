@@ -25,6 +25,7 @@ import {
   selectSalesByMonthDetail,
   selectSalesByMonthGraph,
 } from "@/src/store/slice/salesByMonth.slice";
+import { selectFilter } from "@/src/helpers/selectFilter";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -227,11 +228,7 @@ export default function SalesByMonth() {
                                 width: "100%",
                               }}
                               size="large"
-                              filterOption={(input, option) =>
-                                option.label
-                                  .toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                              }
+                              filterOption={selectFilter}
                               options={graphOptions}
                               onChange={(e) => setGraphSelected(e)}
                             />
