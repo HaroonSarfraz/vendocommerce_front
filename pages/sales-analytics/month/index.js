@@ -26,6 +26,7 @@ import {
   selectSalesByMonthGraph,
 } from "@/src/store/slice/salesByMonth.slice";
 import { selectFilter } from "@/src/helpers/selectFilter";
+import { formatCurrency, formatNumber, formatPercentage } from "@/src/helpers/formatting.helpers";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -308,39 +309,39 @@ export default function SalesByMonth() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: salesByMonthData?.totalOrderedProductSales,
+                          value: formatCurrency(salesByMonthData?.totalOrderedProductSales),
                         },
                         {
                           title: "Sum of Sessions",
-                          value: salesByMonthData?.totalSession,
+                          value: formatNumber(salesByMonthData?.totalSession),
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: salesByMonthData?.totalSessionPercentage,
+                          value: formatPercentage(salesByMonthData?.totalSessionPercentage),
                         },
                         {
                           title: "Sum of Page Views",
-                          value: salesByMonthData?.totalPageViews,
+                          value: formatNumber(salesByMonthData?.totalPageViews),
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: salesByMonthData?.avgPageViewPercentage,
+                          value: formatPercentage(salesByMonthData?.avgPageViewPercentage),
                         },
                         {
                           title: "Average of Buy Box",
-                          value: salesByMonthData?.avgBuyBox,
+                          value: formatPercentage(salesByMonthData?.avgBuyBox),
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: salesByMonthData?.totalUnitOrdered,
+                          value: formatNumber(salesByMonthData?.totalUnitOrdered),
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: salesByMonthData?.avgUnitSession,
+                          value: formatPercentage(salesByMonthData?.avgUnitSession),
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: salesByMonthData?.totalOrderItems,
+                          value: formatNumber(salesByMonthData?.totalOrderItems),
                         },
                       ]}
                     />
@@ -428,15 +429,15 @@ export default function SalesByMonth() {
                                       {d?.month_name}
                                     </a>
                                   </td>
-                                  <td>{d?.totalOrderedProductSales}</td>
-                                  <td>{d?.totalSession}</td>
-                                  <td>{d?.totalSessionPercentage}</td>
-                                  <td>{d?.totalPageViews}</td>
-                                  <td>{d?.avgPageViewPercentage}</td>
-                                  <td>{d?.avgBuyBox}</td>
-                                  <td>{d?.totalUnitOrdered}</td>
-                                  <td>{d?.avgUnitSession}</td>
-                                  <td>{d?.totalOrderItems}</td>
+                                  <td>{formatCurrency(d?.totalOrderedProductSales)}</td>
+                                  <td>{formatNumber(d?.totalSession)}</td>
+                                  <td>{formatPercentage(d?.totalSessionPercentage)}</td>
+                                  <td>{formatNumber(d?.totalPageViews)}</td>
+                                  <td>{formatPercentage(d?.avgPageViewPercentage)}</td>
+                                  <td>{formatPercentage(d?.avgBuyBox)}</td>
+                                  <td>{formatNumber(d?.totalUnitOrdered)}</td>
+                                  <td>{formatPercentage(d?.avgUnitSession)}</td>
+                                  <td>{formatNumber(d?.totalOrderItems)}</td>
                                 </tr>
                                 <tr>
                                   <td
@@ -509,38 +510,38 @@ export default function SalesByMonth() {
                                                     </td>
                                                     <td>
                                                       {
-                                                        r?.total_ordered_product_sales
+                                                        formatCurrency(r?.total_ordered_product_sales)
                                                       }
                                                     </td>
-                                                    <td>{r?.total_session}</td>
+                                                    <td>{formatNumber(r?.total_session)}</td>
                                                     <td>
                                                       {
-                                                        r?.avg_session_percentage
+                                                        formatPercentage(r?.avg_session_percentage)
                                                       }
                                                     </td>
                                                     <td>
-                                                      {r?.total_page_views}
-                                                    </td>
-                                                    <td>
-                                                      {
-                                                        r?.avg_page_view_percentage
-                                                      }
+                                                      {formatNumber(r?.total_page_views)}
                                                     </td>
                                                     <td>
                                                       {
-                                                        r?.avg_buy_box_percentage
+                                                        formatPercentage(r?.avg_page_view_percentage)
                                                       }
-                                                    </td>
-                                                    <td>
-                                                      {r?.total_ordered_units}
                                                     </td>
                                                     <td>
                                                       {
-                                                        r?.avg_unit_session_percentage
+                                                        formatPercentage(r?.avg_buy_box_percentage)
                                                       }
                                                     </td>
                                                     <td>
-                                                      {r?.total_order_items}
+                                                      {formatNumber(r?.total_ordered_units)}
+                                                    </td>
+                                                    <td>
+                                                      {
+                                                        formatPercentage(r?.avg_unit_session_percentage)
+                                                      }
+                                                    </td>
+                                                    <td>
+                                                      {formatNumber(r?.total_order_items)}
                                                     </td>
                                                   </tr>
                                                 );

@@ -1,3 +1,4 @@
+import { formatCurrency, formatNumber, formatPercentage } from "@/src/helpers/formatting.helpers";
 import Details from "./Details";
 
 export default function KPITable({ heading }) {
@@ -13,35 +14,35 @@ export default function KPITable({ heading }) {
                 data={[
                   {
                     title: "Revenue",
-                    value: 0,
+                    value: formatCurrency(0),
                   },
                   {
                     title: "Spend",
-                    value: 0,
+                    value: formatCurrency(0),
                   },
                   {
                     title: "ACoS",
-                    value: 0,
+                    value: formatPercentage(0),
                   },
                   {
                     title: "CPO",
-                    value: 0,
+                    value: formatCurrency(0),
                   },
                   {
                     title: "Impression",
-                    value: 0,
+                    value: formatNumber(0),
                   },
                   {
                     title: "Clicks",
-                    value: 0,
+                    value: formatNumber(0),
                   },
                   {
                     title: "Unit Orders",
-                    value: 0,
+                    value: formatNumber(0),
                   },
                   {
                     title: "CPC",
-                    value: 0,
+                    value: formatCurrency(0),
                   },
                 ]}
               />

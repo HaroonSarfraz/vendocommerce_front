@@ -1,3 +1,4 @@
+import { formatNumber } from "@/src/helpers/formatting.helpers";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { Progress } from "antd";
 import Card from "antd/lib/card/Card";
@@ -130,41 +131,41 @@ export default function InventoryDashboard() {
               subheading='6,891 of 14,291 Units'
               value={40}
               Row1='Utilization Quantity'
-              Row1V='6,982'
+              Row1V={`${formatNumber(6982)}`}
               Row2='Maximum Inventory Level'
-              Row2V='36434'
+              Row2V={`${formatNumber(36434)}`}
               Row3='Maximum Shipment Quantity'
-              Row3V='7200'></CommonCard>
+              Row3V={`${formatNumber(7200)}`}></CommonCard>
             <CommonCard
               heading='Oversize Storage'
               subheading='0 of 1,000 Units'
               value={70}
               Row1='Utilization Quantity'
-              Row1V='0'
+              Row1V={`${formatNumber(0)}`}
               Row2='Maximum Inventory Level'
-              Row2V='1000'
+              Row2V={`${formatNumber(1000)}`}
               Row3='Maximum Shipment Quantity'
-              Row3V='700'></CommonCard>
+              Row3V={`${formatNumber(700)}`}></CommonCard>
             <CommonCard
               heading='Apparel Storage'
               subheading='0 of 1,000 Units'
               value={90}
               Row1='Utilization Quantity'
-              Row1V='6,982'
+              Row1V={`${formatNumber(6982)}`}
               Row2='Maximum Inventory Level'
-              Row2V='0'
+              Row2V={`${formatNumber(0)}`}
               Row3='Maximum Shipment Quantity'
-              Row3V='1000'></CommonCard>
+              Row3V={`${formatNumber(1000)}`}></CommonCard>
             <CommonCard
               heading='Footwear Storage'
               subheading='0 of 1,000 Units'
               value={50}
               Row1='Utilization Quantity'
-              Row1V='6,982'
+              Row1V={`${formatNumber(6982)}`}
               Row2='Maximum Inventory Level'
-              Row2V='36434'
+              Row2V={`${formatNumber(63434)}`}
               Row3='Maximum Shipment Quantity'
-              Row3V='7200'></CommonCard>
+              Row3V={`${formatNumber(1000)}`}></CommonCard>
           </div>
         </div>
       </div>

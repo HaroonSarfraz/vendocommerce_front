@@ -14,6 +14,7 @@ import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { NoDataSvg } from "@/src/assets";
 import { selectSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
+import { formatNumber } from "@/src/helpers/formatting.helpers";
 
 const { useToken } = theme;
 
@@ -383,7 +384,7 @@ export default function SalesByProducts() {
                                     return;
                                   }
                                   const defaultValue =
-                                    r?.[1]?.[selectedColumn] || 0;
+                                    r?.[1]?.[selectedColumn] || 0 ;
                                   return (
                                     <td key={t}>
                                       <div className="d-flex align-items-center">
@@ -442,14 +443,14 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
-                                    {Math.round(
+                                    {formatNumber(Math.round(
                                       Object.values(d || {}).reduce(
                                         (partialSum, a) =>
                                           partialSum +
                                           Number(a?.[selectedColumn] || 0),
                                         0
                                       ) * 100
-                                    ) / 100}
+                                    ) / 100)}
                                     {selectedColumn.startsWith("avg") && "%"}
                                   </span>
                                 </td>

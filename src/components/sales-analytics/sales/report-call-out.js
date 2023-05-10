@@ -1,3 +1,4 @@
+import { formatCurrency, formatPercentage } from "@/src/helpers/formatting.helpers";
 import { Skeleton } from "antd";
 
 export default function ReportCallOuts(reportData, reportCallOutLoading) {
@@ -26,7 +27,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      <b>${reportData?.totalSalesLastWeek || 0}</b>
+                      <b>{formatCurrency(reportData?.totalSalesLastWeek)}</b>
                     </h6>
                   </div>
                 </>
@@ -42,7 +43,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.upVsLw || "0%"}
+                      {formatPercentage(reportData?.upVsLw)}
                     </h6>
                   </div>
                 </>
@@ -57,7 +58,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                     <p className="mb-0">Difference</p>
                   </div>
                   <div className="">
-                    <p className="mb-0">${reportData?.upLwDiff || "0"}</p>
+                    <p className="mb-0">{formatCurrency(reportData?.upLwDiff)}</p>
                   </div>
                 </>
               )}
@@ -72,7 +73,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.upVsL4wk || "0%"}
+                      {formatPercentage(reportData?.upVsL4wk)}
                     </h6>
                   </div>
                 </>
@@ -90,7 +91,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      <b>{reportData?.ytdSales || "$0"}</b>
+                      <b>{formatCurrency(reportData?.ytdSales)}</b>
                     </h6>
                   </div>
                 </>
@@ -124,7 +125,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.upVsLwSession || "0%"}
+                      {formatPercentage(reportData?.upVsLwSession)}
                     </h6>
                   </div>
                 </>
@@ -140,7 +141,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.conversionRate || "0%"}
+                      {formatPercentage(reportData?.conversionRate)}
                     </h6>
                   </div>
                 </>
@@ -156,7 +157,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {reportData?.avgBuyBoxPercentage || "0%"}
+                      {formatPercentage(reportData?.avgBuyBoxPercentage)}
                     </h6>
                   </div>
                 </>
@@ -176,7 +177,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      <b>{reportData?.adSpend || "$0"}</b>
+                      <b>{formatCurrency(reportData?.adSpend)}</b>
                     </h6>
                   </div>
                 </>
@@ -192,7 +193,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwAdSpend || "$0"}
+                      {formatCurrency(reportData?.lwAdSpend)}
                     </h6>
                   </div>
                 </>
@@ -208,7 +209,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwAdRevenue || "$0"}
+                      {formatCurrency(reportData?.lwAdRevenue)}
                     </h6>
                   </div>
                 </>
@@ -224,7 +225,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwOrganicSales || "$0"}
+                      {formatCurrency(reportData?.lwOrganicSales)}
                     </h6>
                   </div>
                 </>
@@ -240,7 +241,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwTotalSales || "$0"}
+                      {formatCurrency(reportData?.lwTotalSales)}
                     </h6>
                   </div>
                 </>
@@ -256,7 +257,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwRoas || "0%"}
+                      {formatPercentage(reportData?.lwRoas)}
                     </h6>
                   </div>
                 </>
@@ -272,7 +273,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {reportData?.lwTotalAcos || "0%"}
+                      {formatPercentage(reportData?.lwTotalAcos)}
                     </h6>
                   </div>
                 </>

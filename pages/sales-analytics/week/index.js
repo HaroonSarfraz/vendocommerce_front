@@ -21,6 +21,7 @@ import {
   selectSalesWeekDetail,
   selectSalesWeekGraph,
 } from "@/src/store/slice/salesByWeek.slice";
+import { formatCurrency, formatNumber, formatPercentage } from "@/src/helpers/formatting.helpers";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -337,39 +338,39 @@ export default function SalesByWeek() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: isWeekList?.totalOrderedProductSales,
+                          value: formatCurrency(isWeekList?.totalOrderedProductSales),
                         },
                         {
                           title: "Sum of Sessions",
-                          value: isWeekList?.totalSession,
+                          value: formatNumber(isWeekList?.totalSession),
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: isWeekList?.totalSessionPercentage,
+                          value: formatPercentage(isWeekList?.totalSessionPercentage),
                         },
                         {
                           title: "Sum of Page Views",
-                          value: isWeekList?.totalPageViews,
+                          value: formatNumber(isWeekList?.totalPageViews),
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: isWeekList?.avgPageViewPercentage,
+                          value: formatPercentage(isWeekList?.avgPageViewPercentage),
                         },
                         {
                           title: "Average of Buy Box",
-                          value: isWeekList?.avgBuyBox,
+                          value: formatPercentage(isWeekList?.avgBuyBox),
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: isWeekList?.totalUnitOrdered,
+                          value: formatNumber(isWeekList?.totalUnitOrdered),
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: isWeekList?.avgUnitSession,
+                          value: formatPercentage(isWeekList?.avgUnitSession),
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: isWeekList?.totalOrderItems,
+                          value: formatNumber(isWeekList?.totalOrderItems),
                         },
                       ]}
                     />
@@ -459,15 +460,15 @@ export default function SalesByWeek() {
                                     {d?.week_name}
                                   </span>
                                 </td>
-                                <td>{d?.totalOrderedProductSales}</td>
-                                <td>{d?.totalSession}</td>
-                                <td>{d?.totalSessionPercentage}</td>
-                                <td>{d?.totalPageViews}</td>
-                                <td>{d?.avgPageViewPercentage}</td>
-                                <td>{d?.avgBuyBox}</td>
-                                <td>{d?.totalUnitOrdered}</td>
-                                <td>{d?.avgUnitSession}</td>
-                                <td>{d?.totalOrderItems}</td>
+                                <td>{formatCurrency(d?.totalOrderedProductSales)}</td>
+                                <td>{formatNumber(d?.totalSession)}</td>
+                                <td>{formatPercentage(d?.totalSessionPercentage)}</td>
+                                <td>{formatNumber(d?.totalPageViews)}</td>
+                                <td>{formatPercentage(d?.avgPageViewPercentage)}</td>
+                                <td>{formatPercentage(d?.avgBuyBox)}</td>
+                                <td>{formatNumber(d?.totalUnitOrdered)}</td>
+                                <td>{formatPercentage(d?.avgUnitSession)}</td>
+                                <td>{formatNumber(d?.totalOrderItems)}</td>
                               </tr>
                               <tr>
                                 <td
@@ -537,24 +538,24 @@ export default function SalesByWeek() {
                                               </td>
                                               <td />
                                               <td>
-                                                {r?.total_ordered_product_sales}
+                                                {formatCurrency(r?.total_ordered_product_sales)}
                                               </td>
-                                              <td>{r?.total_session}</td>
+                                              <td>{formatNumber(r?.total_session)}</td>
                                               <td>
-                                                {r?.avg_session_percentage}
+                                                {formatPercentage(r?.avg_session_percentage)}
                                               </td>
-                                              <td>{r?.total_page_views}</td>
+                                              <td>{formatNumber(r?.total_page_views)}</td>
                                               <td>
-                                                {r?.avg_page_view_percentage}
+                                                {formatPercentage(r?.avg_page_view_percentage)}
                                               </td>
                                               <td>
-                                                {r?.avg_buy_box_percentage}
+                                                {formatPercentage(r?.avg_buy_box_percentage)}
                                               </td>
-                                              <td>{r?.total_ordered_units}</td>
+                                              <td>{formatNumber(r?.total_ordered_units)}</td>
                                               <td>
-                                                {r?.avg_unit_session_percentage}
+                                                {formatPercentage(r?.avg_unit_session_percentage)}
                                               </td>
-                                              <td>{r?.total_order_items}</td>
+                                              <td>{formatNumber(r?.total_order_items)}</td>
                                             </tr>
                                           ))}
                                         </tbody>

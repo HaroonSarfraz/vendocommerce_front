@@ -1,3 +1,4 @@
+import { formatCurrency, formatNumber, formatPercentage } from "@/src/helpers/formatting.helpers";
 import Details from "../../Details";
 
 export default function SkuTable({ loading, details }) {
@@ -12,39 +13,39 @@ export default function SkuTable({ loading, details }) {
                 data={[
                   {
                     title: 'Sum of Units Ordered',
-                    value: details?.totalUnitOrdered
+                    value: formatNumber(details?.totalUnitOrdered)
                   },
                   {
                     title: 'Sum of Ordered Product Sales',
-                    value: details?.totalOrderedProductSales
+                    value: formatCurrency(details?.totalOrderedProductSales)
                   },
                   {
                     title: 'Average of Buy Box',
-                    value: details?.avgBuyBox
+                    value: formatPercentage(details?.avgBuyBox)
                   },
                   {
                     title: 'Sum of Unit Session',
-                    value: details?.avgUnitSession
+                    value: formatPercentage(details?.avgUnitSession)
                   },
                   {
                     title: 'Sum of Sessions',
-                    value: details?.totalSession
+                    value: formatNumber(details?.totalSession)
                   },
                   {
                     title: 'Sum of Page Views',
-                    value: details?.totalPageViews
+                    value: formatNumber(details?.totalPageViews)
                   },
                   {
                     title: 'Sum of Session Percentage',
-                    value: details?.totalSessionPercentage
+                    value: formatPercentage(details?.totalSessionPercentage)
                   },
                   {
                     title: 'Sum of Total Order Items',
-                    value: details?.totalOrderItems
+                    value: formatNumber(details?.totalOrderItems)
                   },
                   {
                     title: 'Sum of Page Views Percentage',
-                    value: details?.avgPageViewPercentage
+                    value: formatPercentage(details?.avgPageViewPercentage)
                   }
                 ]}
               />
