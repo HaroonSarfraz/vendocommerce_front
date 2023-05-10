@@ -6,16 +6,16 @@ import { Input, message } from "antd";
 import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
 import { DefaultPerPage, timeSince } from "@/src/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getBrandList } from "@/src/services/brands.services";
-import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import { isClient } from "@/src/helpers/isClient";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectBrandList } from "@/src/store/slice/brands.slice";
+import { NoDataSvg, SwitchUserSvg } from "@/src/assets";
 
 export default function Users(props) {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function Users(props) {
 
   const [searchText, setSearchText] = useState("");
 
-  const brandList = useSelector((state) => state.brands.brandList);
+  const brandList = useSelector(selectBrandList);
 
   useEffect(() => {
     if (brandList) {
@@ -124,7 +124,7 @@ export default function Users(props) {
               switchBrand(text);
             }}
           >
-            <Icons type="switchUser" />
+            <SwitchUserSvg />
           </span>
         );
       },
@@ -255,7 +255,7 @@ export default function Users(props) {
                       }}
                     />
                   ) : (
-                    <NoData />
+                    <NoDataSvg />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}

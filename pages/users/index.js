@@ -5,7 +5,6 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
 import ASINTooltip from "@/src/components/tooltip";
 import { DefaultPerPage, timeSince } from "@/src/config";
@@ -19,21 +18,23 @@ import { updateUserRequest } from "@/src/api/users.api";
 import { Input } from "antd";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { selectUserList } from "@/src/store/slice/users.slice";
+import { NoDataSvg } from "@/src/assets";
 
 export default function Users() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [accountsModal, setAccountsModal] = useState(false);
   const [modulesModal, setModulesModal] = useState(false);
-  const [clickedAccount, setClickedAccount] = useState('');
+  const [clickedAccount, setClickedAccount] = useState("");
 
   const handleAccountsModal = () => {
     setAccountsModal(!accountsModal);
-  }
+  };
 
   const handleModulesModal = () => {
     setModulesModal(!modulesModal);
-  }
+  };
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -43,7 +44,7 @@ export default function Users() {
   const [searchText, setSearchText] = useState("");
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
-  const userList = useSelector((state) => state.users.userList);
+  const userList = useSelector(selectUserList);
 
   useEffect(() => {
     if (userList) {
@@ -57,9 +58,7 @@ export default function Users() {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(
-      getUserList({ page: page, perPage: pageSize })
-    );
+    dispatch(getUserList({ page: page, perPage: pageSize }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -147,7 +146,7 @@ export default function Users() {
             className="cursor-pointer"
             onClick={() => {
               handleAccountsModal();
-              setClickedAccount(text.u_email)
+              setClickedAccount(text.u_email);
             }}
           >
             View All
@@ -327,7 +326,7 @@ export default function Users() {
                       />
                     </div>
                   ) : (
-                    <NoData />
+                    <NoDataSvg />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}

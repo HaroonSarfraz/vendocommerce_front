@@ -24,3 +24,14 @@ export const {
 } = salesByMonthSlice.actions;
 
 export default salesByMonthSlice.reducer;
+
+const selectSalesByMonthData = (state) => state.salesByMonth.salesByMonthData;
+const selectSalesByMonthGraph = (state) => state.salesByMonth.salesByMonthGraph;
+const selectSalesByMonthDetail = (state) =>
+  state.salesByMonth.salesByMonthDetail;
+
+export {
+  selectSalesByMonthData,
+  selectSalesByMonthGraph,
+  selectSalesByMonthDetail,
+};

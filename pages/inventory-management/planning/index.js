@@ -10,11 +10,16 @@ import {
 } from "@/src/services/InventoryPlanning.services";
 import Drawer from "@/src/components/inventory-management/drawer";
 import Pagination from "@/src/components/pagination";
-import NoData from "@/src/components/no-data";
 import ASINTable from "@/src/components/table";
 import Loading from "@/src/components/loading";
 import VendoTooltip from "@/src/components/tooltip";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import {
+  selectInventoryPlanningColumnList,
+  selectInventoryPlanningColumnSave,
+  selectInventoryPlanningList,
+} from "@/src/store/slice/planning.slice";
+import { NoDataSvg } from "@/src/assets";
 
 const { useToken } = theme;
 const DefaultPerPage = 10;
@@ -31,14 +36,12 @@ export default function InventoryManagement() {
   const [select, setSelect] = useState(true);
 
   const InventoryPlaningColumnsListRes = useSelector(
-    (state) => state.planning.inventoryPlaningColumnsList || {}
+    selectInventoryPlanningColumnList
   );
   const InventoryPlaningColumnsSaveRes = useSelector(
-    (state) => state.planning.inventoryPlaningColumnsSave || {}
+    selectInventoryPlanningColumnSave
   );
-  const InventoryPlaningRes = useSelector(
-    (state) => state.planning.inventoryPlaning || {}
-  );
+  const InventoryPlaningRes = useSelector(selectInventoryPlanningList);
 
   const [selectedColumnsList, setSelectedColumnsList] = useState([]);
   const [columnsList, setColumnsList] = useState([]);
@@ -872,7 +875,7 @@ export default function InventoryManagement() {
                       }}
                     />
                   ) : (
-                    <NoData />
+                    <NoDataSvg />
                   )}
                   <Pagination
                     loading={dataListLoading || dataList?.length === 0}

@@ -24,3 +24,16 @@ export const {
 } = planningSlice.actions;
 
 export default planningSlice.reducer;
+
+const selectInventoryPlanningList = (state) =>
+  state.planning.inventoryPlaning || {};
+const selectInventoryPlanningColumnList = (state) =>
+  state.planning.inventoryPlaningColumnsList || {};
+const selectInventoryPlanningColumnSave = (state) =>
+  state.planning.inventoryPlaningColumnsSave || {};
+
+export {
+  selectInventoryPlanningList,
+  selectInventoryPlanningColumnList,
+  selectInventoryPlanningColumnSave,
+};

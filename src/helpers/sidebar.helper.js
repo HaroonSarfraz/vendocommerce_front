@@ -1,4 +1,12 @@
-import Icons from "@/src/assets/icons";
+import {
+  CategoriesSvg,
+  ClipboardSvg,
+  DashboardSvg,
+  GraphSvg,
+  LockSvg,
+  UserLgSvg,
+  UsersSvg,
+} from "../assets";
 
 function getItem(label, key, icon, children, parent = "") {
   return {
@@ -10,13 +18,13 @@ function getItem(label, key, icon, children, parent = "") {
 }
 
 export const adminMenus = [
-  getItem("Manage Brands", "brands", <Icons type="users" />),
-  getItem("Manage Users", "users", <Icons type="lock" />),
+  getItem("Manage Brands", "brands", <UsersSvg />),
+  getItem("Manage Users", "users", <LockSvg />),
 ];
 
 export const userMenus = [
-  getItem("Dashboard", "dashboard", <Icons type="dashboard" />),
-  getItem("Sales Analytics", "sales-analytics", <Icons type="graph" />, [
+  getItem("Dashboard", "dashboard", <DashboardSvg />),
+  getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
     getItem(
       "Sales",
       "sales",
@@ -63,44 +71,39 @@ export const userMenus = [
       "sales-analytics"
     ),
   ]),
-  getItem(
-    "Inventory Management",
-    "inventory-management",
-    <Icons type="categories" />,
-    [
-      getItem(
-        "Inventory Dashboard",
-        "inventory-dashboard",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "inventory-management"
-      ),
-      getItem(
-        "Inventory Planning",
-        "planning",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "inventory-management"
-      ),
-      getItem(
-        "Shipping From Address",
-        "shipping-from-address",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "inventory-management"
-      ),
-    ]
-  ),
+  getItem("Inventory Management", "inventory-management", <CategoriesSvg />, [
+    getItem(
+      "Inventory Dashboard",
+      "inventory-dashboard",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
+    ),
+    getItem(
+      "Inventory Planning",
+      "planning",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
+    ),
+    getItem(
+      "Shipping From Address",
+      "shipping-from-address",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
+    ),
+  ]),
   getItem(
     "Advertisement Analytics",
     "advertising-analytics",
-    <Icons type="clipboard" />,
+    <ClipboardSvg />,
     [
       getItem(
         "Amazon Advertising",
@@ -122,45 +125,35 @@ export const userMenus = [
       ),
     ]
   ),
-  getItem(
-    "Category Reports",
-    "category-reports",
-    <Icons type="clipboard" />,
-    [
-      getItem(
-        "Category Performance Report",
-        "category-performance-report",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "category-reports"
-      ),
-    ]
-  ),
-  getItem(
-    "Customer Acquisition",
-    "customer-acquisition",
-    <Icons type="user-lg" />,
-    [
-      getItem(
-        "New v/s Repeat",
-        "new-vs-repeat",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "customer-acquisition"
-      ),
-      getItem(
-        "LTV",
-        "ltv",
-        <span className="menu-bullet">
-          <span className="bullet bullet-dot" />
-        </span>,
-        null,
-        "customer-acquisition"
-      ),
-    ]
-  ),
+  getItem("Category Reports", "category-reports", <ClipboardSvg />, [
+    getItem(
+      "Category Performance Report",
+      "category-performance-report",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "category-reports"
+    ),
+  ]),
+  getItem("Customer Acquisition", "customer-acquisition", <UserLgSvg />, [
+    getItem(
+      "New v/s Repeat",
+      "new-vs-repeat",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "customer-acquisition"
+    ),
+    getItem(
+      "LTV",
+      "ltv",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "customer-acquisition"
+    ),
+  ]),
 ];

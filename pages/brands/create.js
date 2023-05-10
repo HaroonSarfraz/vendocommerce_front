@@ -10,6 +10,7 @@ import _ from "lodash";
 import { selectUserList } from "@/src/store/slice/users.slice";
 
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { UserLgSvg } from "@/src/assets";
 
 const formItemLayout = {
   labelCol: {
@@ -72,7 +73,7 @@ export default function Users() {
               <div className="card mb-7">
                 <div className="card-body">
                   <div className="col-12 d-flex flex-row mb-5">
-                    <Icons type="user-lg" />
+                    <UserLgSvg />
                     <h4 className="mx-5 mt-1">Brand Information</h4>
                   </div>
                   <Form

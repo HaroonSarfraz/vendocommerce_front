@@ -14,3 +14,7 @@ export const brandsSlice = createSlice({
 export const { setBrandList } = brandsSlice.actions;
 
 export default brandsSlice.reducer;
+
+const selectBrandList = (state) => state.brands.brandList;
+
+export { selectBrandList };

@@ -3,7 +3,6 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { Menu, Dropdown } from "antd";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
-import NoData from "@/src/components/no-data";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@/src/components/pagination";
 import { DefaultPerPage } from "@/src/config";
@@ -12,6 +11,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import { getShippingList } from "@/src/services/shipping.services";
 import AddNew from "@/src/components/shipping-from-address/addNew";
+import { NoDataSvg } from "@/src/assets";
 
 export default function ShippingFromAddress() {
   const dispatch = useDispatch();
@@ -210,7 +210,7 @@ export default function ShippingFromAddress() {
                     />
                   </div>
                 ) : (
-                  <NoData />
+                  <NoDataSvg />
                 )}
                 <Pagination
                   loading={loading || list?.length === 0}

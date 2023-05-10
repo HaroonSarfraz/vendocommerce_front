@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ModalWrapper from "@/src/components/ModalWrapper";
 import Icons from "@/src/assets/icons";
+import { UserSvg } from "@/src/assets";
 
 export default function AccountsModal({ isOpen, closeModal, account }) {
   return (
@@ -9,7 +10,7 @@ export default function AccountsModal({ isOpen, closeModal, account }) {
       <div className="w-md-500px max-h-500px">
         <div style={{ backgroundColor: "#F6F6F6" }} className="modal-header">
           <p className="modal-title fw-bolder fs-5">
-            {account}&apos;s  Assigned Accounts
+            {account}&apos;s Assigned Accounts
           </p>
           <FontAwesomeIcon
             icon={faXmark}
@@ -19,20 +20,20 @@ export default function AccountsModal({ isOpen, closeModal, account }) {
         </div>
         <div className="min-h-200px p-5">
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="user" />
-            {'  '}BDirect Online
+            <UserSvg />
+            {"  "}BDirect Online
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="user" />
-            {'  '}High Ridge Brands
+            <UserSvg />
+            {"  "}High Ridge Brands
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="user" />
-            {'  '}VStora
+            <UserSvg />
+            {"  "}VStora
           </h5>
           <h5 className="badge badge-light-dark bg-light badge-pill mx-1 mb-2 fs-7 fw-bolder">
-            <Icons type="user" />
-            {'  '}Schmidts galleria
+            <UserSvg />
+            {"  "}Schmidts galleria
           </h5>
         </div>
         <div className="modal-footer">
