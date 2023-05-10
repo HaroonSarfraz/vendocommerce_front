@@ -13,6 +13,7 @@ import _ from "lodash";
 import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { NoDataSvg } from "@/src/assets";
+import { selectSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 
 const { useToken } = theme;
 
@@ -25,9 +26,7 @@ export default function SalesByProducts() {
     boxShadow: token.boxShadowSecondary,
   };
 
-  const salesByProductList = useSelector(
-    (state) => state.salesByProduct.salesByProductList
-  );
+  const salesByProductList = useSelector(selectSalesByProductList);
 
   const [selectedColumn, setSelectedColumn] = useState(null);
 

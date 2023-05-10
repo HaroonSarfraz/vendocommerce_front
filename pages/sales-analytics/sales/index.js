@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import dynamic from "next/dynamic";
+import { useSelector, useDispatch } from "react-redux";
 import { defaultWeek, defaultYear } from "@/src/config";
 import {
   getSalesGraphData,
@@ -17,12 +16,17 @@ import {
   SalesBySKU,
 } from "@/src/components/sales-analytics/sales";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import {
+  selectSalesByReportCallOuts,
+  selectSalesByWeekData,
+  selectSalesGraphData,
+} from "@/src/store/slice/sales.slice";
 
 export default function Sales() {
   const dispatch = useDispatch();
-  const salesGraphData = useSelector((state) => state.sales.salesGraphData);
-  const salesByWeekData = useSelector((state) => state.sales.salesByWeekData);
-  const salesReportCallOuts = useSelector((state) => state.sales.salesReportCallOuts);
+  const salesGraphData = useSelector(selectSalesGraphData);
+  const salesByWeekData = useSelector(selectSalesByWeekData);
+  const salesReportCallOuts = useSelector(selectSalesByReportCallOuts);
 
   const [filter, setFilter] = useState({
     week: [defaultWeek()],

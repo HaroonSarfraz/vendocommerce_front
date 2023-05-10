@@ -8,6 +8,8 @@ import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import selectFilter from "@/src/helpers/selectFilter";
+import { selectUserList } from "@/src/store/slice/users.slice";
+import { UserLgSvg } from "@/src/assets";
 
 const formItemLayout = {
   labelCol: {
@@ -28,10 +30,10 @@ export default function EditBrand() {
 
   const brand = router?.query ?? {};
 
-  const userList = useSelector((state) => state.users.userList);
+  const userList = useSelector(selectUserList);
 
   useEffect(() => {
-    dispatch(getUserList({ perPage: 1000}));
+    dispatch(getUserList({ perPage: 1000 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -80,7 +82,7 @@ export default function EditBrand() {
               <div className="card mb-7">
                 <div className="card-body">
                   <div className="col-12 d-flex flex-row mb-5">
-                    <Icons type="user-lg" />
+                    <UserLgSvg />
                     <h4 className="mx-5 mt-1">Brand Information</h4>
                   </div>
                   <Form
@@ -181,4 +183,3 @@ export default function EditBrand() {
     </DashboardLayout>
   );
 }
-

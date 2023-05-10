@@ -1,21 +1,25 @@
-import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import moment from 'moment';
+import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
 import { defaultDateRange } from "@/src/config";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import {
   getSalesBySkuDetails,
-  getSalesBySkuDetailsList
-} from '@/src/services/salesBySku.services';
+  getSalesBySkuDetailsList,
+} from "@/src/services/salesBySku.services";
 import {
   SkuTable,
   SalesBySkuTable,
-  TopBarFilterSku
-} from '@/src/components/sales-analytics/sku';
+  TopBarFilterSku,
+} from "@/src/components/sales-analytics/sku";
+import {
+  selectSalesBySkuDetails,
+  selectSalesBySkuDetailsList,
+} from "@/src/store/slice/salesBySku.slice";
 
-const DashboardLayout = dynamic(() => import('@/src/layouts/DashboardLayout'), {
-  ssr: false
+const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
+  ssr: false,
 });
 
 export default function SalesBySku() {
@@ -25,10 +29,10 @@ export default function SalesBySku() {
   const [details, setDetails] = useState({});
   const [detailsLoading, setDetailsLoading] = useState(true);
   const [dateFilter, setDateFilter] = useState(defaultDateRange());
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
-  const salesBySKUDetails = useSelector((state) => state.salesBySku.salesBySkuDetails);
-  const salesSKUDetailsList = useSelector((state) => state.salesBySku.salesSkuDetailsList);
+  const salesBySKUDetails = useSelector(selectSalesBySkuDetails);
+  const salesSKUDetailsList = useSelector(selectSalesBySkuDetailsList);
 
   const getList = (e) => {
     setDetailsLoading(true);
@@ -42,9 +46,9 @@ export default function SalesBySku() {
     // );
     dispatch(
       getSalesBySkuDetails({
-        start_date: moment(dateFilter[0]['$d']).format('YYYY-MM-DD'),
-        end_date: moment(dateFilter[1]['$d']).format('YYYY-MM-DD'),
-        search_text: e || searchText || ''
+        start_date: moment(dateFilter[0]["$d"]).format("YYYY-MM-DD"),
+        end_date: moment(dateFilter[1]["$d"]).format("YYYY-MM-DD"),
+        search_text: e || searchText || "",
       })
     );
   };
@@ -78,10 +82,10 @@ export default function SalesBySku() {
   return (
     <DashboardLayout>
       <div
-        className='content d-flex flex-column flex-column-fluid'
-        id='kt_content'
+        className="content d-flex flex-column flex-column-fluid"
+        id="kt_content"
       >
-        <div className='container-fluid' id='kt_content_container'>
+        <div className="container-fluid" id="kt_content_container">
           <TopBarFilterSku
             setDateFilter={(e) => setDateFilter(e)}
             setSearchText={(e) => setSearchText(e.target.value)}

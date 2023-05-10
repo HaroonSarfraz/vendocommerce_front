@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import initialState from '../initialState';
+import { createSlice } from "@reduxjs/toolkit";
+import initialState from "../initialState";
 
 export const salesSlice = createSlice({
   initialState: initialState.sales,
-  name: 'sales',
+  name: "sales",
   reducers: {
     setSalesGraphData: (state, action) => {
       state.salesGraphData = action.payload;
@@ -17,6 +17,17 @@ export const salesSlice = createSlice({
   },
 });
 
-export const { setSalesGraphData, setSalesByWeekData, setSalesReportCallOuts } = salesSlice.actions;
+export const { setSalesGraphData, setSalesByWeekData, setSalesReportCallOuts } =
+  salesSlice.actions;
 
 export default salesSlice.reducer;
+
+const selectSalesByWeekData = (state) => state.sales.salesByWeekData;
+const selectSalesGraphData = (state) => state.sales.salesGraphData;
+const selectSalesByReportCallOuts = (state) => state.sales.salesReportCallOuts;
+
+export {
+  selectSalesByWeekData,
+  selectSalesGraphData,
+  selectSalesByReportCallOuts,
+};

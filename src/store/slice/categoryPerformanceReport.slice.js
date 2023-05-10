@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import initialState from '../initialState';
+import { createSlice } from "@reduxjs/toolkit";
+import initialState from "../initialState";
 
 export const CategoryPerformanceSlice = createSlice({
   initialState: initialState.categoryPerformanceReport,
-  name: 'categoryPerformanceReport',
+  name: "categoryPerformanceReport",
   reducers: {
     setCategoryPerformanceList: (state, action) => {
       state.categoryPerformanceList = action.payload;
@@ -14,3 +14,8 @@ export const CategoryPerformanceSlice = createSlice({
 export const { setCategoryPerformanceList } = CategoryPerformanceSlice.actions;
 
 export default CategoryPerformanceSlice.reducer;
+
+const selectCategoryPerformanceList = (state) =>
+  state.categoryPerformanceReport.categoryPerformanceList;
+
+export { selectCategoryPerformanceList };

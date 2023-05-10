@@ -23,7 +23,7 @@ export default function Dashboard() {
             if (
               res.status >= 200 &&
               res.status <= 299 &&
-              res.data.Brands.length > 0
+              res.data.Brands?.length > 0
             ) {
               localStorage.setItem("brand", JSON.stringify(res.data.Brands[0]));
               router.push("/sales-analytics/sales");

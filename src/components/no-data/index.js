@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NoDataWrapper } from "./style";
-import Icons from "@/src/assets/icons";
 import { isClient } from "@/src/helpers/isClient";
+import { NoDataSvg } from "@/src/assets";
 
 const NoData = (props) => {
   const {
@@ -44,7 +44,7 @@ const NoData = (props) => {
             textAlign: "center",
           }}
         >
-          <Icons type="noData" />
+          <NoDataSvg />
           <div
             style={{
               fontSize: "14px",
