@@ -4,6 +4,11 @@ import Loading from "../../loading";
 import ASINTable from "../../table";
 import Image from "rc-image";
 import { NoDataSvg } from "@/src/assets";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 export default function SalesBySkuTable({ loading, list }) {
   const columns = [
@@ -70,7 +75,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_units_ordered_sum - b.astr_units_ordered_sum,
       render: (text) => {
-        return <span>{text?.astr_units_ordered_sum || 0}</span>;
+        return <span>{numberFormat(text?.astr_units_ordered_sum)}</span>;
       },
     },
     {
@@ -81,7 +86,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.ordered_product_sales_sum - b.ordered_product_sales_sum,
       render: (text) => {
-        return <span>${text?.ordered_product_sales_sum || 0}</span>;
+        return <span>{currencyFormat(text?.ordered_product_sales_sum)}</span>;
       },
     },
     {
@@ -92,7 +97,9 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_buy_box_percentage_avg - b.astr_buy_box_percentage_avg,
       render: (text) => {
-        return <span>{text?.astr_buy_box_percentage_avg || "0%"}</span>;
+        return (
+          <span>{percentageFormat(text?.astr_buy_box_percentage_avg)}</span>
+        );
       },
     },
     {
@@ -103,7 +110,9 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.unit_session_percentage_avg - b.unit_session_percentage_avg,
       render: (text) => {
-        return <span>{text?.unit_session_percentage_avg || "0%"}</span>;
+        return (
+          <span>{percentageFormat(text?.unit_session_percentage_avg)}</span>
+        );
       },
     },
     {
@@ -113,7 +122,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_sessions_sum - b.astr_sessions_sum,
       render: (text) => {
-        return <span>{text?.astr_sessions_sum || 0}</span>;
+        return <span>{numberFormat(text?.astr_sessions_sum)}</span>;
       },
     },
     {
@@ -123,7 +132,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_page_views_sum - b.astr_page_views_sum,
       render: (text) => {
-        return <span>{text?.astr_page_views_sum || 0}</span>;
+        return <span>{numberFormat(text?.astr_page_views_sum)}</span>;
       },
     },
     {
@@ -134,7 +143,9 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_session_percentage_avg - b.astr_session_percentage_avg,
       render: (text) => {
-        return <span>{text?.astr_session_percentage_avg || "0%"}</span>;
+        return (
+          <span>{percentageFormat(text?.astr_session_percentage_avg)}</span>
+        );
       },
     },
     {
@@ -144,7 +155,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.total_order_items_sum - b.total_order_items_sum,
       render: (text) => {
-        return <span>{text?.total_order_items_sum || "0"}</span>;
+        return <span>{numberFormat(text?.total_order_items_sum)}</span>;
       },
     },
     {
@@ -155,7 +166,9 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_page_view_percentage_avg - b.astr_page_view_percentage_avg,
       render: (text) => {
-        return <span>{text?.astr_page_view_percentage_avg || "0%"}</span>;
+        return (
+          <span>{percentageFormat(text?.astr_page_view_percentage_avg)}</span>
+        );
       },
     },
   ];

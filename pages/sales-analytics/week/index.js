@@ -21,6 +21,11 @@ import {
   selectSalesWeekDetail,
   selectSalesWeekGraph,
 } from "@/src/store/slice/salesByWeek.slice";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -337,39 +342,45 @@ export default function SalesByWeek() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: isWeekList?.totalOrderedProductSales,
+                          value: currencyFormat(
+                            isWeekList?.totalOrderedProductSales
+                          ),
                         },
                         {
                           title: "Sum of Sessions",
-                          value: isWeekList?.totalSession,
+                          value: numberFormat(isWeekList?.totalSession),
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: isWeekList?.totalSessionPercentage,
+                          value: percentageFormat(
+                            isWeekList?.totalSessionPercentage
+                          ),
                         },
                         {
                           title: "Sum of Page Views",
-                          value: isWeekList?.totalPageViews,
+                          value: numberFormat(isWeekList?.totalPageViews),
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: isWeekList?.avgPageViewPercentage,
+                          value: percentageFormat(
+                            isWeekList?.avgPageViewPercentage
+                          ),
                         },
                         {
                           title: "Average of Buy Box",
-                          value: isWeekList?.avgBuyBox,
+                          value: percentageFormat(isWeekList?.avgBuyBox),
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: isWeekList?.totalUnitOrdered,
+                          value: numberFormat(isWeekList?.totalUnitOrdered),
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: isWeekList?.avgUnitSession,
+                          value: percentageFormat(isWeekList?.avgUnitSession),
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: isWeekList?.totalOrderItems,
+                          value: numberFormat(isWeekList?.totalOrderItems),
                         },
                       ]}
                     />
@@ -459,15 +470,21 @@ export default function SalesByWeek() {
                                     {d?.week_name}
                                   </span>
                                 </td>
-                                <td>{d?.totalOrderedProductSales}</td>
-                                <td>{d?.totalSession}</td>
-                                <td>{d?.totalSessionPercentage}</td>
-                                <td>{d?.totalPageViews}</td>
-                                <td>{d?.avgPageViewPercentage}</td>
-                                <td>{d?.avgBuyBox}</td>
-                                <td>{d?.totalUnitOrdered}</td>
-                                <td>{d?.avgUnitSession}</td>
-                                <td>{d?.totalOrderItems}</td>
+                                <td>
+                                  {currencyFormat(d?.totalOrderedProductSales)}
+                                </td>
+                                <td>{numberFormat(d?.totalSession)}</td>
+                                <td>
+                                  {percentageFormat(d?.totalSessionPercentage)}
+                                </td>
+                                <td>{numberFormat(d?.totalPageViews)}</td>
+                                <td>
+                                  {percentageFormat(d?.avgPageViewPercentage)}
+                                </td>
+                                <td>{percentageFormat(d?.avgBuyBox)}</td>
+                                <td>{numberFormat(d?.totalUnitOrdered)}</td>
+                                <td>{percentageFormat(d?.avgUnitSession)}</td>
+                                <td>{numberFormat(d?.totalOrderItems)}</td>
                               </tr>
                               <tr>
                                 <td
@@ -537,24 +554,48 @@ export default function SalesByWeek() {
                                               </td>
                                               <td />
                                               <td>
-                                                {r?.total_ordered_product_sales}
-                                              </td>
-                                              <td>{r?.total_session}</td>
-                                              <td>
-                                                {r?.avg_session_percentage}
-                                              </td>
-                                              <td>{r?.total_page_views}</td>
-                                              <td>
-                                                {r?.avg_page_view_percentage}
+                                                {currencyFormat(
+                                                  r?.total_ordered_product_sales
+                                                )}
                                               </td>
                                               <td>
-                                                {r?.avg_buy_box_percentage}
+                                                {numberFormat(r?.total_session)}
                                               </td>
-                                              <td>{r?.total_ordered_units}</td>
                                               <td>
-                                                {r?.avg_unit_session_percentage}
+                                                {percentageFormat(
+                                                  r?.avg_session_percentage
+                                                )}
                                               </td>
-                                              <td>{r?.total_order_items}</td>
+                                              <td>
+                                                {numberFormat(
+                                                  r?.total_page_views
+                                                )}
+                                              </td>
+                                              <td>
+                                                {percentageFormat(
+                                                  r?.avg_page_view_percentage
+                                                )}
+                                              </td>
+                                              <td>
+                                                {percentageFormat(
+                                                  r?.avg_buy_box_percentage
+                                                )}
+                                              </td>
+                                              <td>
+                                                {numberFormat(
+                                                  r?.total_ordered_units
+                                                )}
+                                              </td>
+                                              <td>
+                                                {percentageFormat(
+                                                  r?.avg_unit_session_percentage
+                                                )}
+                                              </td>
+                                              <td>
+                                                {numberFormat(
+                                                  r?.total_order_items
+                                                )}
+                                              </td>
                                             </tr>
                                           ))}
                                         </tbody>

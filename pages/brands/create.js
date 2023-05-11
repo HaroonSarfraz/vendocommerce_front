@@ -11,6 +11,7 @@ import { selectUserList } from "@/src/store/slice/users.slice";
 
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { UserLgSvg } from "@/src/assets";
+import { selectFilter } from "@/src/helpers/selectFilter";
 
 const formItemLayout = {
   labelCol: {
@@ -138,6 +139,7 @@ export default function Users() {
                             size="large"
                             placeholder="Select Brand Account(s) ..."
                             options={options}
+                            filterOption={selectFilter}
                           />
                         </Form.Item>
                       </div>
