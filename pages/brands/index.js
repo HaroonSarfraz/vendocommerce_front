@@ -15,7 +15,8 @@ import _ from "lodash";
 import { isClient } from "@/src/helpers/isClient";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectBrandList } from "@/src/store/slice/brands.slice";
-import { NoDataSvg, SwitchUserSvg } from "@/src/assets";
+import { SwitchUserSvg } from "@/src/assets";
+import NoData from "@/src/components/no-data";
 
 export default function Users(props) {
   const dispatch = useDispatch();
@@ -27,6 +28,8 @@ export default function Users(props) {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [pageSize, setPageSize] = useState(DefaultPerPage);
+  const [orderBy, setOrderBy] = useState("id");
+  const [order, setOrder] = useState("desc");
 
   const [searchText, setSearchText] = useState("");
 
@@ -54,11 +57,14 @@ export default function Users(props) {
   }, []);
 
   const onPageNo = (e) => {
-    setLoading(true);
+    setPage(e);
     dispatch(
       getBrandList({
         page: e,
         perPage: pageSize,
+        search_term: searchText,
+        orderBy: orderBy,
+        order: order,
       })
     );
     setPage(e);
@@ -68,10 +74,15 @@ export default function Users(props) {
     setPage(1);
     setPageSize(e);
     setLoading(true);
+    setOrderBy("id");
+    setOrder("desc");
     dispatch(
       getBrandList({
         page: 1,
         perPage: e,
+        search_term: searchText,
+        orderBy: orderBy,
+        order: order,
       })
     );
   };
@@ -79,9 +90,28 @@ export default function Users(props) {
   const search = () => {
     setLoading(true);
     setPage(1);
-    setList([]);
+    setOrderBy("id");
+    setOrder("desc");
     dispatch(
-      getBrandList({ page: page, perPage: pageSize, search_term: searchText })
+      getBrandList({
+        page: 1,
+        perPage: pageSize,
+        search_term: searchText,
+        orderBy: orderBy,
+        order: order,
+      })
+    );
+  };
+
+  const handleChange = (_pagination, _filters, sorter) => {
+    dispatch(
+      getBrandList({
+        page: page,
+        perPage: pageSize,
+        search_term: searchText,
+        orderBy: sorter?.columnKey,
+        order: sorter?.order?.slice(0, -3),
+      })
     );
   };
 
@@ -90,8 +120,10 @@ export default function Users(props) {
       title: "#",
       width: 60,
       align: "left",
-      render: (_, __, i) => {
-        return <span>{(page - 1) * pageSize + 1 + i}</span>;
+      sorter: true,
+      key: "id",
+      render: (text) => {
+        return <span>{text?.id}</span>;
       },
     },
     {
@@ -106,6 +138,8 @@ export default function Users(props) {
       title: "Name",
       width: 120,
       align: "left",
+      key: "name",
+      sorter: true,
       render: (text) => {
         return <span>{text?.name || "N/A"}</span>;
       },
@@ -243,6 +277,7 @@ export default function Users(props) {
                     <ASINTable
                       columns={columns}
                       dataSource={list}
+                      onChange={handleChange}
                       ellipsis
                       rowKey="key"
                       loading={loading}
@@ -255,7 +290,7 @@ export default function Users(props) {
                       }}
                     />
                   ) : (
-                    <NoDataSvg />
+                    <NoData />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}

@@ -12,6 +12,7 @@ const ASINTable = (props) => {
     scrollY,
     isCheckBoxRow,
     rowSelection,
+    onChange,
     ellipsis = false,
     ...rest
   } = props;
@@ -27,6 +28,7 @@ const ASINTable = (props) => {
       rowKey={rowKey}
       loading={loading}
       pagination={pagination}
+      onChange={onChange}
       rowSelection={
         isCheckBoxRow
           ? {

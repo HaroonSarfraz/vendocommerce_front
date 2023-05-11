@@ -11,8 +11,8 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import _ from "lodash";
 import { getShippingList } from "@/src/services/shipping.services";
 import AddNew from "@/src/components/shipping-from-address/addNew";
-import { NoDataSvg } from "@/src/assets";
 import { selectShippingList } from "@/src/store/slice/shipping.slice";
+import NoData from "@/src/components/no-data";
 
 export default function ShippingFromAddress() {
   const dispatch = useDispatch();
@@ -211,7 +211,7 @@ export default function ShippingFromAddress() {
                     />
                   </div>
                 ) : (
-                  <NoDataSvg />
+                  <NoData />
                 )}
                 <Pagination
                   loading={loading || list?.length === 0}
