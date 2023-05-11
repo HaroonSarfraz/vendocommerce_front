@@ -19,7 +19,7 @@ import {
   selectInventoryPlanningColumnSave,
   selectInventoryPlanningList,
 } from "@/src/store/slice/planning.slice";
-import { NoDataSvg } from "@/src/assets";
+import NoData from "@/src/components/no-data";
 
 const { useToken } = theme;
 const DefaultPerPage = 10;
@@ -875,7 +875,7 @@ export default function InventoryManagement() {
                       }}
                     />
                   ) : (
-                    <NoDataSvg />
+                    <NoData />
                   )}
                   <Pagination
                     loading={dataListLoading || dataList?.length === 0}

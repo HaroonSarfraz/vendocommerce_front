@@ -12,9 +12,9 @@ import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import _ from "lodash";
 import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { NoDataSvg } from "@/src/assets";
 import { selectSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 import { numberFormat } from "@/src/helpers/formatting.helpers";
+import NoData from "@/src/components/no-data";
 
 const { useToken } = theme;
 
@@ -208,32 +208,8 @@ export default function SalesByProducts() {
                     {tableLoading ? (
                       <Loading />
                     ) : Object.keys(list || {}).length === 0 ? (
-                      <div style={{ height: 200 }}>
-                        <div
-                          style={{
-                            transform: "translate(-50%, -50%)",
-                            top: "50%",
-                            left: "50%",
-                            position: "absolute",
-                            textAlign: "center",
-                          }}
-                        >
-                          <NoDataSvg />
-                          <div
-                            style={{
-                              fontSize: "14px",
-                              color: "#363a3e",
-                              opacity: "0.51",
-                              paddingTop: "3px",
-                              fontWeight: "bold",
-                              letterSpacing: "-0.36px",
-                            }}
-                          >
-                            Nothing to see here !
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
+                      <NoData />
+                      ) : (
                       <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">

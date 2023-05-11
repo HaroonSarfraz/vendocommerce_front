@@ -3,7 +3,7 @@ import { Tooltip } from "antd";
 import Loading from "../../loading";
 import ASINTable from "../../table";
 import Image from "rc-image";
-import { NoDataSvg } from "@/src/assets";
+import NoData from "@/src/components/no-data";
 import {
   currencyFormat,
   numberFormat,
@@ -228,7 +228,7 @@ export default function SalesBySkuTable({ loading, list }) {
                 }}
               />
             ) : (
-              <NoDataSvg />
+              <NoData />
             )}
           </div>
         </div>

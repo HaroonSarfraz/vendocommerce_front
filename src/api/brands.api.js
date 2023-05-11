@@ -2,9 +2,7 @@ import request from "./request";
 
 export const fetchBrandList = (data, headers = {}) => {
   return request.get(
-    `/brands/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&search=${
-      data?.search_term || ""
-    }`,
+    `/brands/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&orderBy=${data?.orderBy || "id"}&order=${data?.order || "desc"}&search=${data?.search_term || ""}`,
     { headers }
   );
 };
