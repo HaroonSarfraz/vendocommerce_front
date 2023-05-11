@@ -12,6 +12,7 @@ import _ from "lodash";
 import { getShippingList } from "@/src/services/shipping.services";
 import AddNew from "@/src/components/shipping-from-address/addNew";
 import { NoDataSvg } from "@/src/assets";
+import { selectShippingList } from "@/src/store/slice/shipping.slice";
 
 export default function ShippingFromAddress() {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export default function ShippingFromAddress() {
   const [totalPage, setTotalPage] = useState(1);
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
-  const shipList = useSelector((state) => state.shipping.shippingList);
+  const shipList = useSelector(selectShippingList);
   useEffect(() => {
     setLoading(true);
     dispatch(

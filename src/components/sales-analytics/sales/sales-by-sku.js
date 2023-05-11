@@ -1,3 +1,8 @@
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 import { Skeleton } from "antd";
 
 export default function SalesBySKU(tableList, loading) {
@@ -167,26 +172,30 @@ export default function SalesBySKU(tableList, loading) {
                         <td>
                           {d?.startdate || ""} to {d?.enddate || ""}
                         </td>
-                        <td>${d?.sales?.twSales || "0"}</td>
-                        <td>${d?.sales?.salesDiff || "0"}</td>
+                        <td>{currencyFormat(d?.sales?.twSales)}</td>
+                        <td>{currencyFormat(d?.sales?.salesDiff)}</td>
                         <td
                           className={`${
-                            d?.sales?.salesChange < 0 ? "text-danger" : "text-success"
+                            d?.sales?.salesChange < 0
+                              ? "text-danger"
+                              : "text-success"
                           }`}
                         >
-                          {d?.sales?.salesChange || "0"}%
+                          {percentageFormat(d?.sales?.salesChange)}
                         </td>
                         <td>{d?.units?.twUnits || "0"}</td>
                         <td>{d?.units?.unitsDiff || "0"}</td>
                         <td
                           className={`${
-                            d?.units?.unitsChange < 0 ? "text-danger" : "text-success"
+                            d?.units?.unitsChange < 0
+                              ? "text-danger"
+                              : "text-success"
                           }`}
                         >
-                          {d?.units?.unitsChange || "0"}%
+                          {percentageFormat(d?.units?.unitsChange)}
                         </td>
-                        <td>${d?.sales?.prevWeekSales || "0"}</td>
-                        <td>${d?.sales?.salesDiffLy || "0"}</td>
+                        <td>{currencyFormat(d?.sales?.prevWeekSales)}</td>
+                        <td>{currencyFormat(d?.sales?.salesDiffLy)}</td>
                         <td
                           className={`${
                             d?.sales?.salesChangeLy < 0
@@ -194,10 +203,10 @@ export default function SalesBySKU(tableList, loading) {
                               : "text-success"
                           }`}
                         >
-                          {d?.sales?.salesChangeLy || "0"}%
+                          {percentageFormat(d?.sales?.salesChangeLy)}
                         </td>
-                        <td>{d?.units?.prevWeekUnits || "0"}</td>
-                        <td>{d?.units?.unitsDiffLy || "0"}</td>
+                        <td>{numberFormat(d?.units?.prevWeekUnits)}</td>
+                        <td>{numberFormat(d?.units?.unitsDiffLy)}</td>
                         <td
                           className={`${
                             d?.units?.unitsChangeLy < 0
@@ -205,7 +214,7 @@ export default function SalesBySKU(tableList, loading) {
                               : "text-success"
                           }`}
                         >
-                          {d?.units?.unitsChangeLy || "0"}%
+                          {percentageFormat(d?.units?.unitsChangeLy)}
                         </td>
                       </tr>
                     ))

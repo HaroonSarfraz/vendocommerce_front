@@ -1,3 +1,8 @@
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 import { Skeleton } from "antd";
 
 export default function LSales(reportData, loading) {
@@ -123,14 +128,14 @@ export default function LSales(reportData, loading) {
                           : "text-success"
                       }`}
                     >
-                      ${reportData?.totalSalesLastWeek || "0"}
+                      {currencyFormat(reportData?.totalSalesLastWeek)}
                     </td>
                     <td className="text-success">
-                      {reportData?.upLwDiff || "$0"}
+                      {currencyFormat(reportData?.upLwDiff)}
                     </td>
-                    <td>{reportData?.upVsLw || "0%"}</td>
-                    <td>{reportData?.totalSalesLastWeek || "0"}</td>
-                    <td>{reportData?.vsSalesL4wk || "0"}</td>
+                    <td>{percentageFormat(reportData?.upVsLw)}</td>
+                    <td>{currencyFormat(reportData?.totalSalesLastWeek)}</td>
+                    <td>{currencyFormat(reportData?.vsSalesL4wk)}</td>
                     <td
                       className={`${
                         parseInt(
@@ -142,12 +147,12 @@ export default function LSales(reportData, loading) {
                           : "text-success"
                       }`}
                     >
-                      {reportData?.vsSalesDiff || "0"}
+                      {currencyFormat(reportData?.vsSalesDiff)}
                     </td>
                     <td className="text-danger">
-                      {reportData?.vsSalesChg || "0%"}
+                      {percentageFormat(reportData?.vsSalesChg)}
                     </td>
-                    <td>{reportData?.unitsLw || 0}</td>
+                    <td>{numberFormat(reportData?.unitsLw)}</td>
                     <td
                       className={`${
                         parseInt(
@@ -159,11 +164,11 @@ export default function LSales(reportData, loading) {
                           : "text-success"
                       }`}
                     >
-                      {reportData?.UnitsDiff || 0}
+                      {numberFormat(reportData?.UnitsDiff)}
                     </td>
-                    <td>{reportData?.UnitsChg || 0}</td>
-                    <td>{reportData?.vsUnitsLw || 0}</td>
-                    <td>{reportData?.vsUnitsL4wk || 0}</td>
+                    <td>{percentageFormat(reportData?.UnitsChg)}</td>
+                    <td>{numberFormat(reportData?.vsUnitsLw)}</td>
+                    <td>{numberFormat(reportData?.vsUnitsL4wk)}</td>
                     <td
                       className={`${
                         parseInt(
@@ -175,7 +180,7 @@ export default function LSales(reportData, loading) {
                           : "text-success"
                       }`}
                     >
-                      {reportData?.vsUnitsDiff || 0}
+                      {numberFormat(reportData?.vsUnitsDiff)}
                     </td>
                     <td
                       className={`${
@@ -188,7 +193,7 @@ export default function LSales(reportData, loading) {
                           : "text-success"
                       }`}
                     >
-                      {reportData?.vsUnitsChg || 0}
+                      {percentageFormat(reportData?.vsUnitsChg)}
                     </td>
                   </tr>
                 )}

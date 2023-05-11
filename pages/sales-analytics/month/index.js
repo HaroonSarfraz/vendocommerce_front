@@ -26,6 +26,11 @@ import {
   selectSalesByMonthGraph,
 } from "@/src/store/slice/salesByMonth.slice";
 import { selectFilter } from "@/src/helpers/selectFilter";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -308,39 +313,51 @@ export default function SalesByMonth() {
                       data={[
                         {
                           title: "Sum of Ordered Product Sales",
-                          value: salesByMonthData?.totalOrderedProductSales,
+                          value: currencyFormat(
+                            salesByMonthData?.totalOrderedProductSales
+                          ),
                         },
                         {
                           title: "Sum of Sessions",
-                          value: salesByMonthData?.totalSession,
+                          value: numberFormat(salesByMonthData?.totalSession),
                         },
                         {
                           title: "Sum of Session Percentage",
-                          value: salesByMonthData?.totalSessionPercentage,
+                          value: percentageFormat(
+                            salesByMonthData?.totalSessionPercentage
+                          ),
                         },
                         {
                           title: "Sum of Page Views",
-                          value: salesByMonthData?.totalPageViews,
+                          value: numberFormat(salesByMonthData?.totalPageViews),
                         },
                         {
                           title: "Sum of Page Views Percentage",
-                          value: salesByMonthData?.avgPageViewPercentage,
+                          value: percentageFormat(
+                            salesByMonthData?.avgPageViewPercentage
+                          ),
                         },
                         {
                           title: "Average of Buy Box",
-                          value: salesByMonthData?.avgBuyBox,
+                          value: percentageFormat(salesByMonthData?.avgBuyBox),
                         },
                         {
                           title: "Sum of Units Ordered",
-                          value: salesByMonthData?.totalUnitOrdered,
+                          value: numberFormat(
+                            salesByMonthData?.totalUnitOrdered
+                          ),
                         },
                         {
                           title: "Sum of Unit Session",
-                          value: salesByMonthData?.avgUnitSession,
+                          value: percentageFormat(
+                            salesByMonthData?.avgUnitSession
+                          ),
                         },
                         {
                           title: "Sum of Total Order Items",
-                          value: salesByMonthData?.totalOrderItems,
+                          value: numberFormat(
+                            salesByMonthData?.totalOrderItems
+                          ),
                         },
                       ]}
                     />
@@ -428,15 +445,25 @@ export default function SalesByMonth() {
                                       {d?.month_name}
                                     </a>
                                   </td>
-                                  <td>{d?.totalOrderedProductSales}</td>
-                                  <td>{d?.totalSession}</td>
-                                  <td>{d?.totalSessionPercentage}</td>
-                                  <td>{d?.totalPageViews}</td>
-                                  <td>{d?.avgPageViewPercentage}</td>
-                                  <td>{d?.avgBuyBox}</td>
-                                  <td>{d?.totalUnitOrdered}</td>
-                                  <td>{d?.avgUnitSession}</td>
-                                  <td>{d?.totalOrderItems}</td>
+                                  <td>
+                                    {currencyFormat(
+                                      d?.totalOrderedProductSales
+                                    )}
+                                  </td>
+                                  <td>{numberFormat(d?.totalSession)}</td>
+                                  <td>
+                                    {percentageFormat(
+                                      d?.totalSessionPercentage
+                                    )}
+                                  </td>
+                                  <td>{numberFormat(d?.totalPageViews)}</td>
+                                  <td>
+                                    {percentageFormat(d?.avgPageViewPercentage)}
+                                  </td>
+                                  <td>{percentageFormat(d?.avgBuyBox)}</td>
+                                  <td>{numberFormat(d?.totalUnitOrdered)}</td>
+                                  <td>{percentageFormat(d?.avgUnitSession)}</td>
+                                  <td>{numberFormat(d?.totalOrderItems)}</td>
                                 </tr>
                                 <tr>
                                   <td
@@ -508,39 +535,49 @@ export default function SalesByMonth() {
                                                       </div>
                                                     </td>
                                                     <td>
-                                                      {
+                                                      {currencyFormat(
                                                         r?.total_ordered_product_sales
-                                                      }
+                                                      )}
                                                     </td>
-                                                    <td>{r?.total_session}</td>
                                                     <td>
-                                                      {
+                                                      {numberFormat(
+                                                        r?.total_session
+                                                      )}
+                                                    </td>
+                                                    <td>
+                                                      {percentageFormat(
                                                         r?.avg_session_percentage
-                                                      }
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {r?.total_page_views}
+                                                      {numberFormat(
+                                                        r?.total_page_views
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {
+                                                      {percentageFormat(
                                                         r?.avg_page_view_percentage
-                                                      }
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {
+                                                      {percentageFormat(
                                                         r?.avg_buy_box_percentage
-                                                      }
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {r?.total_ordered_units}
+                                                      {numberFormat(
+                                                        r?.total_ordered_units
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {
+                                                      {percentageFormat(
                                                         r?.avg_unit_session_percentage
-                                                      }
+                                                      )}
                                                     </td>
                                                     <td>
-                                                      {r?.total_order_items}
+                                                      {numberFormat(
+                                                        r?.total_order_items
+                                                      )}
                                                     </td>
                                                   </tr>
                                                 );

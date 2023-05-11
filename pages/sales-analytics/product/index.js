@@ -14,6 +14,7 @@ import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { NoDataSvg } from "@/src/assets";
 import { selectSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
+import { numberFormat } from "@/src/helpers/formatting.helpers";
 
 const { useToken } = theme;
 
@@ -442,14 +443,14 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
-                                    {Math.round(
+                                    {numberFormat(
                                       Object.values(d || {}).reduce(
                                         (partialSum, a) =>
                                           partialSum +
                                           Number(a?.[selectedColumn] || 0),
                                         0
-                                      ) * 100
-                                    ) / 100}
+                                      )
+                                    )}
                                     {selectedColumn.startsWith("avg") && "%"}
                                   </span>
                                 </td>

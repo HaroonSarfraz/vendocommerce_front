@@ -1,3 +1,7 @@
+import {
+  currencyFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 import { Skeleton } from "antd";
 
 export default function RSales(reportData, loading) {
@@ -31,9 +35,11 @@ export default function RSales(reportData, loading) {
                   </tr>
                 ) : (
                   <tr>
-                    <td>{reportData?.ytdSales || 0}</td>
-                    <td>{reportData?.lastYearSales || "$0"}</td>
-                    <td className="text-danger">{reportData?.salesChg || 0}</td>
+                    <td>{currencyFormat(reportData?.ytdSales)}</td>
+                    <td>{currencyFormat(reportData?.lastYearSales)}</td>
+                    <td className="text-danger">
+                      {percentageFormat(reportData?.salesChg)}
+                    </td>
                   </tr>
                 )}
               </tbody>
