@@ -123,12 +123,30 @@ export const userMenus = [
         null,
         "advertising-analytics"
       ),
+      getItem(
+        "Import Advertising data",
+        "import",
+        <span className="menu-bullet">
+          <span className="bullet bullet-dot" />
+        </span>,
+        null,
+        "advertising-analytics"
+      ),
     ]
   ),
   getItem("Category Reports", "category-reports", <ClipboardSvg />, [
     getItem(
       "Category Performance Report",
       "category-performance-report",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "category-reports"
+    ),
+    getItem(
+      "Product Report",
+      "product-report",
       <span className="menu-bullet">
         <span className="bullet bullet-dot" />
       </span>,

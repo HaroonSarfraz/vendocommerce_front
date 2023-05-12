@@ -1,5 +1,4 @@
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import Graph from "@/src/components/advertising-analytics/total-revenue/Graph";
 import Drawers from "@/src/components/advertising-analytics/total-revenue/Drawer";
@@ -7,7 +6,7 @@ import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 
-export default function Users() {
+export default function TotalRevenueAcos() {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 

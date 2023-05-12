@@ -7,6 +7,7 @@ import { defaultWeek, defaultYear } from "@/src/config";
 import { getCategoryPerformanceList } from "@/src/services/categoryPerformance.services";
 import ImportFileModal from "@/src/modals/importFile.modal";
 import { selectCategoryPerformanceList } from "@/src/store/slice/categoryPerformanceReport.slice";
+import NoData from "@/src/components/no-data";
 
 export default function CategoryPerformanceReport() {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export default function CategoryPerformanceReport() {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [tableLoading, setTableLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(true);
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
@@ -82,7 +83,7 @@ export default function CategoryPerformanceReport() {
                 <div className="table-responsive">
                   {tableLoading ? (
                     <Loading />
-                  ) : (
+                  ) : list?.length != 0 ? (
                     <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                       <thead>
                         <tr className="fw-boldest text-dark">
@@ -105,6 +106,8 @@ export default function CategoryPerformanceReport() {
                         <td>No data found</td>
                       </tbody>
                     </table>
+                  ) : (
+                    <NoData />
                   )}
                 </div>
               </div>
