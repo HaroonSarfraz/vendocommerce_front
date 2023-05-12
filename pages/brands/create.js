@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, message, Select } from "antd";
 import { getUserList } from "@/src/services/users.services";
 import { createBrandRequest } from "@/src/api/brands.api";
-import Icons from "@/src/assets/icons";
 import _ from "lodash";
 import { selectUserList } from "@/src/store/slice/users.slice";
 

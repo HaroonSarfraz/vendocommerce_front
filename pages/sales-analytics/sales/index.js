@@ -21,6 +21,7 @@ import {
   selectSalesByWeekData,
   selectSalesGraphData,
 } from "@/src/store/slice/sales.slice";
+import _ from "lodash";
 
 export default function Sales() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function Sales() {
   const salesReportCallOuts = useSelector(selectSalesByReportCallOuts);
 
   const [filter, setFilter] = useState({
-    week: [defaultWeek()],
+    week: _.range(1, defaultWeek() + 1),
     year: defaultYear(),
   });
 

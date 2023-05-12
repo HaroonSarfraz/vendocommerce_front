@@ -4,7 +4,7 @@ const initialState = {
       items: [],
       count: 0,
       page: 1,
-      limit: 10
+      limit: 10,
     },
     switchUser: {},
   },
@@ -13,7 +13,7 @@ const initialState = {
       data: [],
       count: 0,
       page: 1,
-      limit: 10
+      limit: 10,
     },
   },
   sales: {
@@ -24,11 +24,11 @@ const initialState = {
   salesBySku: {
     salesSkuDetailsList: {
       status: false,
-      data: []
+      data: [],
     },
     salesBySkuDetails: {
       status: false,
-      data: {}
+      data: {},
     },
   },
   salesByProduct: {
@@ -43,22 +43,26 @@ const initialState = {
   salesByWeek: {
     salesWeekDetailList: {
       status: false,
-      data: []
+      data: [],
     },
     salesWeekGraph: {},
     salesWeekData: {
       status: false,
-      data: {}
+      data: {},
     },
+  },
+  productReportList: {
+    data: [],
+    status: false,
   },
   salesByMonth: {
     salesByMonthData: {
       status: false,
-      data: {}
+      data: {},
     },
     salesByMonthDetail: {
       status: false,
-      data: []
+      data: [],
     },
     salesByMonthGraph: {},
   },
@@ -69,7 +73,7 @@ const initialState = {
   },
   shipping: {
     shippingList: {
-      items: []
+      items: [],
     },
   },
 };
