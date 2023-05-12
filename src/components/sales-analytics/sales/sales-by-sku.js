@@ -97,7 +97,7 @@ export default function SalesBySKU(tableList, loading) {
                       className="min-w-75px"
                       style={{ borderLeft: "1px dashed #ddd" }}
                     >
-                      {loading ? title2Loading() : "TW"}
+                      {loading ? title2Loading() : "Total"}
                     </th>
                     <th className="min-w-75px">
                       {loading ? title2Loading() : "CHG"}
@@ -109,7 +109,7 @@ export default function SalesBySKU(tableList, loading) {
                       className="min-w-75px"
                       style={{ borderLeft: "1px dashed #ddd" }}
                     >
-                      {loading ? title2Loading() : "TW"}
+                      {loading ? title2Loading() : "Total"}
                     </th>
                     <th className="min-w-75px">
                       {loading ? title2Loading() : "CHG"}
@@ -121,7 +121,7 @@ export default function SalesBySKU(tableList, loading) {
                       className="min-w-75px"
                       style={{ borderLeft: "1px dashed #ddd" }}
                     >
-                      {loading ? title2Loading() : "TW"}
+                      {loading ? title2Loading() : "LY"}
                     </th>
                     <th className="min-w-75px">
                       {loading ? title2Loading() : "CHG"}
@@ -133,7 +133,7 @@ export default function SalesBySKU(tableList, loading) {
                       className="min-w-75px"
                       style={{ borderLeft: "1px dashed #ddd" }}
                     >
-                      {loading ? title2Loading() : "TW"}
+                      {loading ? title2Loading() : "LY"}
                     </th>
                     <th className="min-w-75px">
                       {loading ? title2Loading() : "CHG"}

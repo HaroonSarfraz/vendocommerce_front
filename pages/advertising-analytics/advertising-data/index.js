@@ -1,11 +1,10 @@
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import KPITable from "@/src/components/advertising-analytics/advertising-data/KPITable";
 import Graph from "@/src/components/advertising-analytics/advertising-data/Graph";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 
-export default function Users() {
+export default function AdvertisingData() {
   const [filter, setFilter] = useState({
     week: [],
     year: 2023,
