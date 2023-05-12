@@ -51,6 +51,10 @@ const initialState = {
       data: {}
     },
   },
+  productReportList: {
+    data: [],
+    status: false
+  },
   salesByMonth: {
     salesByMonthData: {
       status: false,
