@@ -8,6 +8,8 @@ import { getCategoryPerformanceList } from "@/src/services/categoryPerformance.s
 import ImportFileModal from "@/src/modals/importFile.modal";
 import { selectCategoryPerformanceList } from "@/src/store/slice/categoryPerformanceReport.slice";
 import NoData from "@/src/components/no-data";
+import ASINTable from "../table";
+import { numberFormat } from "@/src/helpers/formatting.helpers";
 
 export default function CategoryPerformanceReport() {
   const dispatch = useDispatch();
@@ -23,6 +25,33 @@ export default function CategoryPerformanceReport() {
     week: [defaultWeek()],
     year: defaultYear(),
   });
+
+  const columns = [
+    {
+      title: "Row Labels",
+      width: "80px",
+      align: "center",
+      render: (text) => {
+        return <span>{text?.row_label}</span>;
+      },
+    },
+    {
+      title: "Total",
+      width: "120px",
+      align: "center",
+      render: (text) => {
+        return <span>{numberFormat(text?.total)}</span>;
+      },
+    },
+    {
+      title: "% CHANGE WEEK OVER WEEK",
+      width: "240px",
+      align: "center",
+      render: (text) => {
+        return <span>{text?.week}</span>;
+      },
+    },
+  ];
 
   useEffect(() => {
     const { year, week } = filter;
@@ -84,28 +113,20 @@ export default function CategoryPerformanceReport() {
                   {tableLoading ? (
                     <Loading />
                   ) : list?.length != 0 ? (
-                    <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
-                      <thead>
-                        <tr className="fw-boldest text-dark">
-                          <th className="min-w-300px" colSpan="2">
-                            Row Labels
-                          </th>
-                          <th className="min-w-300px" colSpan="2">
-                            Total
-                          </th>{" "}
-                          <th className="min-w-300px" colSpan="2">
-                            % CHANGE WEEK OVER WEEK
-                          </th>
-                        </tr>
-                        <tr className="fw-boldest text-dark">
-                          <th className="p-0" />
-                          <th className="p-0" />
-                        </tr>
-                      </thead>
-                      <tbody className="text-gray-700 fw-bold">
-                        <td>No data found</td>
-                      </tbody>
-                    </table>
+                    <ASINTable
+                      columns={columns}
+                      dataSource={list}
+                      ellipsis
+                      rowKey="key"
+                      loading={!tableLoading}
+                      pagination={false}
+                      scroll={{
+                        x:
+                          columns
+                            ?.map((d) => d.width)
+                            .reduce((a, b) => a + b, 0) + 300,
+                      }}
+                    />
                   ) : (
                     <NoData />
                   )}

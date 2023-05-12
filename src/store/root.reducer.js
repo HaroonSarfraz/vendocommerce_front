@@ -8,6 +8,8 @@ import SalesByMonth from "./slice/salesByMonth.slice";
 import InventoryPlanning from "./slice/planning.slice";
 import shipping from "./slice/shipping.slice";
 import ProductReportList from "./slice/productReport.slice";
+import CategoryList from "./slice/categoryList.slice";
+import CategoryProductList from "./slice/categoryProductList.slice";
 import CategoryPerformanceReport from "./slice/categoryPerformanceReport.slice";
 
 export const rootReducer = {
@@ -20,6 +22,8 @@ export const rootReducer = {
   salesByMonth: SalesByMonth,
   planning: InventoryPlanning,
   shipping: shipping,
+  categoryList: CategoryList,
   productReportList: ProductReportList,
+  categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,
 };
