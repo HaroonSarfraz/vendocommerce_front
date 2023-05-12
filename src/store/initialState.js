@@ -55,6 +55,14 @@ const initialState = {
     data: [],
     status: false,
   },
+  categoryProductList: {
+    data: [],
+    status: false,
+  },
+  categoryList: {
+    data: [],
+    status: false,
+  },
   salesByMonth: {
     salesByMonthData: {
       status: false,
