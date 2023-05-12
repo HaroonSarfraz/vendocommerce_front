@@ -16,6 +16,6 @@ export const { setProductReportList } = ProductReportSlice.actions;
 export default ProductReportSlice.reducer;
 
 const selectProductReportList = (state) =>
-  state.categoryPerformanceReport.productReportList;
+  state.productReportList;
 
 export { selectProductReportList };
