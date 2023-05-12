@@ -73,6 +73,14 @@ export const nameObject = {
     name: "Product Report",
     parent: "Category Reports",
   },
+  "/category-reports/manage-categories": {
+    name: "Manage Categories",
+    parent: "Category Reports",
+  },
+  "/category-reports/manage-categories/create-category": {
+    name: "Create New Category",
+    parent: "Manage Categories",
+  },
   "/customer-acquisition/new-vs-repeat": {
     name: "New v/s Repeat",
     parent: "Customer Acquisition",

@@ -153,6 +153,15 @@ export const userMenus = [
       null,
       "category-reports"
     ),
+    getItem(
+      "Manage Categories",
+      "manage-categories",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "category-reports"
+    ),
   ]),
   getItem("Customer Acquisition", "customer-acquisition", <UserLgSvg />, [
     getItem(
