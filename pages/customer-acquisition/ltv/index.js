@@ -1,40 +1,48 @@
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { defaultYear } from "@/src/config";
+import { selectCustomerAcquisitionList } from "@/src/store/slice/customerAcquisition.slice";
+import { getCustomerAcquisitionList } from "@/src/services/customerAcquisition.services";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import moment from "moment";
+import { currencyFormat, numberFormat } from "@/src/helpers/formatting.helpers";
+import NoData from "@/src/components/no-data";
 
-export default function SalesByMonth() {
-  const [loading, setLoading] = useState(false);
+export default function CustomerAcquisitionLtv() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [list , setList] = useState();
 
   const [filter, setFilter] = useState({
-    month: [],
-    year: 2023,
+    month: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    year: defaultYear(),
   });
+  const CustomerAcquisitionListRes = useSelector(selectCustomerAcquisitionList);
+  const brand = typeof window !== 'undefined' && JSON.parse(localStorage.getItem("brand"));
 
-  const list = [
-    {
-      row_label: "SEP-2022",
-      customers: "78",
-      value: "0",
-    },
-    {
-      row_label: "OCT-2022",
-      customers: "268",
-      value: "0",
-    },
-    {
-      row_label: "NOV-2022",
-      customers: "249",
-      value: "0",
-    },
-    {
-      row_label: "DEC-2022",
-      customers: "240",
-      value: "0",
-    },
-  ];
+  useEffect(() => {
+    const { year, month } = filter;
+    dispatch(
+      getCustomerAcquisitionList({
+        brand_id: brand?.id,
+        search_year: year,
+        search_month: month?.join(','),
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
+
+  useEffect(() => {
+    if (!_.isEmpty(CustomerAcquisitionListRes)) {
+      setList(Object.values([...CustomerAcquisitionListRes.data] || {}));
+      setLoading(false);
+    }
+  }, [CustomerAcquisitionListRes]);
 
   const columns = [
     {
@@ -42,7 +50,7 @@ export default function SalesByMonth() {
       width: 200,
       align: "center",
       render: (text) => {
-        return <span>{text?.row_label}</span>;
+        return <span>{moment().month(text.month - 1).format("MMM") + '-' + text.year}</span>;
       },
     },
     {
@@ -50,7 +58,7 @@ export default function SalesByMonth() {
       width: 180,
       align: "center",
       render: (text) => {
-        return <span>{text?.customers}</span>;
+        return <span>{numberFormat(text?.new_customer_count)}</span>;
       },
     },
     {
@@ -58,7 +66,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -66,7 +74,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -74,7 +82,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -82,7 +90,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -90,7 +98,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -98,7 +106,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -106,7 +114,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -114,7 +122,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
     {
@@ -122,7 +130,7 @@ export default function SalesByMonth() {
       width: 60,
       align: "center",
       render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
+        return <span>{`${currencyFormat(text.revenue)}`}</span>;
       },
     },
   ];
@@ -144,7 +152,7 @@ export default function SalesByMonth() {
 
                 {loading ? (
                   <Loading />
-                ) : (
+                ) : list?.length != 0 ? (
                   <ASINTable
                     columns={columns}
                     dataSource={list}
@@ -159,7 +167,10 @@ export default function SalesByMonth() {
                           .reduce((a, b) => a + b, 0) + 300,
                     }}
                   />
-                )}
+                ) : (
+                  <NoData/>
+                )
+                }
               </div>
             </div>
           </div>

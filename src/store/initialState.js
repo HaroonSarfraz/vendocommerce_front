@@ -16,6 +16,9 @@ const initialState = {
       limit: 10,
     },
   },
+  customerAcquisitionList: {
+    data : []
+  },
   sales: {
     salesGraphData: {},
     salesByWeekData: {},
