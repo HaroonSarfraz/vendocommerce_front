@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function Graph({ loading, heading, chartData }) {
+export default function Graph({ heading, loading, chartData, columns }) {
   return (
     <div className="card card-flush h-xl-100 fadeInRight">
       <div className="card-header min-h-55px d-flex flex-row justify-content-center">
@@ -37,7 +37,7 @@ export default function Graph({ loading, heading, chartData }) {
               </Skeleton.Node>
             </div>
           </div>
-        ) : chartData ? (
+        ) : chartData.length > 0 ? (
           <Chart
             options={{
               dataLabels: {
@@ -47,29 +47,20 @@ export default function Graph({ loading, heading, chartData }) {
                 curve: "smooth",
               },
               xaxis: {
-                // categories: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.week_name
-                // ),
-                categories: ['wk1', 'wk2', 'wk3', 'wk4']
+                categories: Object.values(chartData || {})?.map(
+                  (d) => "WK" + d?.week
+                ),
               },
               colors: ["#000", "#1BC5BD"],
             }}
-            series={[
-              {
-                name: "asdsad",
-                // data: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.total_ordered_product_sales
-                // ),
-                data: [1,3,5,7]
-              },
-              {
-                name: "vbvbn",
-                // data: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.total_ordered_product_sales
-                // ),
-                data: [2,4,6,8]
-              },
-            ]}
+            series={columns.map((column) => {
+              return {
+                name: column.name,
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.[column.data]
+                ),
+              };
+            })}
             type="area"
             height={300}
           />
