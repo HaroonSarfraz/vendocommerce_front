@@ -3,9 +3,13 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { Progress } from "antd";
 import Card from "antd/lib/card/Card";
 import Meta from "antd/lib/card/Meta";
-import React from "react";
-
+import React, { useEffect } from "react";
+import { getInvetoryDashBoardRstack } from "@/src/services/inventoryDashboardRstock.services";
+import { selectInventoryDashBoardRstockSclice } from "@/src/store/slice/inventoryDashboardRstock.sclice";
+import { useDispatch, useSelector } from "react-redux";
 export default function InventoryDashboard() {
+  const dispatch=useDispatch();
+  const ReStockData=useSelector(selectInventoryDashBoardRstockSclice);
   const ProgressBarCard = {
     targetValue: 70,
     progressColor: {
@@ -14,7 +18,9 @@ export default function InventoryDashboard() {
       "100%": "#87d068",
     },
   };
-
+  useEffect(()=>{
+    dispatch(getInvetoryDashBoardRstack())
+  },[]);
   const format = (_percent) => (
     <div
       style={{
@@ -127,7 +133,22 @@ export default function InventoryDashboard() {
         </div>
         <div className="row my-5">
           <h2>Restock Limits</h2>
-          <div className="row my-5">
+         
+           <div className="row my-5">
+            {/* // After Geeting the Data From Api
+          { ReStockData.map((data)=>
+           <CommonCard
+              heading="Standard-Size Storage"
+              subheading="6,891 of 14,291 Units"
+              value={40}
+              Row1="Utilization Quantity"
+              Row1V={`${numberFormat(6982)}`}
+              Row2="Maximum Inventory Level"
+              Row2V={`${numberFormat(36434)}`}
+              Row3="Maximum Shipment Quantity"
+              Row3V={`${numberFormat(7200)}`}
+            />
+           )} */}
             <CommonCard
               heading="Standard-Size Storage"
               subheading="6,891 of 14,291 Units"

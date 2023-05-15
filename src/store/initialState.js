@@ -98,6 +98,10 @@ const initialState = {
       items: [],
     },
   },
+  inventoryDashBoardRstock: {
+    data: [],
+    status: false,
+  },
 };
 
 export default initialState;

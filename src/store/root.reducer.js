@@ -12,7 +12,7 @@ import CategoryList from "./slice/categoryList.slice";
 import CategoryProductList from "./slice/categoryProductList.slice";
 import CategoryPerformanceReport from "./slice/categoryPerformanceReport.slice";
 import Advertising from "./slice/advertising.slice";
-
+import inventoryDashboardRstockSclice from "./slice/inventoryDashboardRstock.sclice";
 export const rootReducer = {
   users: UsersReducer,
   brands: BrandsReducer,
@@ -28,4 +28,5 @@ export const rootReducer = {
   categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,
   advertising: Advertising,
+  inventoryDashboardRstockSclice:inventoryDashboardRstockSclice,
 };
