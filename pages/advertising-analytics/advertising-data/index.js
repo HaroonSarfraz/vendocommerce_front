@@ -1,14 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KPITable from "@/src/components/advertising-analytics/advertising-data/KPITable";
 import Graph from "@/src/components/advertising-analytics/advertising-data/Graph";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { defaultWeek, defaultYear } from "@/src/config";
+import { useSelector, useDispatch } from "react-redux";
+import { getAdvertising } from "@/src/services/advertising.services";
+import {
+  selectLastWeekKPIs,
+  selectYearToDayKPIs,
+  selectAdvertisements,
+} from "@/src/store/slice/advertising.slice";
+import _ from "lodash";
 
 export default function AdvertisingData() {
+  const dispatch = useDispatch();
+  const lastWeekKPIs = useSelector(selectLastWeekKPIs);
+  const yearToDayKPIs = useSelector(selectYearToDayKPIs);
+  const advertisements = useSelector(selectAdvertisements);
+
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: _.range(1, defaultWeek() + 1),
+    year: defaultYear(),
   });
+
+  const [lastWeekKPIsData, setLastWeekKPIsData] = useState({});
+  const [lastYearToDayKPIsData, setYearToDayKPIsData] = useState({});
+  const [advertisementsData, setAdvertisementsData] = useState({});
+
+  const [lastWeekKPIsLoading, setLastWeekKPIsLoading] = useState(true);
+  const [yearToDayKPIsLoading, setYearToDayKPIsLoading] = useState(true);
+  const [graphsLoading, setGraphsLoading] = useState(true);
+
+  useEffect(() => {
+    if (lastWeekKPIs?.status === true) {
+      setLastWeekKPIsData(lastWeekKPIs?.data || {});
+      setLastWeekKPIsLoading(false);
+    } else if (lastWeekKPIs?.status === false) {
+      setLastWeekKPIsLoading(false);
+    }
+  }, [lastWeekKPIs]);
+
+  useEffect(() => {
+    if (yearToDayKPIs?.status === true) {
+      setYearToDayKPIsData(yearToDayKPIs?.data || {});
+      setYearToDayKPIsLoading(false);
+    } else if (yearToDayKPIs?.status === false) {
+      setYearToDayKPIsLoading(false);
+    }
+  }, [yearToDayKPIs]);
+
+  useEffect(() => {
+    if (advertisements?.status === true) {
+      setAdvertisementsData(advertisements?.data || []);
+      setGraphsLoading(false);
+    } else if (advertisements?.status === false) {
+      setGraphsLoading(false);
+    }
+  }, [advertisements]);
+
+  useEffect(() => {
+    setLastWeekKPIsLoading(true);
+    setYearToDayKPIsLoading(true);
+    setGraphsLoading(true);
+
+    dispatch(
+      getAdvertising({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
+  }, [filter]);
 
   return (
     <DashboardLayout>
@@ -18,31 +80,66 @@ export default function AdvertisingData() {
 
           <div className="row gx-5 gx-xl-5">
             <div className="col-xl-6 h-550px h-md-100">
-              <KPITable heading="KPI YTD" />
+              <KPITable
+                heading="KPI YTD"
+                loading={yearToDayKPIsLoading}
+                data={lastYearToDayKPIsData}
+              />
             </div>
             <div className="col-xl-6 h-550px h-md-100">
-              <KPITable heading="KPI LW" />
+              <KPITable
+                heading="KPI LW"
+                loading={lastWeekKPIsLoading}
+                data={lastWeekKPIsData}
+              />
             </div>
           </div>
 
           <div className="row gx-5 gx-xl-5">
             <div className="col-xl-6 mb-5">
-              <Graph heading="REVENUE" loading={true} />
+              <Graph
+                heading="REVENUE"
+                loading={graphsLoading}
+                chartData={advertisementsData}
+                columns={[{ name: "Total Revenue", data: "revenue" }]}
+              />
             </div>
             <div className="col-xl-6 mb-5">
-              <Graph heading="SPEND" loading={true} />
+              <Graph
+                heading="SPEND"
+                loading={graphsLoading}
+                chartData={advertisementsData}
+                columns={[{ name: "Spends", data: "spend" }]}
+              />
             </div>
             <div className="col-xl-6 mb-5">
-              <Graph heading="ACOS" loading={true} />
+              <Graph
+                heading="ACOS"
+                loading={graphsLoading}
+                chartData={advertisementsData}
+                columns={[{ name: "ACoS", data: "ACoS_percentage" }]}
+              />
             </div>
             <div className="col-xl-6 mb-5">
-              <Graph heading="CPO" loading={true} />
+              <Graph
+                heading="CPO"
+                loading={graphsLoading}
+                chartData={advertisementsData}
+                columns={[{ name: "CPO", data: "CPO" }]}
+              />
             </div>
             <div className="col-xl-6 mb-5">
               <Graph
                 heading="TOTAL SALES & ACOS"
-                loading={false}
-                chartData={true}
+                loading={graphsLoading}
+                chartData={advertisementsData}
+                columns={[
+                  { name: "Total ACoS", data: "ACoS" },
+                  {
+                    name: "Total Sales",
+                    data: "total_ordered_product_sales",
+                  },
+                ]}
               />
             </div>
           </div>
