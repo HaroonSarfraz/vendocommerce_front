@@ -42,27 +42,28 @@ export default function Graph({ loading, chartData }) {
                 curve: "smooth",
               },
               xaxis: {
-                // categories: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.week_name
-                // ),
-                categories: [
-                  "week1",
-                  "week2",
-                  "week3",
-                  "week4",
-                  "week5",
-                  "week6",
-                ],
+                categories: Object.values(chartData || {})?.map(
+                  (d) => "WK" + d?.week
+                ),
               },
-              colors: ["#000", "#1BC5BD"],
+              colors: [
+                "#e86c86",
+                "#f55420",
+                "#0abdd5",
+                "#0cb774",
+                "#29d07b",
+                "#bdc0e7",
+                "#3cbea1",
+                "#108a9c",
+                "#16050f",
+              ],
             }}
             series={[
               {
                 name: "Spend",
-                // data: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.total_ordered_product_sales
-                // ),
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.spend
+                ),
               },
               {
                 name: "Spend Change",
@@ -70,7 +71,9 @@ export default function Graph({ loading, chartData }) {
               },
               {
                 name: "Ad Revenue",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.revenue
+                ),
               },
               {
                 name: "Ad Change",
@@ -78,7 +81,9 @@ export default function Graph({ loading, chartData }) {
               },
               {
                 name: "Organic Sales",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.total_ordered_product_sales
+                ),
               },
               {
                 name: "Organic Change",
@@ -90,19 +95,27 @@ export default function Graph({ loading, chartData }) {
               },
               {
                 name: "Total ACoS",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.ACoS_percentage
+                ),
               },
               {
                 name: "Impressions",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.impression
+                ),
               },
               {
                 name: "Clicks",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.clicks
+                ),
               },
               {
                 name: "Toatl Unit Orders",
-                data: [0, 0, 0, 0, 0, 0],
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.unit_ordered
+                ),
               },
               {
                 name: "Branded Spend",

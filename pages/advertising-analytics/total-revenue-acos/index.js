@@ -1,19 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import Graph from "@/src/components/advertising-analytics/total-revenue/Graph";
 import Drawers from "@/src/components/advertising-analytics/total-revenue/Drawer";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { useSelector, useDispatch } from "react-redux";
+import { defaultWeek, defaultYear } from "@/src/config";
+import { getAdvertising } from "@/src/services/advertising.services";
+import { selectAdvertisements } from "@/src/store/slice/advertising.slice";
+import _ from "lodash";
 
 export default function TotalRevenueAcos() {
+  const dispatch = useDispatch();
+
+  const advertisements = useSelector(selectAdvertisements);
+
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: _.range(1, defaultWeek() + 1),
+    year: defaultYear(),
   });
+
+  const [advertisementsData, setAdvertisementsData] = useState({});
+
+  useEffect(() => {
+    if (advertisements?.status === true) {
+      setAdvertisementsData(advertisements?.data || []);
+      setLoading(false);
+    } else if (advertisements?.status === false) {
+      setLoading(false);
+    }
+  }, [advertisements]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    dispatch(
+      getAdvertising({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
+  }, [filter]);
 
   const list = [];
 
@@ -170,7 +201,7 @@ export default function TotalRevenueAcos() {
         <div className="container-fluid">
           {TopBarFilter(filter, setFilter, "Week")}
 
-          <Graph loading={false} chartData={true} />
+          <Graph loading={loading} chartData={advertisementsData} />
 
           <div className="mt-5 col-lg-12">
             <div className="card mb-7 pt-5">
