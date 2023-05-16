@@ -8,28 +8,14 @@ export const poTemplateSlice = createSlice({
         setPoTemplateList: (state, action) => {
             state.poTemplateList = action.payload;
         },
-        setSaveColumnConfiguration: (state, action) => {
-            state.saveColumnConfiguration = action.payload;
-        },
-        setPoTemplateColumnList: (state, action) => {
-            state.poTemplateColumnList = action.payload;
-        },
-        setSaveTableConfiguration: (state, action) => {
-            state.saveTableConfiguration = action.payload;
+        setPoTemplateObj: (state, action) => {
+            state.poTemplateObj = action.payload;
         },
     },
 });
 
 export const {
-    setPoTemplateList,
-    setSaveColumnConfiguration,
-    setPoTemplateColumnList,
-    setSaveTableConfiguration,
+    setPoTemplateList, setPoTemplateObj
 } = poTemplateSlice.actions;
 
 export default poTemplateSlice.reducer;
-
-const selectPoTemplateList = (state) =>
-    state.poTemplate.poTemplateList;
-
-export { selectPoTemplateList };

@@ -38,10 +38,8 @@ const initialState = {
     saveTableConfiguration: {},
   },
   poTemplate: {
-    poTemplateList: {},
-    saveColumnConfiguration: {},
-    poTemplateColumnList: {},
-    saveTableConfiguration: {},
+    poTemplateList: [],
+    poTemplateObj: {},
   },
   advertising: {
     lastWeekKPIs: {

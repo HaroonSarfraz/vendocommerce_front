@@ -1,15 +1,9 @@
 import { message } from "antd";
 import {
-    fetchPoTemplateColumnList,
-    fetchPoTemplateList,
-    SaveColumnConfiguration,
-    SaveTableConfigurationAction,
+    fetchPoTemplateList, postPotemplateObj,
 } from "../api/poTemplate.api";
 import {
-    setPoTemplateColumnList,
     setPoTemplateList,
-    setSaveColumnConfiguration,
-    setSaveTableConfiguration,
 } from "../store/slice/poTemplate.slice";
 
 export const getPoTemplateList = (data) => {
@@ -27,51 +21,18 @@ export const getPoTemplateList = (data) => {
             });
     };
 };
-
-export const getSaveColumnConfiguration = (data) => {
-    return (dispatch) => {
-        SaveColumnConfiguration(data)
+export const postPoTemplate = (data) => {
+    return () => {
+        postPotemplateObj(data)
             .then((res) => {
-                if (res.data.status) {
-                    dispatch(setSaveColumnConfiguration(res.data));
+                if (res.status === 200) {
+                    console.log('successfully post data')
                 } else {
                     message.error(res.data.message);
                 }
             })
             .catch((err) => {
-                message.error(err?.response?.message || "Something Went Wrong.");
-            });
-    };
-};
-
-export const getPoTemplateColumnList = (data) => {
-    return (dispatch) => {
-        fetchPoTemplateColumnList(data)
-            .then((res) => {
-                if (res.data.status) {
-                    dispatch(setPoTemplateColumnList(res.data));
-                } else {
-                    message.error(res.data.message);
-                }
-            })
-            .catch((err) => {
-                message.error(err?.response?.message || "Something Went Wrong.");
-            });
-    };
-};
-
-export const getSaveTableConfiguration = (data) => {
-    return (dispatch) => {
-        SaveTableConfigurationAction(data)
-            .then((res) => {
-                if (res.data.status) {
-                    dispatch(setSaveTableConfiguration(res.data));
-                } else {
-                    message.error(res.data.message);
-                }
-            })
-            .catch((err) => {
-                message.error(err?.response?.message || "Something Went Wrong.");
+                return message.error(err?.response?.message || "Something Went Wrong.");
             });
     };
 };

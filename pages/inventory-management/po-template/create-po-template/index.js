@@ -1,11 +1,10 @@
-import { Button, Form, Input, theme } from "antd";
+import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { selectPoTemplateList } from "@/src/store/slice/poTemplate.slice";
 import { useRouter } from "next/router";
+import { postPoTemplate } from "@/src/services/poTemplate.services";
 
 export default function PoTemplate() {
     const router = useRouter();
@@ -14,16 +13,19 @@ export default function PoTemplate() {
     const [submit, setSubmit] = useState(false);
     const onFinish = (values) => {
         setSubmit(true);
-        form.validateFields().then((values) => {
-            console.log(values);
-        });
-        form.resetFields();
-        setSubmit(false); //on submit successfull response
     }
-
+    const handleInputChange = (fieldName, value) => {
+        // Update the values state with the new field value
+        setValues((prevValues) => ({
+            ...prevValues,
+            [fieldName]: value
+        }));
+    };
     const handleSubmit = () => {
         form.validateFields().then((values) => {
-            console.log(values);
+            // setSubmit(true); //on submit successfull response
+            postPoTemplate(values)
+            // setSubmit(false); //on submit successfull response
         });
         form.resetFields();
     };
@@ -31,24 +33,24 @@ export default function PoTemplate() {
         {
             title: "#",
             width: 60,
-            render: (_, __, i) => {
-                return <span>{(page - 1) * pageSize + 1 + i}</span>;
-            },
         },
         {
             title: "Name",
             width: 120,
-            placeholder: 'Enter Name of PO Template'
+            placeholder: 'Enter Name of PO Template',
+            dataIndex: 'name'
         },
         {
             title: "Ship From",
             width: 120,
-            placeholder: 'Write Shipping From'
+            placeholder: 'Write Shipping From',
+            dataIndex: 'shipFrom'
         },
         {
             title: "Ship To",
             width: 120,
-            placeholder: 'Write Shipping To'
+            placeholder: 'Write Shipping To',
+            dataIndex: 'shipTo'
         },
         {
             title: "Created At",
@@ -99,14 +101,8 @@ export default function PoTemplate() {
                                         form={form}
                                         layout="vertical"
                                         className="mt-4 px-3"
-                                        onFinish={onFinish}
+                                        // onFinish={onFinish}
                                         initialValues={values}
-                                        onValuesChange={(changedValues) =>
-                                            handleChange(
-                                                Object.keys(changedValues)[0],
-                                                changedValues[Object.keys(changedValues)[0]]
-                                            )
-                                        }
                                     >
                                         {columns.map(
                                             (column) =>
@@ -125,10 +121,12 @@ export default function PoTemplate() {
                                                             placeholder={column.placeholder}
                                                             className="form-control-lg"
                                                             size="large"
+                                                            onChange={(e) => handleInputChange(column.dataIndex, e.target.value)}
                                                         /> :
                                                             <Input.TextArea
                                                                 placeholder={column.placeholder}
                                                                 style={{ resize: 'vertical', minHeight: '80px', maxHeight: '250px' }}
+                                                                onChange={(e) => handleInputChange(column.dataIndex, e.target.value)}
                                                             />}
                                                     </Form.Item>
                                                 )
@@ -148,7 +146,9 @@ export default function PoTemplate() {
                                                         <span className="spinner-border spinner-border-sm align-middle ms-2" />
                                                     </span>
                                                 ) : (
-                                                    <span className="indicator-label">Submit</span>
+                                                    <span className="indicator-label"
+                                                        onClick={() => handleSubmit()}
+                                                    >Submit</span>
                                                 )}
                                             </Button>
                                         </Form.Item>
