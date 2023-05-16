@@ -1,101 +1,125 @@
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Details from "@/src/components/customer-acquisition/Details";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { defaultYear } from "@/src/config";
+import { getCustomerAcquisition } from "@/src/services/customerAcquisition.services";
+import NoData from "@/src/components/no-data";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCustomerAcquisition } from "@/src/store/slice/customerAcquisition.slice";
+import _ from "lodash";
+import { currencyFormat, numberFormat } from "@/src/helpers/formatting.helpers";
+import moment from "moment";
 
-export default function SalesByMonth() {
-  const [loading, setLoading] = useState(false);
+export default function CustomerAcquisitionNewVSRepeat() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: [],
-    year: 2023,
+    month: [0, 1, 2],
+    year: defaultYear(),
   });
 
-  const list = [
-    {
-      row_label: "SEP-2022",
-      customers: "78",
-      repeating_customer: "0",
-      new_customer: "78",
-      ad_spends: "0",
-      cac: "0",
-    },
-    {
-      row_label: "OCT-2022",
-      customers: "279",
-      repeating_customer: "11",
-      new_customer: "268",
-      ad_spends: "0",
-      cac: "0",
-    },
-    {
-      row_label: "NOV-2022",
-      customers: "279",
-      repeating_customer: "30",
-      new_customer: "249",
-      ad_spends: "0",
-      cac: "0",
-    },
-    {
-      row_label: "DEC-2022",
-      customers: "273",
-      repeating_customer: "33",
-      new_customer: "240",
-      ad_spends: "0",
-      cac: "0",
-    },
-  ];
+  const CustomerAcquisitionRes = useSelector(selectCustomerAcquisition);
+
+  const totalCustomers = CustomerAcquisitionRes.data.reduce(
+    (a, b) => a + b.customer_count,
+    0
+  );
+  const repeatingCustomers = CustomerAcquisitionRes.data.reduce(
+    (a, b) => a + b.old_customer_count,
+    0
+  );
+  const newCustomers = CustomerAcquisitionRes.data.reduce(
+    (a, b) => a + b.new_customer_count,
+    0
+  );
+
+  useEffect(() => {
+    setLoading(true);
+    const { year, month } = filter;
+    dispatch(
+      getCustomerAcquisition({
+        search_year: year,
+        search_month: month?.join(","),
+      })
+    );
+  }, [filter]);
+
+  useEffect(() => {
+    if (!_.isEmpty(CustomerAcquisitionRes)) {
+      setList(CustomerAcquisitionRes.data || []);
+      setLoading(false);
+    } else if (CustomerAcquisitionRes?.status === false) {
+      setList([]);
+      setLoading(false);
+    }
+  }, [CustomerAcquisitionRes]);
 
   const columns = [
     {
       title: "ROW LABEL",
       width: "80px",
       align: "center",
+      sorter: (a, b) => a.month - b.month,
       render: (text) => {
-        return <span>{text?.row_label}</span>;
+        return (
+          <span>
+            {moment()
+              .month(text.month - 1)
+              .format("MMM") +
+              "-" +
+              (text.year || filter.year) }
+          </span>
+        );
       },
     },
     {
       title: "CUSTOMERS",
       width: "80px",
       align: "center",
+      sorter: (a, b) => a.customer_count - b.customer_count,
       render: (text) => {
-        return <span>{text?.customers}</span>;
+        return <span>{numberFormat(text?.customer_count)}</span>;
       },
     },
     {
       title: "REPEATING CUSOMER",
       width: "120px",
       align: "center",
+      sorter: (a, b) => a.old_customer_count - b.old_customer_count,
       render: (text) => {
-        return <span>{text?.repeating_customer}</span>;
+        return <span>{numberFormat(text?.old_customer_count)}</span>;
       },
     },
     {
       title: "NEW CUSTOMER",
       width: "130px",
       align: "center",
+      sorter: (a, b) => a.new_customer_count - b.new_customer_count,
       render: (text) => {
-        return <span>{text?.new_customer}</span>;
+        return <span>{numberFormat(text?.new_customer_count)}</span>;
       },
     },
     {
       title: "AD SPENDS",
       width: "90px",
       align: "center",
+      sorter: (a, b) => (a.spend || 0) - (b.spend || 0),
       render: (text) => {
-        return <span>{`$${text?.ad_spends}`}</span>;
+        return <span>{`${currencyFormat(text?.spend)}`}</span>;
       },
     },
     {
       title: "CAC",
       width: "100px",
       align: "center",
+      sorter: (a, b) => (a.CPC || 0) - (b.CPC || 0),
       render: (text) => {
-        return <span>{`$${text?.cac}`}</span>;
+        return <span>{`${currencyFormat(text?.CPC)}`}</span>;
       },
     },
   ];
@@ -116,15 +140,15 @@ export default function SalesByMonth() {
                       data={[
                         {
                           title: "Customers",
-                          value: 2366,
+                          value: totalCustomers,
                         },
                         {
                           title: "Repeating Customer",
-                          value: 299,
+                          value: repeatingCustomers,
                         },
                         {
                           title: "New Customer",
-                          value: 2067,
+                          value: newCustomers,
                         },
                       ]}
                     />
@@ -145,7 +169,7 @@ export default function SalesByMonth() {
 
                 {loading ? (
                   <Loading />
-                ) : (
+                ) : list?.length != 0 ? (
                   <ASINTable
                     columns={columns}
                     dataSource={list}
@@ -160,6 +184,8 @@ export default function SalesByMonth() {
                           .reduce((a, b) => a + b, 0) + 300,
                     }}
                   />
+                ) : (
+                  <NoData />
                 )}
               </div>
             </div>
