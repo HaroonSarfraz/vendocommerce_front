@@ -16,6 +16,10 @@ const initialState = {
       limit: 10,
     },
   },
+  customerAcquisition: {
+    status: false,
+    data: [],
+  },
   sales: {
     salesGraphData: {},
     salesByWeekData: {},
