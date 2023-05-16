@@ -71,35 +71,6 @@ export const userMenus = [
       "sales-analytics"
     ),
   ]),
-  getItem("Inventory Management", "inventory-management", <CategoriesSvg />, [
-    getItem(
-      "Inventory Dashboard",
-      "inventory-dashboard",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-    getItem(
-      "Inventory Planning",
-      "planning",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-    getItem(
-      "Shipping From Address",
-      "shipping-from-address",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-  ]),
   getItem(
     "Advertisement Analytics",
     "advertising-analytics",
@@ -134,6 +105,26 @@ export const userMenus = [
       ),
     ]
   ),
+  getItem("Customer Acquisition", "customer-acquisition", <UserLgSvg />, [
+    getItem(
+      "New v/s Repeat",
+      "new-vs-repeat",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "customer-acquisition"
+    ),
+    getItem(
+      "LTV",
+      "ltv",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "customer-acquisition"
+    ),
+  ]),
   getItem("Category Reports", "category-reports", <ClipboardSvg />, [
     getItem(
       "Category Performance Report",
@@ -172,24 +163,33 @@ export const userMenus = [
       "category-reports"
     ),
   ]),
-  getItem("Customer Acquisition", "customer-acquisition", <UserLgSvg />, [
+  getItem("Inventory Management", "inventory-management", <CategoriesSvg />, [
     getItem(
-      "New v/s Repeat",
-      "new-vs-repeat",
+      "Inventory Dashboard",
+      "inventory-dashboard",
       <span className="menu-bullet">
         <span className="bullet bullet-dot" />
       </span>,
       null,
-      "customer-acquisition"
+      "inventory-management"
     ),
     getItem(
-      "LTV",
-      "ltv",
+      "Inventory Planning",
+      "planning",
       <span className="menu-bullet">
         <span className="bullet bullet-dot" />
       </span>,
       null,
-      "customer-acquisition"
+      "inventory-management"
+    ),
+    getItem(
+      "Shipping From Address",
+      "shipping-from-address",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
     ),
   ]),
 ];
