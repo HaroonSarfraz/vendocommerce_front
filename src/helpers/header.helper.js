@@ -49,6 +49,14 @@ export const nameObject = {
     name: "Shipping From Address",
     parent: "Inventory Management",
   },
+  "/inventory-management/po-template": {
+    name: "PO Template",
+    parent: "Inventory Management",
+  },
+  "/inventory-management/po-template/create-po-template": {
+    name: "Create PO Template",
+    parent: "Inventory Management",
+  },
   "/inbound-shipment": {
     name: "Inbound Shipment",
     parent: "Inventory Management",

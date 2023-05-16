@@ -99,6 +99,15 @@ export const userMenus = [
       null,
       "inventory-management"
     ),
+    getItem(
+      "PO Tempate",
+      "po-template",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
+    ),
   ]),
   getItem(
     "Advertisement Analytics",

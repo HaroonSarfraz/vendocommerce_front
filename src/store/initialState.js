@@ -37,6 +37,12 @@ const initialState = {
     salesByProductColumnList: {},
     saveTableConfiguration: {},
   },
+  poTemplate: {
+    poTemplateList: {},
+    saveColumnConfiguration: {},
+    poTemplateColumnList: {},
+    saveTableConfiguration: {},
+  },
   advertising: {
     lastWeekKPIs: {
       status: false,

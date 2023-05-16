@@ -12,6 +12,7 @@ import CategoryList from "./slice/categoryList.slice";
 import CategoryProductList from "./slice/categoryProductList.slice";
 import CategoryPerformanceReport from "./slice/categoryPerformanceReport.slice";
 import Advertising from "./slice/advertising.slice";
+import poTemplateSlice from "./slice/poTemplate.slice";
 
 export const rootReducer = {
   users: UsersReducer,
@@ -28,4 +29,5 @@ export const rootReducer = {
   categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,
   advertising: Advertising,
+  poTemplate: poTemplateSlice,
 };
