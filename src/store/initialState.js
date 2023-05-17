@@ -102,6 +102,10 @@ const initialState = {
       items: [],
     },
   },
+  inventoryDashboard: {
+    data: [],
+    status: false,
+  },
 };
 
 export default initialState;

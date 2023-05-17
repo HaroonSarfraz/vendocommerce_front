@@ -3,9 +3,15 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { Progress } from "antd";
 import Card from "antd/lib/card/Card";
 import Meta from "antd/lib/card/Meta";
-import React from "react";
+import React, { useEffect } from "react";
+import { getInventoryDashboard as getInventoryDashboard } from "@/src/services/inventoryDashboard.services";
+import { selectInventoryDashboard } from "@/src/store/slice/inventoryDashboard.slice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function InventoryDashboard() {
+  const dispatch = useDispatch();
+  const inventoryDashboard = useSelector(selectInventoryDashboard);
+
   const ProgressBarCard = {
     targetValue: 70,
     progressColor: {
@@ -14,6 +20,10 @@ export default function InventoryDashboard() {
       "100%": "#87d068",
     },
   };
+
+  useEffect(() => {
+    dispatch(getInventoryDashboard());
+  }, []);
 
   const format = (_percent) => (
     <div

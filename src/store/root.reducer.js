@@ -13,6 +13,7 @@ import CategoryProductList from "./slice/categoryProductList.slice";
 import CategoryPerformanceReport from "./slice/categoryPerformanceReport.slice";
 import Advertising from "./slice/advertising.slice";
 import CustomerAcquisition from "./slice/customerAcquisition.slice";
+import InventoryDashboard from "./slice/inventoryDashboard.slice";
 
 export const rootReducer = {
   users: UsersReducer,
@@ -30,4 +31,5 @@ export const rootReducer = {
   categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,
   advertising: Advertising,
+  inventoryDashboard: InventoryDashboard,
 };
