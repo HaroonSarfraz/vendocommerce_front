@@ -183,6 +183,15 @@ export const userMenus = [
       "inventory-management"
     ),
     getItem(
+      "PO Template",
+      "po-template",
+      <span className="menu-bullet">
+        <span className="bullet bullet-dot" />
+      </span>,
+      null,
+      "inventory-management"
+    ),
+    getItem(
       "Shipping From Address",
       "shipping-from-address",
       <span className="menu-bullet">
