@@ -1,6 +1,11 @@
 import { DotChartOutlined } from "@ant-design/icons";
 import { Select, Skeleton } from "antd";
 import { useState } from "react";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 import dynamic from "next/dynamic";
 
@@ -15,22 +20,27 @@ export default function SalesByWeek(loading, chartData) {
     {
       value: "sum_of_ordered_product_sales",
       label: "Sales by week",
+      formatter: currencyFormat
     },
     {
       value: "sum_of_units_ordered",
       label: "Units by week",
+      formatter: numberFormat
     },
     {
       value: "sum_of_sessions",
       label: "Sessions by week",
+      formatter: numberFormat
     },
     {
       value: "conversion_rate",
       label: "Conversion By Week",
+      formatter: percentageFormat
     },
     {
       value: "average_of_buy_box_percentage",
       label: "Buy Box % By Week",
+      formatter: percentageFormat
     }
   ];
 
@@ -87,6 +97,20 @@ export default function SalesByWeek(loading, chartData) {
                 categories: Object.values(chartData || [])?.map(
                   (d) => d?.label
                 ),
+              },
+              yaxis: {
+                labels: {
+                  formatter: (value) => {
+                    return value.toFixed(0);
+                  },
+                },
+              },
+              tooltip: {
+                y: {
+                  formatter: function (val) {
+                    return options.find((l) => l?.value == graphSelected)?.formatter(val);
+                  },
+                },
               },
               colors: ["#000", "#1BC5BD"],
             }}

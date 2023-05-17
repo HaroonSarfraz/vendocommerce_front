@@ -209,7 +209,7 @@ export default function SalesByProducts() {
                       <Loading />
                     ) : Object.keys(list || {}).length === 0 ? (
                       <NoData />
-                      ) : (
+                    ) : (
                       <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">
@@ -368,6 +368,9 @@ export default function SalesByProducts() {
                                           className="d-block"
                                           style={{ width: 150 }}
                                         >
+                                          {selectedColumn ==
+                                            "total_ordered_product_sales" &&
+                                            "$"}
                                           {defaultValue || 0}
                                           {selectedColumn.startsWith("avg") &&
                                             "%"}
@@ -399,6 +402,9 @@ export default function SalesByProducts() {
                                                       key={j}
                                                       className="min-w-300px"
                                                     >
+                                                      {h.value ===
+                                                        "total_ordered_product_sales" &&
+                                                        "$"}
                                                       {r?.[1]?.[h.value] ?? 0}
                                                       {h.value.startsWith(
                                                         "avg"
@@ -419,6 +425,8 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
+                                    {selectedColumn ==
+                                      "total_ordered_product_sales" && "$"}
                                     {numberFormat(
                                       Object.values(d || {}).reduce(
                                         (partialSum, a) =>

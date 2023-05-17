@@ -13,7 +13,7 @@ const formatter = (value) => (
   <CountUp
     decimals={checkFloor(value) ? 2 : 0}
     end={value}
-    separator={checkFloor(value) ? '' : ','}
+    separator=","
   />
 );
 

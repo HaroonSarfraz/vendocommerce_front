@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function Graph({ heading, loading, chartData, columns }) {
+export default function Graph({ heading, loading, chartData, formatter, columns }) {
   return (
     <div className="card card-flush h-xl-100 fadeInRight">
       <div className="card-header min-h-55px d-flex flex-row justify-content-center">
@@ -50,6 +50,20 @@ export default function Graph({ heading, loading, chartData, columns }) {
                 categories: Object.values(chartData || {})?.map(
                   (d) => "WK" + d?.week
                 ),
+              },
+              yaxis: {
+                labels: {
+                  formatter: (value) => {
+                    return value.toFixed(0);
+                  },
+                },
+              },
+              tooltip: {
+                y: {
+                  formatter: function (val) {
+                    return formatter(val);
+                  },
+                },
               },
               colors: ["#000", "#1BC5BD"],
             }}

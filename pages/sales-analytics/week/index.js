@@ -214,6 +214,20 @@ export default function SalesByWeek() {
         hideOverlappingLabels: true,
       },
     },
+    yaxis: {
+      labels: {
+        formatter: (value) => {
+          return value.toFixed(0);
+        },
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val;
+        },
+      },
+    },
     colors: [
       "#e86c86",
       "#f55420",
