@@ -4,7 +4,7 @@ import Details from "@/src/components/customer-acquisition/Details";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { defaultYear } from "@/src/config";
+import { defaultYear, defaultMonth } from "@/src/config";
 import { getCustomerAcquisition } from "@/src/services/customerAcquisition.services";
 import NoData from "@/src/components/no-data";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: [0, 1, 2],
+    month: _.range(0, defaultMonth() + 1),
     year: defaultYear(),
   });
 
@@ -72,7 +72,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
               .month(text.month - 1)
               .format("MMM") +
               "-" +
-              (text.year || filter.year) }
+              (text.year || filter.year)}
           </span>
         );
       },

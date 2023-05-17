@@ -285,6 +285,20 @@ export default function SalesByMonth() {
                             hideOverlappingLabels: true,
                           },
                         },
+                        yaxis: {
+                          labels: {
+                            formatter: (value) => {
+                              return value.toFixed(0);
+                            },
+                          },
+                        },
+                        tooltip: {
+                          y: {
+                            formatter: function (val) {
+                              return val;
+                            },
+                          },
+                        },
                         colors: [
                           "#999",
                           "#29d07b",

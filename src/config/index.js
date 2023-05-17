@@ -44,6 +44,10 @@ export const defaultWeek = () => {
   return Math.max(dayjs().week() -1, 0);
 }
 
+export const defaultMonth = () => {
+  return dayjs().month();
+}
+
 export const defaultDateRange = () => {
   return [dayjs().add(-7 - dayjs().day(), 'd'), dayjs().add(-1 - dayjs().day(), 'd')];
 }

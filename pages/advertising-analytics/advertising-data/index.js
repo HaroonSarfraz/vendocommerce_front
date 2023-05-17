@@ -12,6 +12,11 @@ import {
   selectAdvertisements,
 } from "@/src/store/slice/advertising.slice";
 import _ from "lodash";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 export default function AdvertisingData() {
   const dispatch = useDispatch();
@@ -101,6 +106,7 @@ export default function AdvertisingData() {
                 heading="REVENUE"
                 loading={graphsLoading}
                 chartData={advertisementsData}
+                formatter={currencyFormat}
                 columns={[{ name: "Total Revenue", data: "revenue" }]}
               />
             </div>
@@ -109,6 +115,7 @@ export default function AdvertisingData() {
                 heading="SPEND"
                 loading={graphsLoading}
                 chartData={advertisementsData}
+                formatter={currencyFormat}
                 columns={[{ name: "Spends", data: "spend" }]}
               />
             </div>
@@ -117,6 +124,7 @@ export default function AdvertisingData() {
                 heading="ACOS"
                 loading={graphsLoading}
                 chartData={advertisementsData}
+                formatter={percentageFormat}
                 columns={[{ name: "ACoS", data: "ACoS_percentage" }]}
               />
             </div>
@@ -125,6 +133,7 @@ export default function AdvertisingData() {
                 heading="CPO"
                 loading={graphsLoading}
                 chartData={advertisementsData}
+                formatter={currencyFormat}
                 columns={[{ name: "CPO", data: "CPO" }]}
               />
             </div>
@@ -133,12 +142,13 @@ export default function AdvertisingData() {
                 heading="TOTAL SALES & ACOS"
                 loading={graphsLoading}
                 chartData={advertisementsData}
+                formatter={numberFormat}
                 columns={[
-                  { name: "Total ACoS", data: "ACoS" },
                   {
                     name: "Total Sales",
                     data: "total_ordered_product_sales",
                   },
+                  { name: "Total ACoS", data: "ACoS" },
                 ]}
               />
             </div>
