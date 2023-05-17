@@ -294,8 +294,16 @@ export default function SalesByMonth() {
                         },
                         tooltip: {
                           y: {
-                            formatter: function (val) {
-                              return val;
+                            formatter: function (val, { seriesIndex, w }) {
+                              const heading =
+                                w?.config?.series[seriesIndex]?.name || "";
+                              if (heading.includes("Sales")) {
+                                return currencyFormat(val);
+                              }
+                              if (heading.includes("Percentage")) {
+                                return percentageFormat(val);
+                              }
+                              return numberFormat(val);
                             },
                           },
                         },

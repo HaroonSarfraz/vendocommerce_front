@@ -223,8 +223,15 @@ export default function SalesByWeek() {
     },
     tooltip: {
       y: {
-        formatter: function (val) {
-          return val;
+        formatter: function (val, { seriesIndex, w }) {
+          const heading = w?.config?.series[seriesIndex]?.name || "";
+          if(heading.includes("Sales")) {
+            return currencyFormat(val);
+          }
+          if(heading.includes("Percentage")) {
+            return percentageFormat(val);
+          }
+          return numberFormat(val);
         },
       },
     },
@@ -247,7 +254,6 @@ export default function SalesByWeek() {
       borderColor: "#f1f1f1",
       strokeDashArray: 4,
     },
-    tooltip: {},
   };
 
   return (
