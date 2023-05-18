@@ -59,6 +59,12 @@ const initialState = {
       data: [],
     },
   },
+  advertisingTotalRevenue: {
+    list: {
+      status: false,
+      data: [],
+    },
+  },
   salesByWeek: {
     salesWeekDetailList: {
       status: false,

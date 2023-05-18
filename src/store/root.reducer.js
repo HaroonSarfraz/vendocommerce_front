@@ -12,6 +12,7 @@ import CategoryList from "./slice/categoryList.slice";
 import CategoryProductList from "./slice/categoryProductList.slice";
 import CategoryPerformanceReport from "./slice/categoryPerformanceReport.slice";
 import Advertising from "./slice/advertising.slice";
+import AdvertisingTotalRevenue from "./slice/advertisingTotalRevenue.slice";
 import CustomerAcquisition from "./slice/customerAcquisition.slice";
 import InventoryDashboard from "./slice/inventoryDashboard.slice";
 import PoTemplateSlice from "./slice/poTemplate.slice";
@@ -32,6 +33,7 @@ export const rootReducer = {
   categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,
   advertising: Advertising,
+  advertisingTotalRevenue: AdvertisingTotalRevenue,
   inventoryDashboard: InventoryDashboard,
   poTemplate: PoTemplateSlice,
 };

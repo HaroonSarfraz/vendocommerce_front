@@ -1,33 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Drawer, message, Spin } from 'antd';
-import _ from 'lodash';
+import React, { useState } from "react";
+import { Drawer } from "antd";
+import _ from "lodash";
 
 export default function Drawers(props) {
-  const { open, onHide, data } = props;
+  const { open, onHide, columnsList, columnConfig, setColumnConfig } = props;
 
-  const [selectColumns, setSelectColumns] = useState(data);
-  const [submitLoading, setSubmitLoading] = useState(false);
-
-  // const SaveTableConfigurationRes = useSelector(
-  //   (state) => state.salesByProduct.saveTableConfiguration
-  // );
-
-  // useEffect(() => {
-  //   if (data?.selectedColumnList) {
-  //     setSelectColumns(data?.selectedColumnList);
-  //   }
-  //   return () => {};
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // useEffect(() => {
-  //   if (SaveTableConfigurationRes?.status === false) {
-  //     setSubmitLoading(false);
-  //     setResetLoading(false);
-  //     message.destroy();
-  //     message.error(SaveTableConfigurationRes?.message);
-  //   }
-  // }, [SaveTableConfigurationRes]);
+  const [selectedColumns, setSelectedColumns] = useState(columnConfig);
 
   return (
     <Drawer
@@ -39,63 +17,67 @@ export default function Drawers(props) {
     >
       <div className="card w-100 rounded-0">
         <div className="card-body hover-scroll-overlay-y">
-          {Object.entries(data)?.map((d, i) => (
+          {columnsList.map((d, i) => (
             <div
-              key={i}
               onClick={() => {
-                const selectColumns_ = _.cloneDeep(selectColumns);
-                const index = selectColumns_.findIndex((i) => i === d[0]);
+                const selectColumns_ = _.cloneDeep(selectedColumns);
+                const index = selectColumns_.findIndex(
+                  (i) => JSON.stringify(i) === JSON.stringify(d)
+                );
                 if (index === -1) {
-                  selectColumns_.push(d[0]);
+                  selectColumns_.push(d);
                 } else {
                   selectColumns_.splice(index, 1);
                 }
-                setSelectColumns([...selectColumns_]);
+                setSelectedColumns([...selectColumns_]);
               }}
               className="form-check form-check-custom form-check-solid mb-5"
+              key={i}
             >
               <input
                 className="form-check-input"
                 type="checkbox"
-                // checked={}
+                checked={
+                  selectedColumns?.findIndex(
+                    (r) => JSON.stringify(r) === JSON.stringify(d)
+                  ) === -1
+                    ? false
+                    : true
+                }
                 onChange={() => {}}
-                id="flexCheckDefault"
+                id={`flexCheckDefault_${i}`}
               />
               <label
                 className="form-check-label fw-bolder"
-                htmlFor="flexCheckDefault"
+                htmlFor={`flexCheckDefault_${i}`}
               >
-                {d[1].title}
+                {d}
               </label>
             </div>
           ))}
         </div>
         <div className="card-footer py-3">
           <button
-            type="submit"
-            disabled={submitLoading}
             onClick={() => {
-              setSubmitLoading(true);
+              setColumnConfig(columnsList);
+              onHide();
             }}
-            className="btn btn-dark mx-5"
+            type="reset"
+            className="btn fs-7 btn-light btn-active-light-dark me-2"
+            data-kt-drawer-dismiss="true"
           >
-            {submitLoading && (
-              <Spin
-                size="small"
-                style={{
-                  position: "relative",
-                  top: "4px",
-                  marginRight: "10px",
-                }}
-              />
-            )}
-            <span>Apply</span>
+            <span>Reset</span>
           </button>
           <button
-            onClick={onHide}
-            className="btn fs-7 btn-light btn-active-light-dark me-2"
+            type="submit"
+            onClick={() => {
+              setColumnConfig(selectedColumns);
+              onHide();
+            }}
+            className="btn fs-7 btn-dark"
+            data-kt-menu-dismiss="true"
           >
-            <span>Cancel</span>
+            <span>Apply</span>
           </button>
         </div>
       </div>
