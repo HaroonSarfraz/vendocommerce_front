@@ -1,10 +1,15 @@
 import { Skeleton } from "antd";
 import dynamic from "next/dynamic";
 import { DotChartOutlined } from "@ant-design/icons";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function Graph({ loading, chartData }) {
+export default function Graph({ loading, chartData, columnConfig }) {
   return (
     <div className="card card-flush h-xl-100 fadeInRight">
       <div
@@ -42,93 +47,159 @@ export default function Graph({ loading, chartData }) {
                 curve: "smooth",
               },
               xaxis: {
-                // categories: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.week_name
-                // ),
-                categories: [
-                  "week1",
-                  "week2",
-                  "week3",
-                  "week4",
-                  "week5",
-                  "week6",
-                ],
+                categories: Object.values(chartData || {})?.map(
+                  (d) => "WK" + d?.week
+                ),
               },
-              colors: ["#000", "#1BC5BD"],
+              yaxis: {
+                labels: {
+                  formatter: (value) => {
+                    return value.toFixed(0);
+                  },
+                },
+              },
+              tooltip: {
+                y: {
+                  formatter: function (val, { seriesIndex, w }) {
+                    const heading = w?.config?.series[seriesIndex]?.name || "";
+                    if (
+                      heading.includes("Change") ||
+                      heading.includes("ACoS")
+                    ) {
+                      return percentageFormat(val);
+                    }
+                    if (
+                      heading.includes("Sales") ||
+                      heading.includes("Spend") ||
+                      heading.includes("Revenue")
+                    ) {
+                      return currencyFormat(val);
+                    }
+                    return numberFormat(val);
+                  },
+                },
+              },
+              colors: [
+                "#e86c86",
+                "#f55420",
+                "#0abdd5",
+                "#0cb774",
+                "#29d07b",
+                "#bdc0e7",
+                "#3cbea1",
+                "#108a9c",
+                "#16050f",
+              ],
             }}
             series={[
               {
                 name: "Spend",
-                // data: Object.values(chartData?.[0] || {})?.map(
-                //   (d) => d?.total_ordered_product_sales
-                // ),
-                data: [0, 0, 0, 0, 0, 0],
+                title: "SPEND",
+                data: Object.values(chartData || {})?.map((d) => d?.twSpend),
               },
               {
                 name: "Spend Change",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "SPEND CHG",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.spendChange
+                ),
               },
               {
                 name: "Ad Revenue",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "AD REVENUE",
+                data: Object.values(chartData || {})?.map((d) => d?.twRevenue),
               },
               {
                 name: "Ad Change",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "AD CHG",
+                data: Object.values(chartData || {})?.map((d) => d?.adChange),
               },
               {
                 name: "Organic Sales",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "ORGANIC SALES",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.organicSales
+                ),
               },
               {
                 name: "Organic Change",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "ORGANIC CHG",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.organicSalesChange
+                ),
               },
               {
                 name: "Total Sales",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "TOTAL SALES",
+                data: Object.values(chartData || {})?.map((d) => d?.totalSales),
               },
               {
                 name: "Total ACoS",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "TOTAL ACOS",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.ACoS_percentage
+                ),
               },
               {
                 name: "Impressions",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "IMPRESSIONS",
+                data: Object.values(chartData || {})?.map((d) => d?.impression),
               },
               {
                 name: "Clicks",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "CLICKS",
+                data: Object.values(chartData || {})?.map((d) => d?.clicks),
               },
               {
-                name: "Toatl Unit Orders",
-                data: [0, 0, 0, 0, 0, 0],
+                name: "Total Unit Orders",
+                title: "TOTAL UNIT ORDERS",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.totalUnitOrder
+                ),
               },
               {
                 name: "Branded Spend",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "BRANDED SPEND",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.brandedSpends
+                ),
               },
               {
                 name: "Branded Sales",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "BRANDED SALES",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.brandedSales
+                ),
               },
               {
                 name: "Non-Branded Spend",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "NON BRANDED SPEND",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.nonBrandedSpends
+                ),
               },
               {
                 name: "Non-Branded Sales",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "NON BRANDED SALES",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.nonBrandedSales
+                ),
               },
               {
                 name: "Branded ROAS",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "BRANDED ROAS",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.brandedRoAS
+                ),
               },
               {
                 name: "Non-Branded ROAS",
-                data: [0, 0, 0, 0, 0, 0],
+                title: "NON BRANDED ROAS",
+                data: Object.values(chartData || {})?.map(
+                  (d) => d?.nonBrandedRoAS
+                ),
               },
-            ]}
+            ].filter((c) => columnConfig.includes(c.title))}
             type="area"
             height={300}
           />

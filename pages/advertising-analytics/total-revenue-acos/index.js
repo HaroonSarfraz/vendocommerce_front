@@ -1,168 +1,230 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopBarFilter from "@/src/components/advertising-analytics/top-bar-filter";
 import Graph from "@/src/components/advertising-analytics/total-revenue/Graph";
 import Drawers from "@/src/components/advertising-analytics/total-revenue/Drawer";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { useSelector, useDispatch } from "react-redux";
+import { defaultWeek, defaultYear } from "@/src/config";
+import { getAdvertising } from "@/src/services/advertisingTotalRevenue.services";
+import { selectAdvertisingTotalRevenue } from "@/src/store/slice/advertisingTotalRevenue.slice";
+import _ from "lodash";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 
 export default function TotalRevenueAcos() {
+  const dispatch = useDispatch();
+
+  const advertisements = useSelector(selectAdvertisingTotalRevenue);
+
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [columnsList, setColumnsList] = useState([]);
+  const [columnConfig, setColumnConfig] = useState([]);
 
   const [filter, setFilter] = useState({
-    week: [],
-    year: 2023,
+    week: _.range(1, defaultWeek() + 1),
+    year: defaultYear(),
   });
 
-  const list = [];
+  const [advertisementsData, setAdvertisementsData] = useState([]);
+
+  useEffect(() => {
+    if (advertisements?.status === true) {
+      setAdvertisementsData(advertisements?.data || []);
+      setLoading(false);
+    } else if (advertisements?.status === false) {
+      setAdvertisementsData([]);
+      setLoading(false);
+    }
+  }, [advertisements]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    dispatch(
+      getAdvertising({
+        search_year: filter?.year,
+        search_week: filter?.week?.join(","),
+      })
+    );
+  }, [filter]);
 
   const columns = [
     {
       title: "WEEK",
-      width: "80px",
+      width: "100px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.week - b.week,
+      render: (text) => {
+        return <span>{"WK" + text?.week}</span>;
+      },
     },
     {
       title: "SPEND",
-      width: "80px",
+      width: "100px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.twSpend - b.twSpend,
+      render: (text) => {
+        return <span>{currencyFormat(text?.twSpend)}</span>;
+      },
     },
     {
       title: "SPEND CHG",
-      width: "120px",
+      width: "140px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.spendChange - b.spendChange,
+      render: (text) => {
+        return <span>{percentageFormat(text?.spendChange)}</span>;
+      },
     },
     {
       title: "AD REVENUE",
-      width: "130px",
+      width: "150px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.twRevenue - b.twRevenue,
+      render: (text) => {
+        return <span>{currencyFormat(text?.twRevenue)}</span>;
+      },
     },
     {
       title: "AD CHG",
-      width: "90px",
+      width: "120px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.adChange - b.adChange,
+      render: (text) => {
+        return <span>{percentageFormat(text?.adChange)}</span>;
+      },
     },
     {
       title: "ORGANIC SALES",
-      width: "150px",
+      width: "180px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.organicSales - b.organicSales,
+      render: (text) => {
+        return <span>{currencyFormat(text?.organicSales)}</span>;
+      },
     },
     {
       title: "ORGANIC CHG",
-      width: "140px",
+      width: "150px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.organicSalesChange - b.organicSalesChange,
+      render: (text) => {
+        return <span>{percentageFormat(text?.organicSalesChange)}</span>;
+      },
     },
     {
       title: "TOTAL SALES",
-      width: "130px",
+      width: "150px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.totalSales - b.totalSales,
+      render: (text) => {
+        return <span>{currencyFormat(text?.totalSales)}</span>;
+      },
     },
     {
       title: "TOTAL ACOS",
-      width: "120px",
+      width: "150px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.ACoS_percentage - b.ACoS_percentage,
+      render: (text) => {
+        return <span>{percentageFormat(text?.ACoS_percentage)}</span>;
+      },
     },
     {
       title: "IMPRESSIONS",
-      width: "130px",
+      width: "150px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.impression - b.impression,
+      render: (text) => {
+        return <span>{numberFormat(text?.impression)}</span>;
+      },
     },
     {
       title: "CLICKS",
-      width: "90px",
+      width: "120px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.clicks - b.clicks,
+      render: (text) => {
+        return <span>{numberFormat(text?.clicks)}</span>;
+      },
     },
     {
       title: "TOTAL UNIT ORDERS",
-      width: "180px",
+      width: "200px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.totalUnitOrder - b.totalUnitOrder,
+      render: (text) => {
+        return <span>{numberFormat(text?.totalUnitOrder)}</span>;
+      },
     },
     {
       title: "BRANDED SPEND",
-      width: "160px",
+      width: "170px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.brandedSpends - b.brandedSpends,
+      render: (text) => {
+        return <span>{currencyFormat(text?.brandedSpends)}</span>;
+      },
     },
     {
       title: "BRANDED SALES",
-      width: "160px",
+      width: "170px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.brandedSales - b.brandedSales,
+      render: (text) => {
+        return <span>{currencyFormat(text?.brandedSales)}</span>;
+      },
     },
     {
       title: "BRANDED ROAS",
       width: "160px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.brandedRoAS - b.brandedRoAS,
+      render: (text) => {
+        return <span>{numberFormat(text?.brandedRoAS)}</span>;
+      },
     },
     {
       title: "NON BRANDED SPEND",
-      width: "200px",
+      width: "210px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.nonBrandedSpends - b.nonBrandedSpends,
+      render: (text) => {
+        return <span>{currencyFormat(text?.nonBrandedSpends)}</span>;
+      },
     },
     {
       title: "NON BRANDED SALES",
       width: "200px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.nonBrandedSales - b.nonBrandedSales,
+      render: (text) => {
+        return <span>{currencyFormat(text?.nonBrandedSales)}</span>;
+      },
     },
     {
       title: "NON BRANDED ROAS",
       width: "200px",
       align: "center",
-      // render: (text) => {
-      //   return <span>{text?.week_name}</span>;
-      // },
+      sorter: (a, b) => a.nonBrandedRoAS - b.nonBrandedRoAS,
+      render: (text) => {
+        return <span>{numberFormat(text?.nonBrandedRoAS)}</span>;
+      },
     },
   ];
+
+  useEffect(() => {
+    const list = columns.slice(0).map((d) => d.title);
+
+    setColumnsList(list);
+    setColumnConfig(list);
+  }, []);
 
   return (
     <DashboardLayout>
@@ -170,7 +232,11 @@ export default function TotalRevenueAcos() {
         <div className="container-fluid">
           {TopBarFilter(filter, setFilter, "Week")}
 
-          <Graph loading={false} chartData={true} />
+          <Graph
+            loading={loading}
+            chartData={advertisementsData}
+            columnConfig={columnConfig}
+          />
 
           <div className="mt-5 col-lg-12">
             <div className="card mb-7 pt-5">
@@ -188,8 +254,10 @@ export default function TotalRevenueAcos() {
                   <Loading />
                 ) : (
                   <ASINTable
-                    columns={columns}
-                    dataSource={list}
+                    columns={columns.filter(
+                      (c) => c.title == "WEEK" || columnConfig.includes(c.title)
+                    )}
+                    dataSource={advertisementsData}
                     ellipsis
                     rowKey="key"
                     loading={loading}
@@ -208,7 +276,9 @@ export default function TotalRevenueAcos() {
         </div>
         {isOpen && (
           <Drawers
-            data={columns}
+            columnsList={columnsList.slice(1)}
+            columnConfig={columnConfig}
+            setColumnConfig={setColumnConfig}
             open={isOpen}
             onHide={() => setIsOpen(false)}
           />
