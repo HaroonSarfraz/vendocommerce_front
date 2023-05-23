@@ -89,7 +89,7 @@ export default function SalesByMonth() {
         align: "center",
         index: item,
         render: (text) => {
-          return currencyFormat(text[`m-${item}`]);
+          return text[`m-${item}`] ? currencyFormat(text[`m-${item}`]) : null;
         },
       }))
       .sort((a, b) => b.index - a.index),
