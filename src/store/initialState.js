@@ -20,6 +20,10 @@ const initialState = {
     status: false,
     data: [],
   },
+  customerAcquisitionLTV: {
+    status: false,
+    data: [],
+  },
   sales: {
     salesGraphData: {},
     salesByWeekData: {},

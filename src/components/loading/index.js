@@ -1,13 +1,13 @@
 import React from "react";
 import { LoadingWrapper } from "./style";
 
-export default function Loading() {
+export default function Loading(props) {
   return (
     <LoadingWrapper>
       <table id="example" className="table-loader display" width="80%">
         <thead>
           <tr>
-            {[...Array(6).keys()]?.map((_, i) => (
+            {[...Array(props.months || 6).keys()]?.map((_, i) => (
               <th
                 key={i}
                 style={{

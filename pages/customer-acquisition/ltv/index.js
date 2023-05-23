@@ -1,48 +1,77 @@
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TopBarFilter } from "@/src/components/sales-analytics/sales";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { defaultMonth, defaultYear } from "@/src/config";
+import { getCustomerAcquisitionLTV } from "@/src/services/customerAcquisition.services";
+import { selectCustomerAcquisitionLTV } from "@/src/store/slice/customerAcquisitionLTV.slice";
+import moment from "moment";
+import { currencyFormat } from "@/src/helpers/formatting.helpers";
+import { numberFormat } from "@/src/helpers/formatting.helpers";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function SalesByMonth() {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: [],
-    year: 2023,
+    month: _.range(0, defaultMonth() + 1),
+    year: defaultYear(),
   });
 
-  const list = [
-    {
-      row_label: "SEP-2022",
-      customers: "78",
-      value: "0",
-    },
-    {
-      row_label: "OCT-2022",
-      customers: "268",
-      value: "0",
-    },
-    {
-      row_label: "NOV-2022",
-      customers: "249",
-      value: "0",
-    },
-    {
-      row_label: "DEC-2022",
-      customers: "240",
-      value: "0",
-    },
-  ];
+  const CustomerAcquisitionLTVRes = useSelector(selectCustomerAcquisitionLTV);
 
+  const { year, month } = filter;
+
+  useEffect(() => {
+    let time = setTimeout(() => {
+      setLoading(true);
+      dispatch(
+        getCustomerAcquisitionLTV({
+          search_year: year,
+          search_month: month?.join(","),
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
+  }, [year, month]);
+
+  useEffect(() => {
+    if (!_.isEmpty(CustomerAcquisitionLTVRes)) {
+      setList(CustomerAcquisitionLTVRes.data || []);
+      setLoading(false);
+    } else if (CustomerAcquisitionLTVRes?.status === false) {
+      setList([]);
+      setLoading(false);
+    }
+  }, [CustomerAcquisitionLTVRes]);
+
+  const listContent = list.map((item) => {
+    const months = item.otherMonths.reduce((acc, item) => {
+      acc[`m-${item.month - 1}`] = item.newCustomerSalesTotal;
+      return acc;
+    }, {});
+    return {
+      row_label: `${moment()
+        .month(item.month - 1)
+        .format("MMM")}-${item.year}`,
+      customers: numberFormat(item.newCustomerCount),
+      ...months,
+    };
+  });
   const columns = [
     {
       title: "CUSTOMER MADE FIRST ORDER AT",
       width: 200,
       align: "center",
       render: (text) => {
-        return <span>{text?.row_label}</span>;
+        return text?.row_label;
       },
     },
     {
@@ -50,81 +79,20 @@ export default function SalesByMonth() {
       width: 180,
       align: "center",
       render: (text) => {
-        return <span>{text?.customers}</span>;
+        return text?.customers;
       },
     },
-    {
-      title: "MONTH0",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH1",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH2",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH3",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH4",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH5",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH6",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH7",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
-    {
-      title: "MONTH8",
-      width: 60,
-      align: "center",
-      render: (text) => {
-        return <span>{`$${text?.value}`}</span>;
-      },
-    },
+    ...month
+      .map((item) => ({
+        title: moment().month(item).format("MMMM"),
+        width: 60,
+        align: "center",
+        index: item,
+        render: (text) => {
+          return currencyFormat(text[`m-${item}`]);
+        },
+      }))
+      .sort((a, b) => b.index - a.index),
   ];
 
   return (
@@ -137,17 +105,25 @@ export default function SalesByMonth() {
             <div className="card mb-7 pt-5">
               <div className="card-body pt-2">
                 <div className="mb-5 d-flex flex-row justify-content-end">
-                  <button className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3">
-                    Export
-                  </button>
+                  <ExportToExcel
+                    columns={columns.map((item) => item.title)}
+                    rows={listContent.map((item) => {
+                      return columns.reduce((acc, col) => {
+                        acc[col.title] = col.render(item);
+                        return acc;
+                      }, {});
+                    })}
+                    loading={loading}
+                    fileName={"customer-acquisition-ltv"}
+                  />
                 </div>
 
                 {loading ? (
-                  <Loading />
+                  <Loading months={month} />
                 ) : (
                   <ASINTable
                     columns={columns}
-                    dataSource={list}
+                    dataSource={listContent}
                     // ellipsis
                     rowKey="key"
                     loading={loading}

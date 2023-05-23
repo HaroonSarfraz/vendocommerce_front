@@ -16,6 +16,7 @@ import AdvertisingTotalRevenue from "./slice/advertisingTotalRevenue.slice";
 import CustomerAcquisition from "./slice/customerAcquisition.slice";
 import InventoryDashboard from "./slice/inventoryDashboard.slice";
 import PoTemplateSlice from "./slice/poTemplate.slice";
+import CustomerAcquisitionLTV from "./slice/customerAcquisitionLTV.slice";
 
 export const rootReducer = {
   users: UsersReducer,
@@ -29,6 +30,7 @@ export const rootReducer = {
   shipping: shipping,
   categoryList: CategoryList,
   customerAcquisition: CustomerAcquisition,
+  customerAcquisitionLTV: CustomerAcquisitionLTV,
   productReportList: ProductReportList,
   categoryProductList: CategoryProductList,
   categoryPerformanceReport: CategoryPerformanceReport,

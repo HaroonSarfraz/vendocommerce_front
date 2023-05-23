@@ -7,3 +7,14 @@ export const fetchCustomerAcquisition = (data) => {
     }`
   );
 };
+
+export const controllerLTV = new AbortController();
+
+export const fetchCustomerAcquisitionLTV = (data) => {
+  return request.get(
+    `/new-customer-sales?year=${data?.search_year || ""}&months=${
+      data?.search_month || ""
+    }`,
+    { signal: controllerLTV.signal }
+  );
+};

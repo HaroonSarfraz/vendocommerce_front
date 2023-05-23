@@ -5,7 +5,7 @@ import { cookies } from "../constants/cookies";
 
 const request = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-  timeout: 30000,
+  timeout: 60000,
 });
 
 request.interceptors.request.use(
@@ -18,7 +18,8 @@ request.interceptors.request.use(
     if (
       config.url.startsWith("/sales/") ||
       config.url.startsWith("/advertising") ||
-      config.url.startsWith("/customer-acquisition")
+      config.url.startsWith("/customer-acquisition") ||
+      config.url.startsWith("/new-customer-sales")
     ) {
       const brand = JSON.parse(localStorage.getItem("brand"));
       config.url = "/brands/" + brand?.id + config.url;
