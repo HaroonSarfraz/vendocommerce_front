@@ -18,3 +18,7 @@ export const fetchUserBrandList = () => {
 export const updateBrandRequest = (id, data) => {
   return request.patch(`/brands/${id}`, data);
 };
+
+export const addUserToBrandRequest = (id, userID, role) => {
+  return request.get(`/brands/${id}/user/${userID}?role=${role}`);
+};
