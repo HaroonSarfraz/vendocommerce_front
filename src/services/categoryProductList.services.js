@@ -4,10 +4,11 @@ import { fetchCategoryProductList } from "../api/categoryProductList.api";
 
 export const getCategoryProductList = (data) => {
   return (dispatch) => {
+    dispatch(setCategoryProductList({ status: false }));
     fetchCategoryProductList(data)
       .then((res) => {
         if (res.status === 200) {
-          dispatch(setCategoryProductList(res.data));
+          dispatch(setCategoryProductList({ ...res.data, status: true }));
         } else {
           message.error(res.data.message);
         }

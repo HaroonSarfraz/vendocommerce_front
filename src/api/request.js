@@ -19,7 +19,8 @@ request.interceptors.request.use(
       config.url.startsWith("/sales/") ||
       config.url.startsWith("/advertising") ||
       config.url.startsWith("/customer-acquisition") ||
-      config.url.startsWith("/new-customer-sales")
+      config.url.startsWith("/new-customer-sales") ||
+      config.url.startsWith("/categories")
     ) {
       const brand = JSON.parse(localStorage.getItem("brand"));
       config.url = "/brands/" + brand?.id + config.url;

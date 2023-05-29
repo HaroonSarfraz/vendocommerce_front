@@ -6,7 +6,8 @@ export const CategoryProductListSlice = createSlice({
   name: "categoryProductList",
   reducers: {
     setCategoryProductList: (state, action) => {
-      state.categoryProductList = action.payload;
+      state = { ...state, ...action.payload };
+      return state;
     },
   },
 });
