@@ -7,6 +7,12 @@ export const fetchBrandList = (data, headers = {}) => {
   );
 };
 
+export const fetchBrand = (brandId) => {
+  return request.get(
+    `/brands/${brandId}`,
+  );
+};
+
 export const createBrandRequest = (data) => {
   return request.post(`/brands?createdb=${true}`, data);
 };

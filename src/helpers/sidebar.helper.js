@@ -4,9 +4,11 @@ import {
   DashboardSvg,
   GraphSvg,
   LockSvg,
+  SettingsSvg,
   UserLgSvg,
   UsersSvg,
 } from "../assets";
+import { isClient } from "./isClient";
 
 function getItem(label, key, icon, children, parent = "") {
   return {
@@ -21,6 +23,10 @@ export const adminMenus = [
   getItem("Manage Brands", "brands", <UsersSvg />),
   getItem("Manage Users", "users", <LockSvg />),
 ];
+
+const brand  = isClient && JSON.parse(localStorage.getItem("brand"));
+
+console.log(brand)
 
 export const userMenus = [
   getItem("Dashboard", "dashboard", <DashboardSvg />),
@@ -201,4 +207,5 @@ export const userMenus = [
       "inventory-management"
     ),
   ]),
+  isClient && getItem("Settings", `brands/edit?brandId=${brand.id}&activeTab=general`, <SettingsSvg />),
 ];

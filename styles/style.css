@@ -433,7 +433,7 @@ body {
     padding: 20px 0 0 0;
 }
 .select2-container--bootstrap5 .select2-selection--single .select2-selection__rendered {
-    
+
     color: #343434;
 }
 .select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--selected {
@@ -529,3 +529,25 @@ table td, table th{
 .aside .aside-menu .menu .menu-item .menu-link:hover:not(.disabled):not(.active) .menu-title, .aside .aside-menu .menu .menu-item.hover>.menu-link:not(.disabled):not(.active) .menu-title {
     color: #ff643c;
 }
+
+.custom-tabs .ant-tabs-ink-bar {
+    display: none !important;
+}
+
+.custom-tab-pane {
+    border-left: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+
+.custom-tab-pane .icon {
+    width: 25px;
+}
+
+.custom-tabs .ant-tabs-nav .ant-tabs-tab {
+    width: 100%;
+    text-align: center;
+  }
+
+.custom-tabs .ant-tabs-nav .ant-tabs-tab-btn {
+    width: 100%;
+  }

@@ -211,8 +211,7 @@ export default function Users(props) {
         return (
           <div className="d-flex">
             <Link
-              href={{ pathname: "/brands/edit", query: text }}
-              as={`/brands/edit`}
+              href={`/brands/edit?brandId=${text.id}&activeTab=general`}
             >
               <FontAwesomeIcon
                 icon={faPenToSquare}
