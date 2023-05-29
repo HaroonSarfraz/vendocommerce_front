@@ -1,7 +1,12 @@
 import { Select } from "antd";
 import moment from "moment";
 
-export default function TopBarFilter(filter, setFilter, type) {
+export default function TopBarFilter(
+  filter,
+  setFilter,
+  type,
+  disabled = { year: false, month: false }
+) {
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
       <div className="col-xl-12 mb-5 mb-xl-5">
@@ -14,6 +19,7 @@ export default function TopBarFilter(filter, setFilter, type) {
                   size="large"
                   style={{ width: 100 }}
                   value={filter?.year || null}
+                  disabled={disabled.year}
                   onChange={(e) => {
                     setFilter({
                       ...filter,
@@ -36,6 +42,7 @@ export default function TopBarFilter(filter, setFilter, type) {
                   size="large"
                   placeholder={`Select ${type}`}
                   mode="multiple"
+                  disabled={disabled.month}
                   maxTagCount="responsive"
                   value={filter?.[type?.toLowerCase()] || null}
                   onChange={(e) => {

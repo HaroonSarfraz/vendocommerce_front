@@ -19,7 +19,7 @@ export default function SalesByMonth() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: _.range(0, defaultMonth() + 1),
+    month: [defaultMonth() - 1],
     year: defaultYear(),
   });
 
@@ -99,7 +99,10 @@ export default function SalesByMonth() {
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
-          {TopBarFilter(filter, setFilter, "Month")}
+          {TopBarFilter(filter, setFilter, "Month", {
+            month: true,
+            year: true,
+          })}
 
           <div className="col-lg-12">
             <div className="card mb-7 pt-5">
