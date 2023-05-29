@@ -11,6 +11,7 @@ import ForwardArrowSvg from "./icons/forwardArrow.svg";
 import BackArrowSvg from "./icons/backArrow.svg";
 import UserSvg from "./icons/user.svg";
 import UsersSvg from "./icons/users.svg";
+import UsersGroupAddSvg from "./icons/usersGroupAdd.svg";
 
 export {
   NoDataSvg,
@@ -26,4 +27,5 @@ export {
   BackArrowSvg,
   UserSvg,
   UsersSvg,
+  UsersGroupAddSvg
 };
