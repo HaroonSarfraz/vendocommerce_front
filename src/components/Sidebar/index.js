@@ -48,7 +48,7 @@ export default function Sidebar(props) {
       return [current];
     }
     if (
-      menu.filter((d) => d.key === defaultSubMenuSelected()?.[0]).length == 0
+      menu.filter((d) => d?.key === defaultSubMenuSelected()?.[0]).length == 0
     ) {
       return [""];
     }
