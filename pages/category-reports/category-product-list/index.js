@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import ASINTable from "@/src/components/table";
@@ -9,6 +9,14 @@ import TopBarFilter from "./top-bar-filter-category-product";
 import _ from "lodash";
 import { getCategoryProductList } from "@/src/services/categoryProductList.services";
 import { selectCategoryProductList } from "@/src/store/slice/categoryProductList.slice";
+import { useRouter } from "next/router";
+import { Modal } from "antd";
+import CreateCategoryScreen from "@/src/components/CreateCategory";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import EditCatagoryProductData from "@/src/components/EditCatagoryProductData";
+import { getCategoryList } from "@/src/services/categoryList.services";
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 
 export default function CategoryProductList() {
   const [tableLoading, setTableLoading] = useState(true);
@@ -17,35 +25,67 @@ export default function CategoryProductList() {
 
   const CategoryProductListRes = useSelector(selectCategoryProductList);
 
-  const [list, setList] = useState([]);
+  const { replace, pathname, query } = useRouter();
 
+  const [openEdit, setOpenEdit] = useState(null);
+
+  const [list, setList] = useState([]);
   const [filter, setFilter] = useState({
-    asin: "",
-    sku: "",
-    title: "",
-    status: "",
+    page: 1,
+    limit: 20,
+    order: "desc",
+    orderBy: undefined,
+    "search[category]": "",
+    "search[asin]": "",
+    "search[sku]": undefined,
+    "search[product_title]": undefined,
+    "search[product_status]": undefined,
   });
 
   useEffect(() => {
-    dispatch(getCategoryProductList(filter));
+    setFilter((s) => ({ ...s, ...query }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  useEffect(() => {
+    dispatch(getCategoryList({ limit: 9999 }));
   }, []);
 
   useEffect(() => {
-    if (!_.isEmpty(CategoryProductListRes)) {
-      setList(Object.values(CategoryProductListRes.data || {}));
+    let time = setTimeout(() => {
+      dispatch(getCategoryProductList(filter));
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
+
+  useEffect(() => {
+    if (CategoryProductListRes?.status === true) {
       setTableLoading(false);
-    } else if (CategoryProductListRes?.status === false) {
-      setList([]);
-      setTableLoading(false);
+      const isValidData = Array.isArray(CategoryProductListRes.data);
+      isValidData && setList(CategoryProductListRes.data);
     }
   }, [CategoryProductListRes]);
+
+  const handleChange = (_pagination, _filters, sorter) => {
+    const order =
+      (sorter.order?.startsWith("asc") && "asc") ||
+      (sorter.order?.startsWith("desc") && "desc") ||
+      undefined;
+
+    const sortFilter = { order, orderBy: order ? sorter.columnKey : undefined };
+    replace({ pathname: pathname, query: { ...filter, ...sortFilter } });
+  };
 
   const columns = [
     {
       title: "Category",
       width: "80px",
       align: "center",
+      sorter: true,
+      key: "category",
       render: (text) => {
         return <span>{text?.category}</span>;
       },
@@ -54,6 +94,8 @@ export default function CategoryProductList() {
       title: "Asin",
       width: "120px",
       align: "center",
+      sorter: true,
+      key: "asin",
       render: (text) => {
         return <span>{text?.asin}</span>;
       },
@@ -62,6 +104,8 @@ export default function CategoryProductList() {
       title: "Sku",
       width: "130px",
       align: "center",
+      sorter: true,
+      key: "sku",
       render: (text) => {
         return <span>{text?.sku}</span>;
       },
@@ -70,6 +114,8 @@ export default function CategoryProductList() {
       title: "Product Title",
       width: "90px",
       align: "center",
+      sorter: true,
+      key: "product_title",
       render: (text) => {
         return <span>{`${text?.product_title}`}</span>;
       },
@@ -78,8 +124,50 @@ export default function CategoryProductList() {
       title: "Product Status",
       width: "90px",
       align: "center",
+      sorter: true,
+      key: "product_status",
       render: (text) => {
         return <span>{`${text?.product_status}`}</span>;
+      },
+    },
+    {
+      title: "Action",
+      width: "90px",
+      align: "center",
+      render: (text) => {
+        return (
+          <span>
+            <Modal
+              closable
+              maskClosable
+              onCancel={() => setOpenEdit(null)}
+              destroyOnClose
+              footer={null}
+              title="Edit Category"
+              open={openEdit === text.id}
+            >
+              <EditCatagoryProductData
+                id={text.id}
+                onSumbit={() => {
+                  setOpenEdit(null);
+                }}
+                initialValues={{
+                  category: text.category,
+                  product_status: text.product_status,
+                  product_title: text.product_title,
+                }}
+              />
+            </Modal>
+            <FontAwesomeIcon
+              onClick={() => {
+                setOpenEdit(text.id);
+              }}
+              icon={faPenToSquare}
+              style={{ marginRight: "10px" }}
+              className="text-dark fs-3 cursor-pointer"
+            />
+          </span>
+        );
       },
     },
   ];
@@ -100,7 +188,7 @@ export default function CategoryProductList() {
                     </button>
                   </Link>
                 </div>
-                {!tableLoading ? (
+                {tableLoading ? (
                   <Loading />
                 ) : list?.length != 0 ? (
                   <ASINTable
@@ -108,6 +196,7 @@ export default function CategoryProductList() {
                     dataSource={list}
                     ellipsis
                     rowKey="key"
+                    onChange={handleChange}
                     loading={tableLoading}
                     pagination={false}
                     scroll={{

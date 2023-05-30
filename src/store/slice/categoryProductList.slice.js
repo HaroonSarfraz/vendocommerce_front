@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import initialState from "../initialState";
 
 export const CategoryProductListSlice = createSlice({
@@ -6,12 +6,25 @@ export const CategoryProductListSlice = createSlice({
   name: "categoryProductList",
   reducers: {
     setCategoryProductList: (state, action) => {
-      state.categoryProductList = action.payload;
+      state = { ...state, ...action.payload };
+      return state;
+    },
+    setUpdateCategoryProduct: (state, { payload }) => {
+      const result = current(state).data.reduce((acc, item) => {
+        if (item.id === payload.id) {
+          acc.push(payload);
+        } else {
+          acc.push(item);
+        }
+        return acc;
+      }, []);
+      state.data = result;
     },
   },
 });
 
-export const { setCategoryProductList } = CategoryProductListSlice.actions;
+export const { setCategoryProductList, setUpdateCategoryProduct } =
+  CategoryProductListSlice.actions;
 
 export default CategoryProductListSlice.reducer;
 

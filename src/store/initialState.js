@@ -81,7 +81,7 @@ const initialState = {
     },
   },
   categoryPerformanceReport: {
-    categoryPerformanceList: {},
+    categoryPerformanceList: []
   },
   productReportList: {
     data: [],

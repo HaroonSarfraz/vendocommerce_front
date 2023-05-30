@@ -1,20 +1,24 @@
-import { Input, Select } from 'antd';
-import moment from 'moment';
-import { useState } from 'react';
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
+import { Input, Select } from "antd";
+import moment from "moment";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function TopBarFilter(filter, setFilter, type) {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
+
+  const CategoryListRes = useSelector(selectCategoryList);
 
   return (
-    <div className='row gx-5 gx-xl-5 fadeInRight'>
-      <div className='col-xl-12 mb-5 mb-xl-5'>
-        <div className='card card-flush h-xl-100'>
-          <div className='card-body px-4 py-4'>
-            <div className='d-flex flex-wrap gap-3'>
+    <div className="row gx-5 gx-xl-5 fadeInRight">
+      <div className="col-xl-12 mb-5 mb-xl-5">
+        <div className="card card-flush h-xl-100">
+          <div className="card-body px-4 py-4">
+            <div className="d-flex flex-wrap gap-3">
               <div>
                 <Select
-                  defaultValue='2022'
-                  size='large'
+                  defaultValue="2022"
+                  size="large"
                   style={{ width: 100 }}
                   value={filter?.year || null}
                   onChange={(e) => {
@@ -24,7 +28,11 @@ export default function TopBarFilter(filter, setFilter, type) {
                     });
                   }}
                   options={[...Array(4)].map((_, i) => {
-                    const year = parseInt(moment(new Date()).format('YYYY')) + i - [...Array(4)]?.length + 1;
+                    const year =
+                      parseInt(moment(new Date()).format("YYYY")) +
+                      i -
+                      [...Array(4)]?.length +
+                      1;
                     return { value: year, label: year };
                   })}
                 />
@@ -32,10 +40,10 @@ export default function TopBarFilter(filter, setFilter, type) {
               <div>
                 <Select
                   style={{ width: 300 }}
-                  size='large'
+                  size="large"
                   placeholder={`Select ${type}`}
-                  mode='multiple'
-                  maxTagCount='responsive'
+                  mode="multiple"
+                  maxTagCount="responsive"
                   value={filter?.[type?.toLowerCase()] || null}
                   onChange={(e) => {
                     setFilter({
@@ -44,11 +52,13 @@ export default function TopBarFilter(filter, setFilter, type) {
                     });
                   }}
                   options={
-                    type === 'Week'
+                    type === "Week"
                       ? [...Array(53)].map((_, i) => {
                           return {
                             value: i + 1,
-                            label: `WK${i.toString()?.length === 1 ? 0 + i + 1 : i + 1}`,
+                            label: `WK${
+                              i.toString()?.length === 1 ? 0 + i + 1 : i + 1
+                            }`,
                           };
                         })
                       : moment.months()?.map((d, i) => {
@@ -58,18 +68,29 @@ export default function TopBarFilter(filter, setFilter, type) {
                   allowClear
                 />
               </div>
-              <div className='position-relative'>
-                <Input
-                  placeholder='Search by category'
-                  style={{
-                    width: 250,
+              <div className="position-relative">
+                <Select
+                  placeholder="Category"
+                  size="large"
+                  style={{ width: 200 }}
+                  value={filter?.["category"] || null}
+                  disabled={CategoryListRes?.data.length === 0}
+                  onChange={(e) => {
+                    setFilter({
+                      ...filter,
+                      ["category"]: e,
+                    });
                   }}
-                  value={searchText || null}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  onPressEnter={() => {
-                    getList();
-                  }}
-                  size='large'
+                  options={[
+                    {
+                      value: null,
+                      label: "All",
+                    },
+                    ...(CategoryListRes?.data?.map((item) => ({
+                      value: item.name,
+                      label: item.name,
+                    })) || []),
+                  ]}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Loading from "@/src/components/loading";
 import TopBarFilter from "./top-bar-filter-Category";
@@ -8,8 +8,11 @@ import { getCategoryPerformanceList } from "@/src/services/categoryPerformance.s
 import ImportFileModal from "@/src/modals/importFile.modal";
 import { selectCategoryPerformanceList } from "@/src/store/slice/categoryPerformanceReport.slice";
 import NoData from "@/src/components/no-data";
-import ASINTable from "../table";
-import { numberFormat } from "@/src/helpers/formatting.helpers";
+import { Table } from "antd";
+import { currencyFormat } from "@/src/helpers/formatting.helpers";
+import { percentageFormat } from "@/src/helpers/formatting.helpers";
+import { getCategoryList } from "@/src/services/categoryList.services";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function CategoryPerformanceReport() {
   const dispatch = useDispatch();
@@ -22,121 +25,202 @@ export default function CategoryPerformanceReport() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    week: [defaultWeek()],
+    week: [],
     year: defaultYear(),
+    category: null,
   });
 
-  const columns = [
-    {
-      title: "Row Labels",
-      width: "80px",
-      align: "center",
-      render: (text) => {
-        return <span>{text?.row_label}</span>;
-      },
-    },
-    {
-      title: "Total",
-      width: "120px",
-      align: "center",
-      render: (text) => {
-        return <span>{numberFormat(text?.total)}</span>;
-      },
-    },
-    {
-      title: "% CHANGE WEEK OVER WEEK",
-      width: "240px",
-      align: "center",
-      render: (text) => {
-        return <span>{text?.week}</span>;
-      },
-    },
-  ];
+  useEffect(() => {
+    dispatch(getCategoryList({ limit: 9999 }));
+  }, []);
 
   useEffect(() => {
-    const { year, week } = filter;
-    dispatch(
-      getCategoryPerformanceList({
-        search_year: year,
-        search_week: week?.join(","),
-      })
-    );
+    const { year, week, category } = filter;
+    const time = setTimeout(() => {
+      dispatch(
+        getCategoryPerformanceList({
+          search_year: year,
+          search_week: week?.join(","),
+          category,
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   useEffect(() => {
-    if (!_.isEmpty(CategoryPerformanceListRes)) {
-      setList(Object.values(CategoryPerformanceListRes || {}));
-      setTableLoading(false);
-    } else if (CategoryPerformanceListRes?.status === false) {
-      setList([]);
+    if (CategoryPerformanceListRes.length !== 0) {
+      setList(CategoryPerformanceListRes);
       setTableLoading(false);
     }
   }, [CategoryPerformanceListRes]);
 
+  const listLength = list.length;
+
+  const findWeeksCount = useMemo(
+    () =>
+      list.reduce((acc, item) => {
+        const count = item.weekly_report.length;
+        if (acc <= count) {
+          return count;
+        }
+      }, 0),
+    [listLength]
+  );
+
+  const columns = useMemo(
+    () => [
+      {
+        title: "Row Labels",
+        width: 110,
+        dataIndex: "name",
+        key: "name",
+        fixed: "left",
+      },
+      ...(Array(findWeeksCount)
+        .fill("")
+        .map((_, key) => ({
+          title: `WK${key + 1}`,
+          dataIndex: `WK${key + 1}`,
+          key: `WK${key + 1}`,
+          width: 90,
+        })) || []),
+      {
+        title: "Total",
+        width: 100,
+        dataIndex: "total",
+        key: "total",
+      },
+      {
+        title: "% Change week over week",
+        width: 160,
+        dataIndex: "cwow",
+        key: "cwow",
+      },
+    ],
+    [findWeeksCount]
+  );
+
+  const res = useMemo(
+    () =>
+      list?.reduce((acc, item) => {
+        const { change_week_over_week, total, weekly_report } = item;
+
+        const weeks = (type, formatter = (val) => val) =>
+          weekly_report.reduce((wacc, witem) => {
+            wacc[witem.week_name] = formatter(witem[type]);
+            return wacc;
+          }, {});
+
+        const row1 = { name: item.category };
+        const row2 = {
+          name: "Shipped Revenue",
+          ...weeks("shipped_revenue", currencyFormat),
+          total: currencyFormat(total?.shipped_revenue),
+          cwow: percentageFormat(change_week_over_week.shipped_revenue),
+        };
+        const row3 = {
+          name: "TACoS",
+          ...weeks("TACoS", percentageFormat),
+          total: percentageFormat(total?.TACoS),
+          cwow: percentageFormat(change_week_over_week.TACoS),
+        };
+        const row4 = {
+          name: "Ad Sales",
+          ...weeks("ad_sales", currencyFormat),
+          total: currencyFormat(total?.ad_sales),
+          cwow: percentageFormat(change_week_over_week.ad_sales),
+        };
+        const row5 = {
+          name: "Ad Spend	",
+          ...weeks("ad_spend", currencyFormat),
+          total: currencyFormat(total?.ad_spend),
+          cwow: percentageFormat(change_week_over_week.ad_spend),
+        };
+        acc.push(row1);
+        acc.push(row2);
+        acc.push(row3);
+        acc.push(row4);
+        acc.push(row5);
+        return acc;
+      }, []) || [],
+    [listLength]
+  );
+
   return (
-    <div
-      className="content d-flex flex-column flex-column-fluid"
-      id="kt_content"
-    >
-      <div className="container-fluid" id="kt_content_container">
-        <style
-          dangerouslySetInnerHTML={{
-            __html:
-              "\n                            /* .table th, .table td{\n                                border:1px solid red\n                            } */\n                        ",
-          }}
-        />
-        <div className="row gx-5 gx-xl-5">
-          {TopBarFilter(filter, setFilter, "Week")}
-          <div className="col-lg-12">
-            <div className="card mb-1">
-              <div className="card-header border-bottom border-bottom-dashed">
-                <h3 className="card-title align-items-start flex-column">
-                  <span className="card-label fw-bolder fs-3 mb-0">
-                    Category Performance Report
-                  </span>
-                </h3>
-                <div className="card-toolbar gap-3">
-                  <button
-                    className="btn btn-light-danger btn-sm fw-bolder"
-                    onClick={() => setModalOpen(true)}
-                  >
-                    Import Data
-                  </button>
-                  <button className="btn btn-light-danger btn-sm fw-bolder">
-                    Export Data
-                  </button>
+    <>
+      <div
+        className="content d-flex flex-column flex-column-fluid"
+        id="kt_content"
+      >
+        <div className="container-fluid" id="kt_content_container">
+          <style
+            dangerouslySetInnerHTML={{
+              __html:
+                "\n                            /* .table th, .table td{\n                                border:1px solid red\n                            } */\n                        ",
+            }}
+          />
+          <div className="row gx-5 gx-xl-5">
+            {TopBarFilter(filter, setFilter, "Week")}
+            <div className="col-lg-12">
+              <div className="card mb-1">
+                <div className="card-header border-bottom border-bottom-dashed">
+                  <h3 className="card-title align-items-start flex-column">
+                    <span className="card-label fw-bolder fs-3 mb-0">
+                      Category Performance Report
+                    </span>
+                  </h3>
+                  <div className="card-toolbar gap-3">
+                    <button
+                      className="btn btn-light-danger btn-sm fw-bolder"
+                      onClick={() => setModalOpen(true)}
+                    >
+                      Import Data
+                    </button>
+                    <ExportToExcel
+                      columns={columns.map((item) => item.title) || []}
+                      rows={res}
+                      fileName={"category-performance-report"}
+                      loading={tableLoading}
+                    >
+                      <button className="btn btn-light-danger btn-sm fw-bolder">
+                        Export Data
+                      </button>
+                    </ExportToExcel>
+                  </div>
                 </div>
-              </div>
-              <div className="card-body pt-2 table-responsive">
-                <div className="table-responsive">
-                  {tableLoading ? (
-                    <Loading />
-                  ) : list?.length != 0 ? (
-                    <ASINTable
-                      columns={columns}
-                      dataSource={list}
-                      ellipsis
-                      rowKey="key"
-                      loading={!tableLoading}
-                      pagination={false}
-                      scroll={{
-                        x:
-                          columns
-                            ?.map((d) => d.width)
-                            .reduce((a, b) => a + b, 0) + 300,
-                      }}
-                    />
-                  ) : (
-                    <NoData />
-                  )}
+                <div className="card-body pt-2 table-responsive">
+                  <div className="table-responsive">
+                    {tableLoading ? (
+                      <Loading />
+                    ) : list?.length != 0 ? (
+                      <Table
+                        pagination={false}
+                        columns={columns}
+                        dataSource={res}
+                        loading={tableLoading}
+                        scroll={{
+                          x:
+                            columns
+                              ?.map((d) => d.width)
+                              .reduce((a, b) => a + b, 0) + 300,
+                        }}
+                        size={"small"}
+                      />
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <ImportFileModal setModalOpen={setModalOpen} modalOpen={modalOpen} />
       </div>
-      <ImportFileModal setModalOpen={setModalOpen} modalOpen={modalOpen} />
-    </div>
+    </>
   );
 }
