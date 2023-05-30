@@ -25,8 +25,10 @@ export default function EditBrand() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (brandId) {
-      fetchBrand(brandId)
+    const localBrand = JSON.parse(localStorage.getItem("brand"))?.id;
+
+    if (brandId || localBrand) {
+      fetchBrand(brandId || localBrand)
         .then((res) => {
           if(res.status == 200 && res.data) {
             setBrand(res.data);
