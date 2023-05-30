@@ -10,6 +10,13 @@ import _ from "lodash";
 import { getCategoryProductList } from "@/src/services/categoryProductList.services";
 import { selectCategoryProductList } from "@/src/store/slice/categoryProductList.slice";
 import { useRouter } from "next/router";
+import { Modal } from "antd";
+import CreateCategoryScreen from "@/src/components/CreateCategory";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import EditCatagoryProductData from "@/src/components/EditCatagoryProductData";
+import { getCategoryList } from "@/src/services/categoryList.services";
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 
 export default function CategoryProductList() {
   const [tableLoading, setTableLoading] = useState(true);
@@ -17,7 +24,10 @@ export default function CategoryProductList() {
   const dispatch = useDispatch();
 
   const CategoryProductListRes = useSelector(selectCategoryProductList);
+
   const { replace, pathname, query } = useRouter();
+
+  const [openEdit, setOpenEdit] = useState(null);
 
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({
@@ -36,6 +46,10 @@ export default function CategoryProductList() {
     setFilter((s) => ({ ...s, ...query }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  useEffect(() => {
+    dispatch(getCategoryList({ limit: 9999 }));
+  }, []);
 
   useEffect(() => {
     let time = setTimeout(() => {
@@ -114,6 +128,46 @@ export default function CategoryProductList() {
       key: "product_status",
       render: (text) => {
         return <span>{`${text?.product_status}`}</span>;
+      },
+    },
+    {
+      title: "Action",
+      width: "90px",
+      align: "center",
+      render: (text) => {
+        return (
+          <span>
+            <Modal
+              closable
+              maskClosable
+              onCancel={() => setOpenEdit(null)}
+              destroyOnClose
+              footer={null}
+              title="Edit Category"
+              open={openEdit === text.id}
+            >
+              <EditCatagoryProductData
+                id={text.id}
+                onSumbit={() => {
+                  setOpenEdit(null);
+                }}
+                initialValues={{
+                  category: text.category,
+                  product_status: text.product_status,
+                  product_title: text.product_title,
+                }}
+              />
+            </Modal>
+            <FontAwesomeIcon
+              onClick={() => {
+                setOpenEdit(text.id);
+              }}
+              icon={faPenToSquare}
+              style={{ marginRight: "10px" }}
+              className="text-dark fs-3 cursor-pointer"
+            />
+          </span>
+        );
       },
     },
   ];

@@ -22,3 +22,7 @@ export const EditCategory = ({ id, ...data }) => {
 export const DeleteCategoryAPI = (id) => {
   return request.delete(`/categories/${id}`);
 };
+
+export const EditCategoryProductData = (id, data) => {
+  return request.patch(`/categories/product-data/${id}`, data);
+};

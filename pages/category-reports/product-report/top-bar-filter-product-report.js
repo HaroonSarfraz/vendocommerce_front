@@ -1,10 +1,11 @@
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 import { Input, Select } from "antd";
 import moment from "moment";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function TopBarFilter(filter, setFilter, type) {
-  const [searchASIN, setSearchASIN] = useState("");
-  const [searchCategory, setSearchCategory] = useState("");
+  const CategoryListRes = useSelector(selectCategoryList);
 
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
@@ -71,8 +72,10 @@ export default function TopBarFilter(filter, setFilter, type) {
                   style={{
                     width: 250,
                   }}
-                  value={searchASIN || null}
-                  onChange={(e) => setSearchASIN(e.target.value)}
+                  value={filter.asin || null}
+                  onChange={(e) =>
+                    setFilter((s) => ({ ...s, asin: e.target.value }))
+                  }
                   onPressEnter={() => {
                     getList();
                   }}
@@ -80,17 +83,30 @@ export default function TopBarFilter(filter, setFilter, type) {
                 />
               </div>
               <div className="position-relative">
-                <Input
-                  placeholder="Search by category"
-                  style={{
-                    width: 250,
-                  }}
-                  value={searchCategory || null}
-                  onChange={(e) => setSearchCategory(e.target.value)}
-                  onPressEnter={() => {
-                    getList();
-                  }}
+                <Select
+                  disabled={CategoryListRes?.data.length === 0}
+                  mode="multiple"
+                  defaultValue="All"
+                  placeholder="Category"
                   size="large"
+                  style={{ width: 200 }}
+                  value={filter?.["category"] || null}
+                  onChange={(e) => {
+                    setFilter({
+                      ...filter,
+                      ["category"]: e,
+                    });
+                  }}
+                  options={[
+                    {
+                      value: null,
+                      label: "All",
+                    },
+                    ...(CategoryListRes?.data?.map((item) => ({
+                      value: item.id,
+                      label: item.name,
+                    })) || []),
+                  ]}
                 />
               </div>
             </div>

@@ -6,7 +6,8 @@ export const ProductReportSlice = createSlice({
   name: "productReportList",
   reducers: {
     setProductReportList: (state, action) => {
-      state.productReportList = action.payload;
+      state.data = action.payload;
+      state.status = true;
     },
   },
 });

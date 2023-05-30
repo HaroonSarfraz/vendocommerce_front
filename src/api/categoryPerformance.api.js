@@ -1,7 +1,13 @@
-import request from './request';
+import request from "./request";
 
 export const fetchCategoryPerformanceList = (data) => {
-  return request.get(`/category/category-performance-report-data?year=${data?.search_year || ''}&weeks=${data?.search_week || '1,2,3'}`);
+  return request.get(`/categories/performance-report`, {
+    params: {
+      year: data?.search_year,
+      weeks: data?.search_week || "1,2,3",
+      category: data?.category,
+    },
+  });
 };
 
 export const CategoryPerformanceReportImport = (data) => {

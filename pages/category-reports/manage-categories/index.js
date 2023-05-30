@@ -12,7 +12,7 @@ import {
   getCategoryList,
 } from "@/src/services/categoryList.services";
 import moment from "moment";
-import { Button, Modal, Space } from "antd";
+import { Button, Modal, Space, message } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -21,14 +21,23 @@ import {
 import CreateCategoryScreen from "@/src/components/CreateCategory";
 import { DeleteCategoryAPI } from "@/src/api/categoryList.api";
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import Pagination from "@/src/components/pagination";
 
+const initialFilters = {
+  page: "1",
+  limit: "20",
+  order: "desc",
+  orderBy: "name",
+};
 const { confirm } = Modal;
 
 export default function ManageCategory() {
   const [tableLoading, setTableLoading] = useState(true);
 
   const [openEdit, setOpenEdit] = useState(null);
-  const [openDeleteEdit, setOpenDeleteEdit] = useState(null);
+
   const [list, setList] = useState([]);
   const dispatch = useDispatch();
   const CategoryListRes = useSelector(selectCategoryList);
@@ -36,19 +45,16 @@ export default function ManageCategory() {
 
   const filter = useMemo(() => {
     return _.isEmpty(query)
-      ? {
-          page: "1",
-          limit: "20",
-          order: "desc",
-          orderBy: "name",
-        }
-      : query;
+      ? initialFilters
+      : {
+          ...initialFilters,
+          ...query,
+        };
   }, [query]);
-
-  console.log(filter);
 
   useEffect(() => {
     let time = setTimeout(() => {
+      message.loading({ content: "Loading...", duration: 0 });
       dispatch(getCategoryList(filter));
     }, 600);
     return () => {
@@ -59,6 +65,7 @@ export default function ManageCategory() {
 
   useEffect(() => {
     if (CategoryListRes?.status === true) {
+      message.destroy();
       setTableLoading(false);
       const isValidData = Array.isArray(CategoryListRes.data);
       isValidData && setList(CategoryListRes.data);
@@ -75,7 +82,25 @@ export default function ManageCategory() {
     replace({ pathname: pathname, query: { ...filter, ...sortFilter } });
   };
 
+  const onPageNo = (e) => {
+    replace({ pathname: pathname, query: { page: e, limit: filter.limit } });
+  };
+
+  const onPerPage = (e) => {
+    replace({ pathname: pathname, query: { page: "1", limit: e } });
+  };
+
   const columns = [
+    {
+      title: "#",
+      width: "30px",
+      align: "left",
+      sorter: true,
+      key: "id",
+      render: (text) => {
+        return <span>{text?.id}</span>;
+      },
+    },
     {
       title: "Name",
       width: "80px",
@@ -132,44 +157,41 @@ export default function ManageCategory() {
           });
         };
         return (
-          <span>
-            <Space>
-              <Button
-                onClick={() => {
-                  setOpenEdit(text.id);
-                }}
-                type="primary"
-                icon={<EditOutlined />}
-              />
-              <Modal
-                closable
-                maskClosable
-                onCancel={() => setOpenEdit(null)}
-                destroyOnClose
-                footer={null}
-                title="Edit Category"
-                open={openEdit === text.id}
-              >
-                <Space className="mt-6">
-                  <CreateCategoryScreen
-                    id={text.id}
-                    onSumbit={() => {
-                      setOpenEdit(null);
-                    }}
-                    type="edit"
-                    initialValues={{ name: text?.name }}
-                  />
-                </Space>
-              </Modal>
-              {/*  */}
-
-              <Button
-                onClick={showDeleteConfirm}
-                danger
-                icon={<DeleteOutlined />}
-              />
-            </Space>
-          </span>
+          <div className="d-flex justify-content-center">
+            <Modal
+              closable
+              maskClosable
+              onCancel={() => setOpenEdit(null)}
+              destroyOnClose
+              footer={null}
+              title="Edit Category"
+              open={openEdit === text.id}
+            >
+              <Space className="mt-6">
+                <CreateCategoryScreen
+                  id={text.id}
+                  onSumbit={() => {
+                    setOpenEdit(null);
+                  }}
+                  type="edit"
+                  initialValues={{ name: text?.name }}
+                />
+              </Space>
+            </Modal>
+            <FontAwesomeIcon
+              onClick={() => {
+                setOpenEdit(text.id);
+              }}
+              icon={faPenToSquare}
+              style={{ marginRight: "10px" }}
+              className="text-dark fs-3 cursor-pointer"
+            />
+            <FontAwesomeIcon
+              onClick={showDeleteConfirm}
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
+          </div>
         );
       },
     },
@@ -213,6 +235,14 @@ export default function ManageCategory() {
                     <NoData />
                   </div>
                 )}
+                <Pagination
+                  loading={tableLoading || list?.length === 0}
+                  pageSize={parseInt(filter.limit)}
+                  page={parseInt(filter.page)}
+                  totalPage={parseInt(CategoryListRes.count)}
+                  onPerPage={onPerPage}
+                  onPageNo={onPageNo}
+                />
               </div>
             </div>
           </div>

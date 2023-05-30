@@ -1,6 +1,10 @@
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 import { Input, Select } from "antd";
+import { useSelector } from "react-redux";
 
 export default function TopBarFilter(filter, setFilter) {
+  const CategoryListRes = useSelector(selectCategoryList);
+
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
       <div className="col-xl-12 mb-5 mb-xl-5">
@@ -20,7 +24,16 @@ export default function TopBarFilter(filter, setFilter) {
                       ["search[category]"]: e,
                     });
                   }}
-                  options={[{ value: "All", label: "All" }]}
+                  options={[
+                    {
+                      value: "",
+                      label: "All",
+                    },
+                    ...(CategoryListRes?.data?.map((item) => ({
+                      value: item.id,
+                      label: item.name,
+                    })) || []),
+                  ]}
                 />
               </div>
               <div className="position-relative">
@@ -75,22 +88,25 @@ export default function TopBarFilter(filter, setFilter) {
                 />
               </div>
               <div className="position-relative">
-                <Input
+                <Select
+                  defaultValue="All"
                   placeholder="Product Status"
-                  style={{
-                    width: 250,
-                  }}
+                  size="large"
+                  style={{ width: 200 }}
                   value={filter?.["search[product_status]"] || null}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setFilter({
                       ...filter,
-                      ["search[product_status]"]: e.target.value,
-                    })
-                  }
-                  onPressEnter={() => {
-                    getList();
+                      ["search[product_status]"]: e,
+                    });
                   }}
-                  size="large"
+                  options={[
+                    {
+                      value: "Active",
+                      label: "Active",
+                    },
+                    { value: "inactive", label: "inactive" },
+                  ]}
                 />
               </div>
             </div>
