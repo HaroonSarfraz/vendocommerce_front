@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Form, Input, message, Select } from "antd";
-import { updateBrandRequest, fetchBrand } from "@/src/api/brands.api";
+import { createBrandRequest, updateBrandRequest } from "@/src/api/brands.api";
 import _ from "lodash";
 import { UserLgSvg } from "@/src/assets";
 
@@ -30,16 +30,30 @@ export default function General({ brand }) {
       u_amazon_marketplace_name: values.u_amazon_marketplace_name,
     };
 
-    updateBrandRequest(brand.id, data)
-      .then((res) => {
-        setSubmit(false);
-        if (res.status === 200) {
-          message.success("Brand Updated Successfully");
-        } else {
-          message.error("unable to create user");
-        }
-      })
-      .catch((err) => message.error(err?.response?.message));
+    if (brand) {
+      updateBrandRequest(brand.id, data)
+        .then((res) => {
+          setSubmit(false);
+          if (res.status === 200) {
+            message.success("Brand Updated Successfully");
+          } else {
+            message.error("Unable to update brand");
+          }
+        })
+        .catch((err) => message.error(err?.response?.message));
+    } else {
+      createBrandRequest(data)
+        .then((res) => {
+          setSubmit(false);
+          if (res.status === 201) {
+            message.success("Brand Created Successfully");
+            router.push(`/brands/edit?brandId=${res.data.id}&activeTab=users`);
+          } else {
+            message.error("Unable to create brand");
+          }
+        })
+        .catch((err) => message.error(err?.response?.message));
+    }
   };
 
   return (
@@ -101,12 +115,6 @@ export default function General({ brand }) {
                       name="u_amazon_marketplace_name"
                       label="Amazon Marketplace Name"
                       className="fw-bolder"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Amazon Marketplace Name is required",
-                        },
-                      ]}
                       hasFeedback
                       initialValue={brand?.u_amazon_marketplace_name ?? ""}
                     >
