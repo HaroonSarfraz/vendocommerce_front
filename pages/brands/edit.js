@@ -12,8 +12,8 @@ import {
   TvSvg,
   UserLgSvg,
 } from "@/src/assets";
-import General from "./general-settings";
-import UserSettings from "./users-settings";
+import General from "@/src/components/brands/general-settings";
+import UserSettings from "@/src/components/brands/users-settings";
 import { fetchBrand } from "@/src/api/brands.api";
 import Loading from "@/src/components/loading";
 

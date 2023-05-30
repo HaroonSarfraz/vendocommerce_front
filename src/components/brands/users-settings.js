@@ -9,6 +9,8 @@ import { selectFilter } from "@/src/helpers/selectFilter";
 import { selectUserList } from "@/src/store/slice/users.slice";
 import { UsersGroupAddSvg } from "@/src/assets";
 import ASINTable from "@/src/components/table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const formItemLayout = {
   labelCol: {
@@ -100,6 +102,21 @@ export default function UserSettings({ brand }) {
         return <span>{text?.role || "N/A"}</span>;
       },
     },
+    {
+      title: "Action",
+      width: 70,
+      align: "left",
+      render: (text) => {
+        return (
+          <div className="d-flex">
+            <FontAwesomeIcon
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
+          </div>
+        );
+      },
+    },
   ];
 
   return (
@@ -172,7 +189,7 @@ export default function UserSettings({ brand }) {
                       />
                     </Form.Item>
                   </div>
-                  <div className="col-12 col-sm-4 col-md-4 col-lg-4 mt-6 pt-4">
+                  <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                     <Form.Item className="d-flex">
                       <Button
                         htmlType="submit"
@@ -192,7 +209,7 @@ export default function UserSettings({ brand }) {
                   </div>
                 </div>
               </Form>
-              <div>
+              <div className="mt-6">
                 <ASINTable
                   columns={columns}
                   dataSource={users}

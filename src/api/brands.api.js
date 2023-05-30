@@ -14,7 +14,7 @@ export const fetchBrand = (brandId) => {
 };
 
 export const createBrandRequest = (data) => {
-  return request.post(`/brands?createdb=${true}`, data);
+  return request.post(`/brands?createdb=${false}`, data);
 };
 
 export const fetchUserBrandList = () => {
