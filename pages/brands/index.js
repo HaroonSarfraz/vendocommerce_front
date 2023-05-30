@@ -210,10 +210,7 @@ export default function Users(props) {
       render: (text) => {
         return (
           <div className="d-flex">
-            <Link
-              href={{ pathname: "/brands/edit", query: text }}
-              as={`/brands/edit`}
-            >
+            <Link href={`/brands/edit?brandId=${text.id}&activeTab=general`}>
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 style={{ marginRight: "10px" }}
