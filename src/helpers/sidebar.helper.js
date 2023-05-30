@@ -24,8 +24,6 @@ export const adminMenus = [
   getItem("Manage Users", "users", <LockSvg />),
 ];
 
-const brand = isClient && JSON.parse(localStorage.getItem("brand"));
-
 export const userMenus = [
   getItem("Dashboard", "dashboard", <DashboardSvg />),
   getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
@@ -205,10 +203,5 @@ export const userMenus = [
       "inventory-management"
     ),
   ]),
-  brand &&
-    getItem(
-      "Settings",
-      `brands/edit?brandId=${brand.id}&activeTab=general`,
-      <SettingsSvg />
-    ),
+  getItem("Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
 ];
