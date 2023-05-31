@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input, message } from "antd";
+import { Input, message, Modal } from "antd";
 import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
@@ -17,6 +17,10 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectBrandList } from "@/src/store/slice/brands.slice";
 import { SwitchUserSvg } from "@/src/assets";
 import NoData from "@/src/components/no-data";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { deleteBrandRequest } from "@/src/api/brands.api";
+
+const { confirm } = Modal;
 
 export default function Users(props) {
   const dispatch = useDispatch();
@@ -115,6 +119,29 @@ export default function Users(props) {
     );
   };
 
+  const deleteBrand = (brandID) => {
+    setLoading(true);
+    deleteBrandRequest(brandID)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          dispatch(
+            getBrandList({
+              page: page,
+              perPage: pageSize,
+              search_term: searchText,
+              orderBy: orderBy,
+              order: order,
+            })
+          );
+          message.success("Brand has been Deleted Successfully");
+        } else {
+          setLoading(false);
+          message.error("Unable to delete brand");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+  };
+
   const columns = [
     {
       title: "#",
@@ -208,6 +235,21 @@ export default function Users(props) {
       width: 70,
       align: "left",
       render: (text) => {
+        const showDeleteConfirm = () => {
+          confirm({
+            title: `Are you sure to delete ${text.name} brand?`,
+            icon: <ExclamationCircleFilled />,
+            content: "",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+              deleteBrand(text.id);
+            },
+            onCancel() {},
+          });
+        };
+
         return (
           <div className="d-flex">
             <Link href={`/brands/edit?brandId=${text.id}&activeTab=general`}>
@@ -218,6 +260,7 @@ export default function Users(props) {
               />
             </Link>
             <FontAwesomeIcon
+              onClick={showDeleteConfirm}
               icon={faTrashCan}
               className="text-danger fs-3 cursor-pointer"
             />

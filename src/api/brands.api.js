@@ -14,7 +14,7 @@ export const fetchBrand = (brandId) => {
 };
 
 export const createBrandRequest = (data) => {
-  return request.post(`/brands?createdb=${false}`, data);
+  return request.post(`/brands?createdb=${true}`, data);
 };
 
 export const fetchUserBrandList = () => {
@@ -31,4 +31,8 @@ export const addUserToBrandRequest = (id, userID, role) => {
 
 export const removeUserFromBrandRequest = (id, userID) => {
   return request.delete(`/brands/${id}/user/${userID}`);
+};
+
+export const deleteBrandRequest = (id) => {
+  return request.delete(`/brands/${id}`);
 };
