@@ -28,3 +28,7 @@ export const updateBrandRequest = (id, data) => {
 export const addUserToBrandRequest = (id, userID, role) => {
   return request.get(`/brands/${id}/user/${userID}?role=${role}`);
 };
+
+export const removeUserFromBrandRequest = (id, userID) => {
+  return request.delete(`/brands/${id}/user/${userID}`);
+};
