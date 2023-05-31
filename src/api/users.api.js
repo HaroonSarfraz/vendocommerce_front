@@ -23,3 +23,7 @@ export const updateUserRequest = (id, data) => {
 export const fetchUserBrands = (id) => {
   return request.get(`/users/${id}/brands`);
 };
+
+export const deleteUserRequest = (id) => {
+  return request.delete(`/users/${id}`);
+};

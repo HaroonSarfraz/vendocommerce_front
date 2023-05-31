@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, message, Select } from "antd";
+import { Button, Form, message, Select, Modal } from "antd";
 import { getUserList } from "@/src/services/users.services";
-import { addUserToBrandRequest } from "@/src/api/brands.api";
+import {
+  addUserToBrandRequest,
+  removeUserFromBrandRequest,
+} from "@/src/api/brands.api";
 import _ from "lodash";
 import { selectFilter } from "@/src/helpers/selectFilter";
 import { selectUserList } from "@/src/store/slice/users.slice";
@@ -11,6 +14,7 @@ import { UsersGroupAddSvg } from "@/src/assets";
 import ASINTable from "@/src/components/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const formItemLayout = {
   labelCol: {
@@ -22,20 +26,29 @@ const formItemLayout = {
     },
   },
 };
+const { confirm } = Modal;
 
 export default function UserSettings({ brand }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const [addUserForm] = Form.useForm();
-  const [addUserSubmit, setAddUserSubmit] = useState(false);
-  const [users, setUsers] = useState(brand?.users || []);
-  const [loading, setLoading] = useState(true);
-
   const userList = useSelector(selectUserList);
+
+  const [addUserSubmit, setAddUserSubmit] = useState(false);
+
+  const [users, setUsers] = useState(
+    (brand?.users || []).map((u, index) => {
+      return {
+        user_id: u.user.id,
+        index: index + 1,
+        role: u.role,
+        name: u.user.u_name,
+      };
+    })
+  );
 
   useEffect(() => {
     dispatch(getUserList({ perPage: 9999 }));
-    setLoading(false);
   }, []);
 
   const options = userList.items.map((user) => {
@@ -53,7 +66,8 @@ export default function UserSettings({ brand }) {
           setUsers((users) => [
             ...users,
             {
-              id: _.max(users.map((u) => u.id)) + 1 || 1,
+              user_id: values.user_id,
+              index: _.max(users.map((u) => u.index)) + 1 || 1,
               role: values.role,
               name: options.find((u) => u.value === values.user_id).label,
             },
@@ -61,6 +75,19 @@ export default function UserSettings({ brand }) {
           message.success("User Added to the Brand Successfully");
         } else {
           message.error("unable to create user");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+  };
+
+  const deleteUser = (userID) => {
+    removeUserFromBrandRequest(brand.id, userID)
+      .then((res) => {
+        if (res.status === 200) {
+          setUsers(users.filter((u) => u.user_id !== userID));
+          message.success("User has been Removed from Brand Successfully");
+        } else {
+          message.error("Unable to remove user");
         }
       })
       .catch((err) => message.error(err?.response?.message));
@@ -76,10 +103,10 @@ export default function UserSettings({ brand }) {
       title: "#",
       width: 30,
       align: "left",
-      sorter: (a, b) => a.id - b.id,
+      sorter: (a, b) => a.index - b.index,
       key: "id",
       render: (text) => {
-        return <span>{text?.id}</span>;
+        return <span>{text?.index}</span>;
       },
     },
     {
@@ -107,9 +134,24 @@ export default function UserSettings({ brand }) {
       width: 70,
       align: "left",
       render: (text) => {
+        const showDeleteConfirm = () => {
+          confirm({
+            title: `Are you sure to remove ${text.name} user?`,
+            icon: <ExclamationCircleFilled />,
+            content: "",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+              deleteUser(text.user_id);
+            },
+            onCancel() {},
+          });
+        };
         return (
           <div className="d-flex">
             <FontAwesomeIcon
+              onClick={showDeleteConfirm}
               icon={faTrashCan}
               className="text-danger fs-3 cursor-pointer"
             />
@@ -161,7 +203,7 @@ export default function UserSettings({ brand }) {
                         placeholder="Select User"
                         options={options}
                         filterOption={selectFilter}
-                        disabled={loading}
+                        disabled={options.length === 0}
                       />
                     </Form.Item>
                   </div>
@@ -196,7 +238,7 @@ export default function UserSettings({ brand }) {
                         disabled={addUserSubmit}
                         className="btn btn-sm btn-primary"
                       >
-                        {addUserSubmit ? (
+                        {addUserSubmit || options.length === 0 ? (
                           <span>
                             Please wait...
                             <span className="spinner-border spinner-border-sm align-middle ms-2" />
