@@ -81,7 +81,6 @@ export default function UserSettings({ brand }) {
   };
 
   const deleteUser = (userID) => {
-    console.log("userID", userID);
     removeUserFromBrandRequest(brand.id, userID)
       .then((res) => {
         if (res.status === 200) {

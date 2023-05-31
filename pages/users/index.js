@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import dynamic from "next/dynamic";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
@@ -14,12 +13,15 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getUserList } from "@/src/services/users.services";
 import AccountsModal from "@/src/components/permissions/AccountsModal";
 import ModulesModal from "@/src/components/permissions/ModulesModal";
-import { updateUserRequest } from "@/src/api/users.api";
-import { Input } from "antd";
+import { updateUserRequest, deleteUserRequest } from "@/src/api/users.api";
+import { Input, Modal, message } from "antd";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectUserList } from "@/src/store/slice/users.slice";
 import { NoDataSvg } from "@/src/assets";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+
+const { confirm } = Modal;
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -105,6 +107,27 @@ export default function Users() {
         }
       })
       .catch((err) => message.error(err));
+  };
+
+  const deleteUser = (userID) => {
+    setLoading(true);
+    deleteUserRequest(userID)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          dispatch(
+            getUserList({
+              page: page,
+              perPage: pageSize,
+              search_term: searchText,
+            })
+          );
+          message.success("User has been Deleted Successfully");
+        } else {
+          setLoading(false);
+          message.error("Unable to delete user");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
   };
 
   const columns = [
@@ -243,6 +266,21 @@ export default function Users() {
       width: 70,
       align: "left",
       render: (text) => {
+        const showDeleteConfirm = () => {
+          confirm({
+            title: `Are you sure to delete ${text.u_name} user?`,
+            icon: <ExclamationCircleFilled />,
+            content: "",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+              deleteUser(text.id);
+            },
+            onCancel() {},
+          });
+        };
+
         return (
           <div className="d-flex">
             <Link
@@ -256,6 +294,7 @@ export default function Users() {
               />
             </Link>
             <FontAwesomeIcon
+              onClick={showDeleteConfirm}
               icon={faTrashCan}
               className="text-danger fs-3 cursor-pointer"
             />
