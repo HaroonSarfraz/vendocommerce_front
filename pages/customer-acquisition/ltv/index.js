@@ -54,13 +54,11 @@ export default function SalesByMonth() {
 
   const listContent = list.map((item) => {
     const months = item.otherMonths.reduce((acc, item) => {
-      acc[`m-${item.month - 1}`] = item.newCustomerSalesTotal;
+      acc[`m-${item.month}`] = item.newCustomerSalesTotal;
       return acc;
     }, {});
     return {
-      row_label: `${moment()
-        .month(item.month - 1)
-        .format("MMM")}-${item.year}`,
+      row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
       customers: numberFormat(item.newCustomerCount),
       ...months,
     };
@@ -100,7 +98,7 @@ export default function SalesByMonth() {
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
           {TopBarFilter(filter, setFilter, "Month", {
-            month: true,
+            month: !true,
             year: true,
           })}
 

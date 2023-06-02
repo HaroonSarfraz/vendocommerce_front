@@ -37,30 +37,30 @@ export const nameObject = {
     name: "Month",
     parent: "Sales Analytics",
   },
-  "/inventory-management/inventory-dashboard": {
-    name: "Inventory Dashboard",
-    parent: "Inventory Management",
-  },
-  "/inventory-management/planning": {
-    name: "Inventory Planning",
-    parent: "Inventory Management",
-  },
-  "/inventory-management/po-template": {
-    name: "PO Template",
-    parent: "Inventory Management",
-  },
-  "/inventory-management/po-template/create": {
-    name: "Create PO Template",
-    parent: "Inventory Management",
-  },
-  "/inventory-management/shipping-from-address": {
-    name: "Shipping From Address",
-    parent: "Inventory Management",
-  },
-  "/inbound-shipment": {
-    name: "Inbound Shipment",
-    parent: "Inventory Management",
-  },
+  // "/inventory-management/inventory-dashboard": {
+  //   name: "Inventory Dashboard",
+  //   parent: "Inventory Management",
+  // },
+  // "/inventory-management/planning": {
+  //   name: "Inventory Planning",
+  //   parent: "Inventory Management",
+  // },
+  // "/inventory-management/po-template": {
+  //   name: "PO Template",
+  //   parent: "Inventory Management",
+  // },
+  // "/inventory-management/po-template/create": {
+  //   name: "Create PO Template",
+  //   parent: "Inventory Management",
+  // },
+  // "/inventory-management/shipping-from-address": {
+  //   name: "Shipping From Address",
+  //   parent: "Inventory Management",
+  // },
+  // "/inbound-shipment": {
+  //   name: "Inbound Shipment",
+  //   parent: "Inventory Management",
+  // },
   "/advertising-analytics/advertising-data": {
     name: "Amazon Advertising",
     parent: "Advertisement Analytics",

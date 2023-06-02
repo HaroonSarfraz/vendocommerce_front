@@ -20,6 +20,7 @@ import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 
 export default function CategoryProductList() {
   const [tableLoading, setTableLoading] = useState(true);
+  const CategoryListRes = useSelector(selectCategoryList);
 
   const dispatch = useDispatch();
 
@@ -160,7 +161,7 @@ export default function CategoryProductList() {
             </Modal>
             <FontAwesomeIcon
               onClick={() => {
-                setOpenEdit(text.id);
+                CategoryListRes?.data.length !== 0 && setOpenEdit(text.id);
               }}
               icon={faPenToSquare}
               style={{ marginRight: "10px" }}

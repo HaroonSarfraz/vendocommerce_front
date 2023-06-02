@@ -68,7 +68,7 @@ export default function CategoryPerformanceReport() {
           return count;
         }
       }, 0),
-    [listLength]
+    [list, filter]
   );
 
   const columns = useMemo(
@@ -101,54 +101,79 @@ export default function CategoryPerformanceReport() {
         key: "cwow",
       },
     ],
-    [findWeeksCount]
+    [findWeeksCount, filter]
   );
 
   const res = useMemo(
     () =>
-      list?.reduce((acc, item) => {
-        const { change_week_over_week, total, weekly_report } = item;
+      list?.reduce(
+        (acc, item, key) => {
+          const { data, totals } = acc;
+          const { change_week_over_week, total, weekly_report } = item;
 
-        const weeks = (type, formatter = (val) => val) =>
-          weekly_report.reduce((wacc, witem) => {
-            wacc[witem.week_name] = formatter(witem[type]);
-            return wacc;
-          }, {});
+          const weeks = (type, formatter = (val) => val) =>
+            weekly_report.reduce((wacc, witem) => {
+              wacc[witem.week_name] = formatter(witem[type]);
+              return wacc;
+            }, {});
 
-        const row1 = { name: item.category };
-        const row2 = {
-          name: "Shipped Revenue",
-          ...weeks("shipped_revenue", currencyFormat),
-          total: currencyFormat(total?.shipped_revenue),
-          cwow: percentageFormat(change_week_over_week.shipped_revenue),
-        };
-        const row3 = {
-          name: "TACoS",
-          ...weeks("TACoS", percentageFormat),
-          total: percentageFormat(total?.TACoS),
-          cwow: percentageFormat(change_week_over_week.TACoS),
-        };
-        const row4 = {
-          name: "Ad Sales",
-          ...weeks("ad_sales", currencyFormat),
-          total: currencyFormat(total?.ad_sales),
-          cwow: percentageFormat(change_week_over_week.ad_sales),
-        };
-        const row5 = {
-          name: "Ad Spend	",
-          ...weeks("ad_spend", currencyFormat),
-          total: currencyFormat(total?.ad_spend),
-          cwow: percentageFormat(change_week_over_week.ad_spend),
-        };
-        acc.push(row1);
-        acc.push(row2);
-        acc.push(row3);
-        acc.push(row4);
-        acc.push(row5);
-        return acc;
-      }, []) || [],
-    [listLength]
+          const row1 = { name: item.category };
+          const row2 = {
+            name: "Shipped Revenue",
+            ...weeks("shipped_revenue", currencyFormat),
+            total: currencyFormat(total?.shipped_revenue),
+            cwow: percentageFormat(change_week_over_week.shipped_revenue),
+          };
+          const row3 = {
+            name: "TACoS",
+            ...weeks("TACoS", percentageFormat),
+            total: percentageFormat(total?.TACoS),
+            cwow: percentageFormat(change_week_over_week.TACoS),
+          };
+          const row4 = {
+            name: "Ad Sales",
+            ...weeks("ad_sales", currencyFormat),
+            total: currencyFormat(total?.ad_sales),
+            cwow: percentageFormat(change_week_over_week.ad_sales),
+          };
+          const row5 = {
+            name: "Ad Spend",
+            ...weeks("ad_spend", currencyFormat),
+            total: currencyFormat(total?.ad_spend),
+            cwow: percentageFormat(change_week_over_week.ad_spend),
+          };
+          data.push(row1);
+          data.push(row2);
+          data.push(row3);
+          data.push(row4);
+          data.push(row5);
+
+          totals["Shipped Revenue"] += total?.shipped_revenue;
+          totals["TACoS"] += total?.TACoS;
+          totals["Ad Sales"] += total?.ad_sales;
+          totals["Ad Spend"] += total?.ad_spend;
+
+          return acc;
+        },
+        {
+          data: [],
+          totals: {
+            "Shipped Revenue": 0,
+            TACoS: 0,
+            "Ad Sales": 0,
+            "Ad Spend": 0,
+          },
+        }
+      ) || [],
+    [list, filter]
   );
+
+  const shippedRevenue = currencyFormat(
+    res.totals["Shipped Revenue"] / list.length
+  );
+  const tACoS = percentageFormat(res.totals["TACoS"] / list.length);
+  const adSales = currencyFormat(res.totals["Ad Sales"] / list.length);
+  const adSpend = currencyFormat(res.totals["Ad Spend"] / list.length);
 
   return (
     <>
@@ -182,7 +207,7 @@ export default function CategoryPerformanceReport() {
                     </button>
                     <ExportToExcel
                       columns={columns.map((item) => item.title) || []}
-                      rows={res}
+                      rows={res.data}
                       fileName={"category-performance-report"}
                       loading={tableLoading}
                     >
@@ -197,19 +222,67 @@ export default function CategoryPerformanceReport() {
                     {tableLoading ? (
                       <Loading />
                     ) : list?.length != 0 ? (
-                      <Table
-                        pagination={false}
-                        columns={columns}
-                        dataSource={res}
-                        loading={tableLoading}
-                        scroll={{
-                          x:
-                            columns
-                              ?.map((d) => d.width)
-                              .reduce((a, b) => a + b, 0) + 300,
-                        }}
-                        size={"small"}
-                      />
+                      <>
+                        <Table
+                          pagination={false}
+                          columns={[
+                            {
+                              title: "",
+                              width: 80,
+                            },
+                            {
+                              title: "Shipped Revenue Average",
+                              width: 90,
+                              dataIndex: "shippedRevenue",
+                              key: "shippedRevenue",
+                            },
+                            {
+                              title: "TACoS Average",
+                              width: 90,
+                              dataIndex: "tACoS",
+                              key: "tACoS",
+                            },
+                            {
+                              title: "Ad Sales Average",
+                              width: 90,
+                              dataIndex: "adSales",
+                              key: "adSales",
+                            },
+                            {
+                              title: "Ad Spend Average",
+                              width: 90,
+                              dataIndex: "adSpend",
+                              key: "adSpend",
+                            },
+                            {
+                              title: "",
+                              width: 25,
+                            },
+                          ]}
+                          dataSource={[
+                            {
+                              shippedRevenue,
+                              tACoS,
+                              adSales,
+                              adSpend,
+                            },
+                          ]}
+                          size={"small"}
+                        />
+                        <Table
+                          pagination={false}
+                          columns={columns}
+                          dataSource={res.data}
+                          loading={tableLoading}
+                          scroll={{
+                            x:
+                              columns
+                                ?.map((d) => d.width)
+                                .reduce((a, b) => a + b, 0) + 300,
+                          }}
+                          size={"small"}
+                        />
+                      </>
                     ) : (
                       <NoData />
                     )}

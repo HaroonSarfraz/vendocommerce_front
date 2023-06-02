@@ -12,6 +12,7 @@ import { selectCustomerAcquisition } from "@/src/store/slice/customerAcquisition
 import _ from "lodash";
 import { currencyFormat, numberFormat } from "@/src/helpers/formatting.helpers";
 import moment from "moment";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function CustomerAcquisitionNewVSRepeat() {
   const dispatch = useDispatch();
@@ -67,13 +68,11 @@ export default function CustomerAcquisitionNewVSRepeat() {
       sorter: (a, b) => a.month - b.month,
       render: (text) => {
         return (
-          <span>
-            {moment()
-              .month(text.month - 1)
-              .format("MMM") +
-              "-" +
-              (text.year || filter.year)}
-          </span>
+          moment()
+            .month(text.month - 1)
+            .format("MMM") +
+          "-" +
+          (text.year || filter.year)
         );
       },
     },
@@ -83,7 +82,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       align: "center",
       sorter: (a, b) => a.customer_count - b.customer_count,
       render: (text) => {
-        return <span>{numberFormat(text?.customer_count)}</span>;
+        return numberFormat(text?.customer_count);
       },
     },
     {
@@ -92,7 +91,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       align: "center",
       sorter: (a, b) => a.old_customer_count - b.old_customer_count,
       render: (text) => {
-        return <span>{numberFormat(text?.old_customer_count)}</span>;
+        return numberFormat(text?.old_customer_count);
       },
     },
     {
@@ -101,7 +100,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       align: "center",
       sorter: (a, b) => a.new_customer_count - b.new_customer_count,
       render: (text) => {
-        return <span>{numberFormat(text?.new_customer_count)}</span>;
+        return numberFormat(text?.new_customer_count);
       },
     },
     {
@@ -110,7 +109,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       align: "center",
       sorter: (a, b) => (a.spend || 0) - (b.spend || 0),
       render: (text) => {
-        return <span>{`${currencyFormat(text?.spend)}`}</span>;
+        return currencyFormat(text?.spend);
       },
     },
     {
@@ -119,7 +118,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       align: "center",
       sorter: (a, b) => (a.CPC || 0) - (b.CPC || 0),
       render: (text) => {
-        return <span>{`${currencyFormat(text?.CPC)}`}</span>;
+        return currencyFormat(text?.CPC);
       },
     },
   ];
@@ -162,9 +161,23 @@ export default function CustomerAcquisitionNewVSRepeat() {
             <div className="card mb-7 pt-5">
               <div className="card-body pt-2">
                 <div className="mb-5 d-flex flex-row justify-content-end">
-                  <button className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3">
-                    Export
-                  </button>
+                  <ExportToExcel
+                    columns={[
+                      "mounth",
+                      ...columns
+                        .slice(1)
+                        .map((item) => item.title.toLowerCase()),
+                    ]}
+                    rows={list.map((data) =>
+                      columns.map((item) => item.render(data))
+                    )}
+                    fileName={"new-vs-repeat"}
+                    loading={loading}
+                  >
+                    <button className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3">
+                      Export Data
+                    </button>
+                  </ExportToExcel>
                 </div>
 
                 {loading ? (

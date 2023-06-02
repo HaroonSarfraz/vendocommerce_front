@@ -13,6 +13,7 @@ import { getShippingList } from "@/src/services/shipping.services";
 import AddNew from "@/src/components/shipping-from-address/addNew";
 import { selectShippingList } from "@/src/store/slice/shipping.slice";
 import NoData from "@/src/components/no-data";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function ShippingFromAddress() {
   const dispatch = useDispatch();
@@ -128,7 +129,17 @@ export default function ShippingFromAddress() {
   const menu = (
     <Menu>
       <Menu.Item key="1">Export to csv</Menu.Item>
-      <Menu.Item key="2">Export to xlsx</Menu.Item>
+      <ExportToExcel
+        columns={[]}
+        rows={[]}
+        fileName={"inventory-management-shipping-from-address"}
+        loading={loading}
+      >
+        <button className="btn btn-light-danger btn-sm fw-bolder ">
+          Export Data
+        </button>
+        <Menu.Item key="2">Export to xlsx</Menu.Item>
+      </ExportToExcel>
     </Menu>
   );
   const onPageNo = (e) => {
