@@ -6,7 +6,7 @@ export const getUserList = (data) => {
   return (dispatch) => {
     fetchUserList(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status == 200 && res.data) {
           dispatch(setUserList(res.data));
         } else {
           message.error(res.data.message);

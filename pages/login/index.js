@@ -41,10 +41,10 @@ export default function Login() {
               ? router.push("/dashboard")
               : fetchUserBrandList().then((res) => {
                   if (res.status >= 200 && res.status <= 299) {
-                    if (res.data.Brands.length > 0) {
+                    if (res.data.brands.length > 0) {
                       localStorage.setItem(
                         "brand",
-                        JSON.stringify(res.data.Brands[0])
+                        JSON.stringify(res.data.brands[0].brand)
                       );
                       router.push(from || "/sales-analytics/sales");
                     } else {
