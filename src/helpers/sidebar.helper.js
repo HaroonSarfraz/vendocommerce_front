@@ -8,7 +8,6 @@ import {
   UserLgSvg,
   UsersSvg,
 } from "../assets";
-import { isClient } from "./isClient";
 
 function getItem(label, key, icon, children, parent = "") {
   return {

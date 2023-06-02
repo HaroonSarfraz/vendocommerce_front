@@ -15,6 +15,14 @@ const initialState = {
       page: 1,
       limit: 10,
     },
+    amazonSpApiCredentials: {
+      status: false,
+      data: [],
+    },
+    amazonAdvertisingCredentials: {
+      status: false,
+      data: [],
+    }
   },
   customerAcquisition: {
     status: false,

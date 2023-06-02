@@ -12,8 +12,7 @@ import {
   TvSvg,
   UserLgSvg,
 } from "@/src/assets";
-import General from "@/src/components/brands/general-settings";
-import UserSettings from "@/src/components/brands/users-settings";
+import { General, UserSettings, SPCredentials, AdvertisingCredentials } from "@/src/components/brands";
 import { fetchBrand } from "@/src/api/brands.api";
 import Loading from "@/src/components/loading";
 
@@ -30,11 +29,11 @@ export default function EditBrand() {
     if (brandId || localBrand) {
       fetchBrand(brandId || localBrand)
         .then((res) => {
-          if(res.status == 200 && res.data) {
+          if (res.status == 200 && res.data) {
             setBrand(res.data);
             setLoading(false);
           } else {
-            if(JSON.parse(localStorage.getItem("brand"))) {
+            if (JSON.parse(localStorage.getItem("brand"))) {
               router.push("/sales-analytics/sales");
             } else {
               router.push("/brands");
@@ -65,18 +64,18 @@ export default function EditBrand() {
       icon: <AddUserSvg />,
       tabComponent: UserSettings,
     },
-    // {
-    //   tabHeading: "Amazon SP API Credentials",
-    //   key: "apiCredentials",
-    //   icon: <KeySvg />,
-    //   tabComponent: null,
-    // },
-    // {
-    //   tabHeading: "Amazon Advertising Credentials",
-    //   key: "advertisingCredentials",
-    //   icon: <TvSvg />,
-    //   tabComponent: null,
-    // },
+    {
+      tabHeading: "Amazon SP API Credentials",
+      key: "apiCredentials",
+      icon: <KeySvg />,
+      tabComponent: SPCredentials,
+    },
+    {
+      tabHeading: "Amazon Advertising Credentials",
+      key: "advertisingCredentials",
+      icon: <TvSvg />,
+      tabComponent: AdvertisingCredentials,
+    },
     // {
     //   tabHeading: "Default Values",
     //   key: "defaultValues",
