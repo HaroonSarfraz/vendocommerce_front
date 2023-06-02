@@ -5,7 +5,7 @@ import Loading from "@/src/components/loading";
 import { defaultWeek, defaultYear } from "@/src/config";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "rc-image";
-import { Table, Tooltip } from "antd";
+import { Checkbox, Table, Tooltip } from "antd";
 import { currencyFormat, numberFormat } from "@/src/helpers/formatting.helpers";
 import ASINTable from "@/src/components/table";
 import NoData from "@/src/components/no-data";
@@ -15,6 +15,14 @@ import { selectProductReportList } from "@/src/store/slice/productReport.slice";
 import { getCategoryList } from "@/src/services/categoryList.services";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
 
+const columnToggleOptions = [
+  { label: "Sales", value: "sales" },
+  { label: "AD Sales", value: "ad_sales" },
+  { label: "AD Spend", value: "ad_spend" },
+];
+
+const columnToggleInitialValues = ["sales", "ad_spend", "ad_sales"];
+
 export default function ProductReportPage() {
   const dispatch = useDispatch();
 
@@ -22,6 +30,13 @@ export default function ProductReportPage() {
 
   const [tableLoading, setTableLoading] = useState(true);
   const [list, setList] = useState([]);
+  const [columnToggle, setColumnToggle] = useState(columnToggleInitialValues);
+
+  const onChange = (checkedValues) => {
+    setColumnToggle(
+      checkedValues.length === 0 ? columnToggleInitialValues : checkedValues
+    );
+  };
 
   const [filter, setFilter] = useState({
     week: [],
@@ -69,14 +84,45 @@ export default function ProductReportPage() {
           return count;
         }
       }, 0),
-    [listLength]
+    [list, filter]
   );
+
+  console.log(columnToggle);
+
+  const weekGroupColumn =
+    Array(findWeeksCount)
+      .fill("")
+      .map((_, key) => ({
+        title: `WK${key + 1}`,
+        key: `WK${key + 1}`,
+        children: [
+          columnToggle.includes("sales") && {
+            title: "Sales",
+            dataIndex: `sales${key + 1}`,
+            key: `sales${key + 1}`,
+            width: 110,
+          },
+          columnToggle.includes("ad_sales") && {
+            title: "AD Sales",
+            dataIndex: `ad_sales${key + 1}`,
+            key: `ad_sales${key + 1}`,
+            width: 110,
+          },
+          columnToggle.includes("ad_spend") && {
+            title: "AD Spend",
+            dataIndex: `ad_spend${key + 1}`,
+            key: `ad_spend${key + 1}`,
+            width: 110,
+          },
+        ].filter(Boolean),
+      })) || [];
 
   const columns = useMemo(
     () => [
       {
         title: "",
         width: 40,
+        fixed: "left",
       },
       {
         title: "Row Labels",
@@ -98,41 +144,49 @@ export default function ProductReportPage() {
         dataIndex: "status",
         key: "status",
       },
-      ...(Array(findWeeksCount)
-        .fill("")
-        .map((_, key) => ({
-          title: `WK${key + 1}`,
-          key: `WK${key + 1}`,
-          children: [
-            {
-              title: "Sales",
-              dataIndex: `sales${key + 1}`,
-              key: `sales${key + 1}`,
-              width: 110,
-            },
-            {
-              title: "AD Sales",
-              dataIndex: `ad_sales${key + 1}`,
-              key: `ad_sales${key + 1}`,
-              width: 110,
-            },
-          ],
-        })) || []),
+      ...weekGroupColumn,
       {
         title: "Total",
-        width: 100,
         dataIndex: "total",
         key: "total",
+        children: [
+          columnToggle.includes("sales") && {
+            title: "Sales",
+            dataIndex: `sales_total`,
+            key: `sales_total`,
+            width: 110,
+          },
+          columnToggle.includes("ad_sales") && {
+            title: "AD Sales",
+            dataIndex: `ad_sales_total`,
+            key: `ad_sales_total`,
+            width: 110,
+          },
+          columnToggle.includes("ad_spend") && {
+            title: "AD Spend",
+            dataIndex: `ad_spend_total`,
+            key: `ad_spend_total`,
+            width: 110,
+          },
+        ].filter(Boolean),
       },
     ],
-    [findWeeksCount]
+    [list, filter, weekGroupColumn]
   );
 
   const data = useMemo(
     () =>
       list?.reduce((acc, item, key) => {
-        const { total_sales, weekly_sales, products } = item;
+        const {
+          total_sales,
+          total_ad_sales,
+          total_ad_spend,
+          weekly_sales,
+          products,
+          products_total,
+        } = item;
 
+        5403.21;
         const alterProducts = Object.values(
           products.reduce((pacc, pitem, key) => {
             if (pacc[pitem.asin]) {
@@ -140,6 +194,20 @@ export default function ProductReportPage() {
                 ...pacc[pitem.asin],
                 [`sales${pitem.week}`]: currencyFormat(pitem.sales),
                 [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
+                [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
+                // products_total
+                sales_total: currencyFormat(
+                  products_total.find((fid) => fid.asin === pitem.asin)
+                    ?.sales || "0"
+                ),
+                ad_sales_total: currencyFormat(
+                  products_total.find((fid) => fid.asin === pitem.asin)
+                    ?.ad_sales || "0"
+                ),
+                ad_spend_total: currencyFormat(
+                  products_total.find((fid) => fid.asin === pitem.asin)
+                    ?.ad_spend || "0"
+                ),
               };
             } else {
               pacc[pitem.asin] = {
@@ -149,6 +217,7 @@ export default function ProductReportPage() {
                 sku: pitem.sku,
                 [`sales${pitem.week}`]: currencyFormat(pitem.sales),
                 [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
+                [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
               };
             }
             return pacc;
@@ -158,6 +227,7 @@ export default function ProductReportPage() {
         const weeks = weekly_sales.reduce((wacc, witem, key) => {
           wacc[`sales${witem.week}`] = currencyFormat(witem.sales);
           wacc[`ad_sales${witem.week}`] = currencyFormat(witem.ad_sales);
+          wacc[`ad_spend${witem.week}`] = currencyFormat(witem.ad_spend);
           return wacc;
         }, {});
 
@@ -165,7 +235,9 @@ export default function ProductReportPage() {
           key: key + 1,
           name: item.category,
           ...weeks,
-          total: currencyFormat(total_sales),
+          sales_total: currencyFormat(total_sales),
+          ad_sales_total: currencyFormat(total_ad_sales),
+          ad_spend_total: currencyFormat(total_ad_spend),
           children: alterProducts,
         };
 
@@ -173,7 +245,7 @@ export default function ProductReportPage() {
 
         return acc;
       }, []) || [],
-    [listLength]
+    [list, filter]
   );
 
   return (
@@ -200,6 +272,11 @@ export default function ProductReportPage() {
                     </span>
                   </h3>
                   <div className="card-toolbar gap-3">
+                    <Checkbox.Group
+                      options={columnToggleOptions}
+                      value={columnToggle}
+                      onChange={onChange}
+                    />
                     <ExportToExcel
                       columns={columns.slice(1).reduce((acc, item) => {
                         if (item.children) {
@@ -248,6 +325,7 @@ export default function ProductReportPage() {
                     <Loading />
                   ) : list?.length != 0 ? (
                     <Table
+                      bordered
                       columns={columns}
                       dataSource={data}
                       loading={tableLoading}
@@ -255,7 +333,7 @@ export default function ProductReportPage() {
                       scroll={{
                         y:
                           typeof window !== "undefined"
-                            ? window.innerHeight - 410
+                            ? window.innerHeight - 310
                             : undefined,
                         x:
                           columns

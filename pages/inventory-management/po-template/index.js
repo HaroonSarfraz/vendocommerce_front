@@ -10,6 +10,7 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import NoData from "@/src/components/no-data";
 import { useRouter } from "next/router";
 import ASINTable from "@/src/components/table";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function PoTemplate() {
   const dispatch = useDispatch();
@@ -149,9 +150,16 @@ export default function PoTemplate() {
                     >
                       Create PO Template
                     </button>
-                    <button className="btn btn-light-danger btn-sm fw-bolder ">
-                      Export Data
-                    </button>
+                    <ExportToExcel
+                      columns={[]}
+                      rows={[]}
+                      fileName={"inventory-management-po-template"}
+                      loading={tableLoading}
+                    >
+                      <button className="btn btn-light-danger btn-sm fw-bolder ">
+                        Export Data
+                      </button>
+                    </ExportToExcel>
                   </div>
                 </div>
                 <div className="card-body pt-2 table-responsive">

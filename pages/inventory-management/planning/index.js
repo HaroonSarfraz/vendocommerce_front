@@ -20,6 +20,7 @@ import {
   selectInventoryPlanningList,
 } from "@/src/store/slice/planning.slice";
 import NoData from "@/src/components/no-data";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 const { useToken } = theme;
 const DefaultPerPage = 10;
@@ -846,11 +847,21 @@ export default function InventoryManagement() {
                             Export to csv
                           </a>
                         </li>
-                        <li>
-                          <a className="dropdown-item" href="#">
-                            Export to xlsx
-                          </a>
-                        </li>
+                        {/* list.map((data) =>
+                            columns.map((item) => item.render(data))
+                          ) */}
+                        <ExportToExcel
+                          columns={[]}
+                          rows={[]}
+                          fileName={"inventory-management-planning"}
+                          loading={dataListLoading}
+                        >
+                          <li>
+                            <span className="dropdown-item">
+                              Export to xlsx
+                            </span>
+                          </li>
+                        </ExportToExcel>
                       </ul>
                     </div>
                   </div>

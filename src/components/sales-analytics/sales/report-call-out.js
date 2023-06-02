@@ -5,6 +5,7 @@ import {
 import { Skeleton } from "antd";
 
 export default function ReportCallOuts(reportData, reportCallOutLoading) {
+  console.log(reportData);
   return (
     <div className="card card-flush h-xl-100 fadeInRight">
       <div className="card-header min-h-55px ">
@@ -182,7 +183,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      <b>{currencyFormat(reportData?.adSpend)}</b>
+                      <b>{currencyFormat(reportData?.advertisementData?.twSpend)}</b>
                     </h6>
                   </div>
                 </>
@@ -198,7 +199,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {currencyFormat(reportData?.lwAdSpend)}
+                      {currencyFormat(reportData?.advertisementData?.twSpend)}
                     </h6>
                   </div>
                 </>
@@ -214,7 +215,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {currencyFormat(reportData?.lwAdRevenue)}
+                      {currencyFormat(reportData?.advertisementData?.twRevenue)}
                     </h6>
                   </div>
                 </>
@@ -230,7 +231,9 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {currencyFormat(reportData?.lwOrganicSales)}
+                      {currencyFormat(
+                        reportData?.advertisementData?.organicSales
+                      )}
                     </h6>
                   </div>
                 </>
@@ -246,7 +249,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {currencyFormat(reportData?.lwTotalSales)}
+                      {currencyFormat(reportData?.advertisementData?.totalSales)}
                     </h6>
                   </div>
                 </>
@@ -262,7 +265,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {percentageFormat(reportData?.lwRoas)}
+                      {percentageFormat(reportData?.advertisementData?.ROAS)}
                     </h6>
                   </div>
                 </>
@@ -278,7 +281,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {percentageFormat(reportData?.lwTotalAcos)}
+                      {percentageFormat(reportData?.advertisementData?.ACoS)}
                     </h6>
                   </div>
                 </>

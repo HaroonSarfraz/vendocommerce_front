@@ -164,48 +164,43 @@ export const userMenus = [
       "category-reports"
     ),
   ]),
-  getItem("Inventory Management", "inventory-management", <CategoriesSvg />, [
-    getItem(
-      "Inventory Dashboard",
-      "inventory-dashboard",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-    getItem(
-      "Inventory Planning",
-      "planning",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-    getItem(
-      "PO Template",
-      "po-template",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-    getItem(
-      "Shipping From Address",
-      "shipping-from-address",
-      <span className="menu-bullet">
-        <span className="bullet bullet-dot" />
-      </span>,
-      null,
-      "inventory-management"
-    ),
-  ]),
-  getItem(
-    "Settings",
-    `brands/edit?activeTab=general`,
-    <SettingsSvg />,
-    null,
-  ),
+  // getItem("Inventory Management", "inventory-management", <CategoriesSvg />, [
+  //   getItem(
+  //     "Inventory Dashboard",
+  //     "inventory-dashboard",
+  //     <span className="menu-bullet">
+  //       <span className="bullet bullet-dot" />
+  //     </span>,
+  //     null,
+  //     "inventory-management"
+  //   ),
+  //   getItem(
+  //     "Inventory Planning",
+  //     "planning",
+  //     <span className="menu-bullet">
+  //       <span className="bullet bullet-dot" />
+  //     </span>,
+  //     null,
+  //     "inventory-management"
+  //   ),
+  //   getItem(
+  //     "PO Template",
+  //     "po-template",
+  //     <span className="menu-bullet">
+  //       <span className="bullet bullet-dot" />
+  //     </span>,
+  //     null,
+  //     "inventory-management"
+  //   ),
+  //   getItem(
+  //     "Shipping From Address",
+  //     "shipping-from-address",
+  //     <span className="menu-bullet">
+  //       <span className="bullet bullet-dot" />
+  //     </span>,
+  //     null,
+  //     "inventory-management"
+  //   ),
+  // ]),
+  getItem("Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
 ];

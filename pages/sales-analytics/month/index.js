@@ -2,7 +2,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useState } from "react";
-import { Select, Skeleton } from "antd";
+import { Modal, Select, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { DotChartOutlined } from "@ant-design/icons";
 import Loading from "@/src/components/loading";
@@ -31,6 +31,7 @@ import {
   numberFormat,
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
+import { ExportToExcel, exportToExcel } from "@/src/hooks/Excelexport";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -38,10 +39,18 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 
 export default function SalesByMonth() {
   const dispatch = useDispatch();
+  const [exportBy, setExportBy] = useState("sku");
+
   const [filter, setFilter] = useState({
     month: [0],
     year: 2023,
   });
+
+  const handleChangeExport = (value) => {
+    setExportBy(value);
+  };
+
+  const [toggleExport, setToggleExport] = useState(false);
 
   const [graphFilter, setGraphFilter] = useState("month");
   const [graphSelected, setGraphSelected] = useState([]);
@@ -398,9 +407,61 @@ export default function SalesByMonth() {
                     </span>
                   </h3>
                   <div className="card-toolbar">
-                    <button className="btn btn-light-danger btn-sm fw-bolder ">
+                    <button
+                      onClick={() => setToggleExport(true)}
+                      className="btn btn-light-danger btn-sm fw-bolder "
+                    >
                       Export Data
                     </button>
+                    {/* <ExportToExcel
+                      columns={[]}
+                      rows={[]}
+                      fileName={"sales-analytics-month"}
+                      loading={salesByMonthDetailLoading}
+                    >
+                      <button className="btn btn-light-danger btn-sm fw-bolder ">
+                        Export Data
+                      </button>
+                    </ExportToExcel> */}
+                    <Modal
+                      closable
+                      maskClosable
+                      destroyOnClose
+                      onOk={() => {
+                        // TODO
+                        exportToExcel({
+                          fileName: `sales-analytics-${exportBy}`,
+                          loading: salesByMonthDetailLoading,
+                          columns: [
+                            "ROW LABELS",
+                            "SUM OF ORDERED PRODUCT SALES",
+                            "SUM OF SESSIONS",
+                            "SUM OF SESSION PERCENTAGE",
+                            "SUM OF PAGE VIEWS",
+                            "SUM OF PAGE VIEWS PERCENTAGE",
+                            "AVERAGE OF BUY BOX PERCENTAGE",
+                            "SUM OF UNITS ORDERED",
+                            "SUM OF UNIT SESSION PERCENTAGE",
+                            "SUM OF TOTAL ORDER ITEMS",
+                          ],
+                          rows: salesByMonthDetail,
+                        });
+                      }}
+                      onCancel={() => setToggleExport(false)}
+                      title="Export Data"
+                      open={toggleExport}
+                    >
+                      <Select
+                        placeholder={"Export By"}
+                        style={{ width: "100%" }}
+                        onChange={handleChangeExport}
+                        value={exportBy}
+                        options={[
+                          { value: "sku", label: "SKU" },
+                          { value: "asin", label: "ASIN" },
+                        ]}
+                      />
+                    </Modal>
                   </div>
                 </div>
                 <div className="card-body pt-2">

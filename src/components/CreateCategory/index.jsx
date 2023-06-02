@@ -29,18 +29,26 @@ const CreateCategoryScreen = ({
       : EditCategory({ id, ...values })
     )
       .then((res) => {
+        const data = res.data;
         message.destroy();
-        message.success(
-          `Successfully ${type === "create" ? "Created" : "Edited"}`
-        );
-        type === "create" && router.push("/category-reports/manage-categories");
+        if (data.statusCode === 400) {
+          message.error(data.message);
+        } else {
+          message.success(
+            `Successfully ${type === "create" ? "Created" : "Edited"}`
+          );
+          type === "create" &&
+            router.push("/category-reports/manage-categories");
+        }
 
         if (type === "edit" && id) {
           dispatch(setUpdateCategory(res.data));
         }
+        messageApi.destroy();
       })
       .catch((err) => {
         message.error(err?.response?.message || "Something Went Wrong.");
+        messageApi.destroy();
       })
       .finally(() => {
         setSubmit(false);

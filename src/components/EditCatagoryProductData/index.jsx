@@ -1,9 +1,20 @@
 import { EditCategoryProductData } from "@/src/api/categoryList.api";
+import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
 import { setUpdateCategoryProduct } from "@/src/store/slice/categoryProductList.slice";
-import { Button, Checkbox, Form, Input, Switch, message } from "antd";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Space,
+  Switch,
+  message,
+} from "antd";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PlusOutlined } from "@ant-design/icons";
 
 const EditCatagoryProductData = ({
   initialValues = {
@@ -14,10 +25,29 @@ const EditCatagoryProductData = ({
   onSumbit = () => {},
   id = null,
 }) => {
+  const CategoryListRes = useSelector(selectCategoryList);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [submit, setSubmit] = useState(false);
   const dispatch = useDispatch();
+
+  const [name, setName] = useState("");
+  const inputRef = useRef(null);
+
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const addItem = (e) => {
+    if (name) {
+      e.preventDefault();
+      form.setFieldValue("category", name);
+      setName("");
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    }
+  };
 
   const onFinish = (values) => {
     setSubmit(true);
@@ -65,7 +95,35 @@ const EditCatagoryProductData = ({
           placeholder="Edit Category"
           rules={[{ required: true, type: "string" }]}
         >
-          <Input />
+          <Select
+            placeholder="Edit Category"
+            dropdownRender={(menu) => (
+              <>
+                {menu}
+                <Divider style={{ margin: "8px 0" }} />
+                <Space style={{ padding: "0 8px 4px" }}>
+                  <Input
+                    placeholder="Add New Category"
+                    ref={inputRef}
+                    value={name}
+                    onChange={onNameChange}
+                  />
+                  <Button
+                    disabled={name === ""}
+                    type="text"
+                    icon={<PlusOutlined />}
+                    onClick={addItem}
+                  >
+                    Add Category
+                  </Button>
+                </Space>
+              </>
+            )}
+            options={CategoryListRes.data?.map((item) => ({
+              label: item.name,
+              value: item.name,
+            }))}
+          />
         </Form.Item>
         <Form.Item
           name="product_title"
