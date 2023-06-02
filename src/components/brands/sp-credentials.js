@@ -1,7 +1,4 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Button, Form, Input, Select } from "antd";
-import { getUserList } from "@/src/services/users.services";
 import _ from "lodash";
 import { selectFilter } from "@/src/helpers/selectFilter";
 import { KeySvg } from "@/src/assets";
@@ -18,12 +15,7 @@ const formItemLayout = {
 };
 
 export default function SPCredentials({ brand }) {
-  const dispatch = useDispatch();
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    dispatch(getUserList({ perPage: 9999 }));
-  }, []);
 
   const loginWithAmazon = (values) => {
     const email = brand.email || JSON.parse(localStorage.getItem("user")).email;

@@ -12,7 +12,7 @@ import {
   TvSvg,
   UserLgSvg,
 } from "@/src/assets";
-import { General, UserSettings, SPCredentials } from "@/src/components/brands";
+import { General, UserSettings, SPCredentials, AdvertisingCredentials } from "@/src/components/brands";
 import { fetchBrand } from "@/src/api/brands.api";
 import Loading from "@/src/components/loading";
 
@@ -70,12 +70,12 @@ export default function EditBrand() {
       icon: <KeySvg />,
       tabComponent: SPCredentials,
     },
-    // {
-    //   tabHeading: "Amazon Advertising Credentials",
-    //   key: "advertisingCredentials",
-    //   icon: <TvSvg />,
-    //   tabComponent: null,
-    // },
+    {
+      tabHeading: "Amazon Advertising Credentials",
+      key: "advertisingCredentials",
+      icon: <TvSvg />,
+      tabComponent: AdvertisingCredentials,
+    },
     // {
     //   tabHeading: "Default Values",
     //   key: "defaultValues",
