@@ -8,7 +8,6 @@ import {
   UserLgSvg,
   UsersSvg,
 } from "../assets";
-import { isClient } from "./isClient";
 
 function getItem(label, key, icon, children, parent = "") {
   return {
@@ -203,5 +202,10 @@ export const userMenus = [
       "inventory-management"
     ),
   ]),
-  getItem("Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
+  getItem(
+    "Settings",
+    `brands/edit?activeTab=general`,
+    <SettingsSvg />,
+    null,
+  ),
 ];

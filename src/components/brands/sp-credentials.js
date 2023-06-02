@@ -1,7 +1,14 @@
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Input, Select } from "antd";
-import _ from "lodash";
 import { selectFilter } from "@/src/helpers/selectFilter";
 import { KeySvg } from "@/src/assets";
+import { getAmazonSpApiCredentialsList } from "@/src/services/brands.services";
+import { selectAmazonSpApiCredentialsList } from "@/src/store/slice/brands.slice";
+import { deleteAmazonSpApiCredentialsRequest } from "@/src/api/brands.api";
+
+import CredentialsTable from "./credentials-table";
+import Loading from "@/src/components/loading";
 
 const formItemLayout = {
   labelCol: {
@@ -15,7 +22,25 @@ const formItemLayout = {
 };
 
 export default function SPCredentials({ brand }) {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
+
+  const amazonSpApiCredentialsList = useSelector(
+    selectAmazonSpApiCredentialsList
+  );
+
+  useEffect(() => {
+    // dispatch(getAmazonSpApiCredentialsList(brand.id));
+  }, []);
+
+  useEffect(() => {
+    if (amazonSpApiCredentialsList) {
+      setList(amazonSpApiCredentialsList.data);
+      setLoading(false);
+    }
+  }, [amazonSpApiCredentialsList]);
 
   const loginWithAmazon = (values) => {
     const email = brand.email || JSON.parse(localStorage.getItem("user")).email;
@@ -61,6 +86,19 @@ export default function SPCredentials({ brand }) {
       options: [{ label: "China", value: "AAHKV2X7AFYLW" }],
     },
   ];
+
+  const deleteAmazonSpApiCredentials = (id) => {
+    deleteAmazonSpApiCredentialsRequest(brand.id, id)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(getAmazonSpApiCredentialsList(brand.id));
+          message.success("User has been Removed from Brand Successfully");
+        } else {
+          message.error("Unable to remove user");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+  };
 
   return (
     <div className="container-fluid">
@@ -167,6 +205,19 @@ export default function SPCredentials({ brand }) {
                   </div>
                 </div>
               </Form>
+              <div className="row pt-4 border-top">
+                <h4 className="mx-5 mt-6">Amazon SP API Credentials List</h4>
+              </div>
+              <div className="mt-2">
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <CredentialsTable
+                    list={list}
+                    deleteAction={deleteAmazonSpApiCredentials}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

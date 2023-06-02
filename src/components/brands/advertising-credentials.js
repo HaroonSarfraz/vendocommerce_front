@@ -1,9 +1,35 @@
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { TvSvg } from "@/src/assets";
-import { useEffect } from "react";
+import { getAmazonAdvertisingCredentialsList } from "@/src/services/brands.services";
+import { selectAmazonAdvertisingCredentialsList } from "@/src/store/slice/brands.slice";
+import { deleteAmazonAdvertisingCredentialsRequest } from "@/src/api/brands.api";
+
+import CredentialsTable from "./credentials-table";
+import Loading from "@/src/components/loading";
+
+const clientID = process.env.NEXT_PUBLIC_ADVERTISING_CLIENT_ID;
+const returnURL = process.env.NEXT_PUBLIC_ADVERTISING_RETURN_URL;
 
 export default function AdvertisingCredentials({ brand }) {
-  var clientID = process.env.NEXT_PUBLIC_ADVERTISING_CLIENT_ID;
-  var returnURL = process.env.NEXT_PUBLIC_ADVERTISING_RETURN_URL;
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
+
+  const amazonSpApiCredentialsList = useSelector(
+    selectAmazonAdvertisingCredentialsList
+  );
+
+  useEffect(() => {
+    // dispatch(getAmazonAdvertisingCredentialsList(brand.id));
+  }, []);
+
+  useEffect(() => {
+    if (amazonSpApiCredentialsList) {
+      setList(amazonSpApiCredentialsList.data);
+      setLoading(false);
+    }
+  }, [amazonSpApiCredentialsList]);
 
   useEffect(() => {
     window.onAmazonLoginReady = function () {
@@ -28,6 +54,19 @@ export default function AdvertisingCredentials({ brand }) {
     };
   }, []);
 
+  const deleteAmazonSpApiCredentials = (id) => {
+    deleteAmazonAdvertisingCredentialsRequest(brand.id, id)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(getAmazonAdvertisingCredentialsList(brand.id));
+          message.success("User has been Removed from Brand Successfully");
+        } else {
+          message.error("Unable to remove user");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -39,7 +78,7 @@ export default function AdvertisingCredentials({ brand }) {
 
                 <div className="col-12 d-flex flex-row mb-5">
                   <TvSvg />
-                  <h4 className="mx-5 mt-1">Amazon SP API Credentials</h4>
+                  <h4 className="mx-5 mt-1">Amazon Advertising Credentials</h4>
                 </div>
               </div>
               <div className="row">
@@ -55,6 +94,16 @@ export default function AdvertisingCredentials({ brand }) {
                     id="LoginWithAmazon"
                   />
                 </div>
+              </div>
+              <div className="row mt-4 pt-4 border-top">
+                <h4 className="mx-5 mt-6">Amazon Advertising Credentials List</h4>
+              </div>
+              <div className="mt-2">
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <CredentialsTable list={list} deleteAction={deleteAmazonSpApiCredentials} />
+                )}
               </div>
             </div>
           </div>

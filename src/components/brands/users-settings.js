@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, message, Select, Modal } from "antd";
 import { getUserList } from "@/src/services/users.services";
@@ -29,7 +28,6 @@ const formItemLayout = {
 const { confirm } = Modal;
 
 export default function UserSettings({ brand }) {
-  const router = useRouter();
   const dispatch = useDispatch();
   const [addUserForm] = Form.useForm();
   const userList = useSelector(selectUserList);

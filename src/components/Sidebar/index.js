@@ -44,6 +44,15 @@ export default function Sidebar(props) {
 
   const checkMenu = () => {
     const menu = userType ? adminMenus : userMenus;
+
+    // To be Fixed later
+    if(router?.route === "/brands/edit") {
+      return ["brands/edit?activeTab=general", "brands"];
+    }
+    if(router?.route === "/users/edit") {
+      return ["users"];
+    }
+
     if (defaultSubMenuSelected()?.length == 0) {
       return [current];
     }
