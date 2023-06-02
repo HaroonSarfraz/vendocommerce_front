@@ -168,12 +168,10 @@ export default function CategoryPerformanceReport() {
     [list, filter]
   );
 
-  const shippedRevenue = currencyFormat(
-    res.totals["Shipped Revenue"] / list.length
-  );
+  const shippedRevenue = currencyFormat(res.totals["Shipped Revenue"]);
   const tACoS = percentageFormat(res.totals["TACoS"] / list.length);
-  const adSales = currencyFormat(res.totals["Ad Sales"] / list.length);
-  const adSpend = currencyFormat(res.totals["Ad Spend"] / list.length);
+  const adSales = currencyFormat(res.totals["Ad Sales"]);
+  const adSpend = currencyFormat(res.totals["Ad Spend"]);
 
   return (
     <>
@@ -231,7 +229,7 @@ export default function CategoryPerformanceReport() {
                               width: 80,
                             },
                             {
-                              title: "Shipped Revenue Average",
+                              title: "Shipped Revenue Total",
                               width: 90,
                               dataIndex: "shippedRevenue",
                               key: "shippedRevenue",
@@ -243,13 +241,13 @@ export default function CategoryPerformanceReport() {
                               key: "tACoS",
                             },
                             {
-                              title: "Ad Sales Average",
+                              title: "Ad Sales Total",
                               width: 90,
                               dataIndex: "adSales",
                               key: "adSales",
                             },
                             {
-                              title: "Ad Spend Average",
+                              title: "Ad Spend Total",
                               width: 90,
                               dataIndex: "adSpend",
                               key: "adSpend",
