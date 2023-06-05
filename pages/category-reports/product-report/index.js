@@ -4,10 +4,8 @@ import DashboardLayout from "@/src/layouts/DashboardLayout";
 import Loading from "@/src/components/loading";
 import { defaultWeek, defaultYear } from "@/src/config";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "rc-image";
-import { Checkbox, Table, Tooltip } from "antd";
-import { currencyFormat, numberFormat } from "@/src/helpers/formatting.helpers";
-import ASINTable from "@/src/components/table";
+import { Checkbox, Table } from "antd";
+import { currencyFormat } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
 import TopBarFilter from "./top-bar-filter-product-report";
 import { getProductReportList } from "@/src/services/productReport.services";
@@ -16,12 +14,20 @@ import { getCategoryList } from "@/src/services/categoryList.services";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 const columnToggleOptions = [
+  { label: "Active status", value: "status" },
+  { label: "Product Detail", value: "pg" },
   { label: "Sales", value: "sales" },
   { label: "AD Sales", value: "ad_sales" },
   { label: "AD Spend", value: "ad_spend" },
 ];
 
-const columnToggleInitialValues = ["sales", "ad_spend", "ad_sales"];
+const columnToggleInitialValues = [
+  "sales",
+  "ad_spend",
+  "ad_sales",
+  "status",
+  "pg",
+];
 
 export default function ProductReportPage() {
   const dispatch = useDispatch();
@@ -39,7 +45,7 @@ export default function ProductReportPage() {
   };
 
   const [filter, setFilter] = useState({
-    week: [],
+    week: _.range(0, defaultWeek() + 1),
     year: defaultYear(),
     asin: "",
     category: "",
@@ -74,177 +80,176 @@ export default function ProductReportPage() {
     }
   }, [ProductReportListRes]);
 
-  const listLength = list.length;
-
   const findWeeksCount = useMemo(
     () =>
-      list.reduce((acc, item) => {
-        const count = item.weekly_sales.length;
-        if (acc <= count) {
-          return count;
-        }
-      }, 0),
+      _.uniqBy(
+        list.reduce((acc, item) => {
+          const weeks = item.weekly_sales.map((item) => item.week);
+          acc = acc.concat(weeks);
+          return acc;
+        }, [])
+      ),
     [list, filter]
   );
 
-  console.log(columnToggle);
-
   const weekGroupColumn =
-    Array(findWeeksCount)
-      .fill("")
-      .map((_, key) => ({
-        title: `WK${key + 1}`,
-        key: `WK${key + 1}`,
-        children: [
-          columnToggle.includes("sales") && {
-            title: "Sales",
-            dataIndex: `sales${key + 1}`,
-            key: `sales${key + 1}`,
-            width: 110,
-          },
-          columnToggle.includes("ad_sales") && {
-            title: "AD Sales",
-            dataIndex: `ad_sales${key + 1}`,
-            key: `ad_sales${key + 1}`,
-            width: 110,
-          },
-          columnToggle.includes("ad_spend") && {
-            title: "AD Spend",
-            dataIndex: `ad_spend${key + 1}`,
-            key: `ad_spend${key + 1}`,
-            width: 110,
-          },
-        ].filter(Boolean),
-      })) || [];
+    findWeeksCount.map((item) => ({
+      title: `WK${item}`,
+      key: `WK${item}`,
+      children: [
+        columnToggle.includes("sales") && {
+          title: "Sales",
+          dataIndex: `sales${item}`,
+          key: `sales${item}`,
+          width: 110,
+        },
+        columnToggle.includes("ad_sales") && {
+          title: "AD Sales",
+          dataIndex: `ad_sales${item}`,
+          key: `ad_sales${item}`,
+          width: 110,
+        },
+        columnToggle.includes("ad_spend") && {
+          title: "AD Spend",
+          dataIndex: `ad_spend${item}`,
+          key: `ad_spend${item}`,
+          width: 110,
+        },
+      ].filter(Boolean),
+    })) || [];
 
   const columns = useMemo(
-    () => [
-      {
-        title: "",
-        width: 40,
-        fixed: "left",
-      },
-      {
-        title: "Row Labels",
-        width: 155,
-        ellipsis: true,
-        dataIndex: "name",
-        key: "name",
-        fixed: "left",
-      },
-      {
-        title: "Product Detail",
-        width: 221,
-        dataIndex: "pd",
-        key: "pd",
-      },
-      {
-        title: "Active Status",
-        width: 129,
-        dataIndex: "status",
-        key: "status",
-      },
-      ...weekGroupColumn,
-      {
-        title: "Total",
-        dataIndex: "total",
-        key: "total",
-        children: [
-          columnToggle.includes("sales") && {
-            title: "Sales",
-            dataIndex: `sales_total`,
-            key: `sales_total`,
-            width: 110,
-          },
-          columnToggle.includes("ad_sales") && {
-            title: "AD Sales",
-            dataIndex: `ad_sales_total`,
-            key: `ad_sales_total`,
-            width: 110,
-          },
-          columnToggle.includes("ad_spend") && {
-            title: "AD Spend",
-            dataIndex: `ad_spend_total`,
-            key: `ad_spend_total`,
-            width: 110,
-          },
-        ].filter(Boolean),
-      },
-    ],
-    [list, filter, weekGroupColumn]
+    () =>
+      [
+        {
+          title: "",
+          width: 40,
+          fixed: "left",
+        },
+        {
+          title: "Row Labels",
+          width: 155,
+          ellipsis: true,
+          dataIndex: "name",
+          key: "name",
+          fixed: "left",
+        },
+        columnToggle.includes("pg") && {
+          title: "Product Detail",
+          width: 221,
+          dataIndex: "pd",
+          key: "pd",
+        },
+        columnToggle.includes("status") && {
+          title: "Active Status",
+          width: 129,
+          dataIndex: "status",
+          key: "status",
+        },
+        ...weekGroupColumn,
+        {
+          title: "Total",
+          dataIndex: "total",
+          key: "total",
+          children: [
+            columnToggle.includes("sales") && {
+              title: "Sales",
+              dataIndex: `sales_total`,
+              key: `sales_total`,
+              width: 110,
+            },
+            columnToggle.includes("ad_sales") && {
+              title: "AD Sales",
+              dataIndex: `ad_sales_total`,
+              key: `ad_sales_total`,
+              width: 110,
+            },
+            columnToggle.includes("ad_spend") && {
+              title: "AD Spend",
+              dataIndex: `ad_spend_total`,
+              key: `ad_spend_total`,
+              width: 110,
+            },
+          ].filter(Boolean),
+        },
+      ].filter(Boolean),
+    [list, filter, weekGroupColumn, columnToggle]
   );
 
   const data = useMemo(
     () =>
-      list?.reduce((acc, item, key) => {
-        const {
-          total_sales,
-          total_ad_sales,
-          total_ad_spend,
-          weekly_sales,
-          products,
-          products_total,
-        } = item;
+      list
+        ?.reduce((acc, item, key) => {
+          const {
+            total_sales,
+            total_ad_sales,
+            total_ad_spend,
+            weekly_sales,
+            products,
+            products_total,
+          } = item;
 
-        5403.21;
-        const alterProducts = Object.values(
-          products.reduce((pacc, pitem, key) => {
-            if (pacc[pitem.asin]) {
-              pacc[pitem.asin] = {
-                ...pacc[pitem.asin],
-                [`sales${pitem.week}`]: currencyFormat(pitem.sales),
-                [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
-                [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
-                // products_total
-                sales_total: currencyFormat(
-                  products_total.find((fid) => fid.asin === pitem.asin)
-                    ?.sales || "0"
-                ),
-                ad_sales_total: currencyFormat(
-                  products_total.find((fid) => fid.asin === pitem.asin)
-                    ?.ad_sales || "0"
-                ),
-                ad_spend_total: currencyFormat(
-                  products_total.find((fid) => fid.asin === pitem.asin)
-                    ?.ad_spend || "0"
-                ),
-              };
-            } else {
-              pacc[pitem.asin] = {
-                name: pitem.asin,
-                pd: `SKU:${pitem.sku} ${pitem.title}`,
-                status: pitem.status,
-                sku: pitem.sku,
-                [`sales${pitem.week}`]: currencyFormat(pitem.sales),
-                [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
-                [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
-              };
-            }
-            return pacc;
-          }, {})
-        );
+          5403.21;
+          const alterProducts = Object.values(
+            products.reduce((pacc, pitem, key) => {
+              if (pacc[pitem.asin]) {
+                pacc[pitem.asin] = {
+                  ...pacc[pitem.asin],
+                  [`sales${pitem.week}`]: currencyFormat(pitem.sales),
+                  [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
+                  [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
+                  // products_total
+                  sales_total: currencyFormat(
+                    products_total.find((fid) => fid.asin === pitem.asin)
+                      ?.sales || "0"
+                  ),
+                  ad_sales_total: currencyFormat(
+                    products_total.find((fid) => fid.asin === pitem.asin)
+                      ?.ad_sales || "0"
+                  ),
+                  ad_spend_total: currencyFormat(
+                    products_total.find((fid) => fid.asin === pitem.asin)
+                      ?.ad_spend || "0"
+                  ),
+                };
+              } else {
+                pacc[pitem.asin] = {
+                  name: pitem.asin,
+                  pd: `SKU:${pitem.sku} ${pitem.title}`,
+                  status: pitem.status,
+                  sku: pitem.sku,
+                  [`sales${pitem.week}`]: currencyFormat(pitem.sales),
+                  [`ad_sales${pitem.week}`]: currencyFormat(pitem.ad_sales),
+                  [`ad_spend${pitem.week}`]: currencyFormat(pitem.ad_spend),
+                };
+              }
+              return pacc;
+            }, {})
+          );
 
-        const weeks = weekly_sales.reduce((wacc, witem, key) => {
-          wacc[`sales${witem.week}`] = currencyFormat(witem.sales);
-          wacc[`ad_sales${witem.week}`] = currencyFormat(witem.ad_sales);
-          wacc[`ad_spend${witem.week}`] = currencyFormat(witem.ad_spend);
-          return wacc;
-        }, {});
+          const weeks = weekly_sales.reduce((wacc, witem, key) => {
+            wacc[`sales${witem.week}`] = currencyFormat(witem.sales);
+            wacc[`ad_sales${witem.week}`] = currencyFormat(witem.ad_sales);
+            wacc[`ad_spend${witem.week}`] = currencyFormat(witem.ad_spend);
+            return wacc;
+          }, {});
 
-        const row1 = {
-          key: key + 1,
-          name: item.category,
-          ...weeks,
-          sales_total: currencyFormat(total_sales),
-          ad_sales_total: currencyFormat(total_ad_sales),
-          ad_spend_total: currencyFormat(total_ad_spend),
-          children: alterProducts,
-        };
+          const row1 = {
+            key: key + 1,
+            name: item.category,
+            ...weeks,
+            sales_total: currencyFormat(total_sales),
+            total_sales,
+            ad_sales_total: currencyFormat(total_ad_sales),
+            ad_spend_total: currencyFormat(total_ad_spend),
+            children: alterProducts,
+          };
 
-        acc.push(row1);
+          acc.push(row1);
 
-        return acc;
-      }, []) || [],
+          return acc;
+        }, [])
+        .sort((a, b) => b.total_sales - a.total_sales),
     [list, filter]
   );
 
