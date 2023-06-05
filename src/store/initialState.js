@@ -22,7 +22,7 @@ const initialState = {
     amazonAdvertisingCredentials: {
       status: false,
       data: [],
-    }
+    },
   },
   customerAcquisition: {
     status: false,
@@ -89,7 +89,16 @@ const initialState = {
     },
   },
   categoryPerformanceReport: {
-    categoryPerformanceList: []
+    categoryPerformanceList: {
+      categories: [],
+      grandTotal: {
+        shipped_revenue: 0,
+        TACoS: 0,
+        ad_sales: 0,
+        ad_spend: 0,
+      },
+      weeklyTotal: [],
+    },
   },
   productReportList: {
     data: [],

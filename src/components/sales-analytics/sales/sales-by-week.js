@@ -1,6 +1,6 @@
 import { DotChartOutlined } from "@ant-design/icons";
-import { Select, Skeleton } from "antd";
-import { useState } from "react";
+import { Drawer, Modal, Select, Skeleton } from "antd";
+import { cloneElement, useState } from "react";
 import {
   currencyFormat,
   numberFormat,
@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function SalesByWeek(loading, chartData) {
+  const [open, setOpen] = useState(false);
   const [graphSelected, setGraphSelected] = useState(
     "sum_of_ordered_product_sales"
   );
@@ -20,28 +21,28 @@ export default function SalesByWeek(loading, chartData) {
     {
       value: "sum_of_ordered_product_sales",
       label: "Sales by week",
-      formatter: currencyFormat
+      formatter: currencyFormat,
     },
     {
       value: "sum_of_units_ordered",
       label: "Units by week",
-      formatter: numberFormat
+      formatter: numberFormat,
     },
     {
       value: "sum_of_sessions",
       label: "Sessions by week",
-      formatter: numberFormat
+      formatter: numberFormat,
     },
     {
       value: "conversion_rate",
       label: "Conversion By Week",
-      formatter: percentageFormat
+      formatter: percentageFormat,
     },
     {
       value: "average_of_buy_box_percentage",
       label: "Buy Box % By Week",
-      formatter: percentageFormat
-    }
+      formatter: percentageFormat,
+    },
   ];
 
   return (
@@ -85,46 +86,92 @@ export default function SalesByWeek(loading, chartData) {
             </div>
           </div>
         ) : (
-          <Chart
-            options={{
-              dataLabels: {
-                enabled: false,
-              },
-              stroke: {
-                curve: "smooth",
-              },
-              xaxis: {
-                categories: Object.values(chartData || [])?.map(
-                  (d) => d?.label
-                ),
-              },
-              yaxis: {
-                labels: {
-                  formatter: (value) => {
-                    return value.toFixed(0);
+          (() => {
+            const chart = (
+              <Chart
+                options={{
+                  chart: {
+                    id: "sales-by-week",
+                    toolbar: {
+                      show: true,
+                      tools: {
+                        customIcons: [
+                          {
+                            icon: '<img src="/assets/fullscreen.svg" width="20">',
+                            index: 4,
+                            title: "Fullscreen",
+                            class:
+                              "apexcharts-reset-icon apexcharts-reset-icon apexcharts-reset-icon",
+                            click: function (chart, options, e) {
+                              setOpen(true);
+                            },
+                          },
+                        ],
+                      },
+                    },
                   },
-                },
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return options.find((l) => l?.value == graphSelected)?.formatter(val);
+                  selection: {
+                    enabled: true,
                   },
-                },
-              },
-              colors: ["#000", "#1BC5BD"],
-            }}
-            series={[
-              {
-                name: options.find((l) => l?.value == graphSelected)?.label,
-                data: Object.values(chartData || [])?.map(
-                  (d) => d?.[graphSelected] || 0
-                ),
-              },
-            ]}
-            type="area"
-            height={300}
-          />
+                  dataLabels: {
+                    enabled: false,
+                  },
+                  stroke: {
+                    curve: "smooth",
+                  },
+                  xaxis: {
+                    categories: Object.values(chartData || [])?.map(
+                      (d) => d?.label
+                    ),
+                  },
+                  yaxis: {
+                    labels: {
+                      formatter: (value) => {
+                        return value.toFixed(0);
+                      },
+                    },
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: function (val) {
+                        return options
+                          .find((l) => l?.value == graphSelected)
+                          ?.formatter(val);
+                      },
+                    },
+                  },
+                  colors: ["#000", "#1BC5BD"],
+                }}
+                series={[
+                  {
+                    name: options.find((l) => l?.value == graphSelected)?.label,
+                    data: Object.values(chartData || [])?.map(
+                      (d) => d?.[graphSelected] || 0
+                    ),
+                  },
+                ]}
+                type="area"
+                height={300}
+              />
+            );
+            return (
+              <>
+                {chart}
+                <Drawer
+                  title="Sales By Week Chart"
+                  placement="top"
+                  onClose={() => setOpen(false)}
+                  open={open}
+                  forceRender
+                  height={"100vh"}
+                >
+                  {cloneElement(chart, {
+                    height: (window.outerWidth / window.outerHeight) * 300,
+                  })}
+                </Drawer>
+              </>
+            );
+          })()
         )}
         <div className="resize-triggers">
           <div className="expand-trigger">

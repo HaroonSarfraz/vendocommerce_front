@@ -56,6 +56,11 @@ export default function TotalRevenueAcos() {
     );
   }, [filter]);
 
+  const showDSP = advertisementsData.reduce(
+    (acc, item) => acc + item.twDspRevenue,
+    0
+  );
+
   const columns = [
     {
       title: "WEEK",
@@ -219,13 +224,63 @@ export default function TotalRevenueAcos() {
         return <span>{numberFormat(text?.nonBrandedRoAS)}</span>;
       },
     },
+    //
+
+    ...(showDSP
+      ? [
+          {
+            title: "DSP SPEND",
+            width: "200px",
+            align: "center",
+            sorter: (a, b) => a.twDspSpend - b.twDspSpend,
+            render: (text) => {
+              return <span>{numberFormat(text?.twDspSpend)}</span>;
+            },
+          },
+          {
+            title: "DSP SPEND CHANGE",
+            width: "200px",
+            align: "center",
+            sorter: (a, b) => a.dspSpendChange - b.dspSpendChange,
+            render: (text) => {
+              return <span>{numberFormat(text?.dspSpendChange)}</span>;
+            },
+          },
+          {
+            title: "DSP SALES",
+            width: "200px",
+            align: "center",
+            sorter: (a, b) => a.twDspRevenue - b.twDspRevenue,
+            render: (text) => {
+              return <span>{numberFormat(text?.twDspRevenue)}</span>;
+            },
+          },
+          {
+            title: "DSP SALES CHANGE",
+            width: "200px",
+            align: "center",
+            sorter: (a, b) => a.dspRevenueChange - b.dspRevenueChange,
+            render: (text) => {
+              return <span>{numberFormat(text?.dspRevenueChange)}</span>;
+            },
+          },
+        ]
+      : []),
+    {
+      title: "TOTAL SPEND",
+      width: "200px",
+      align: "center",
+      sorter: (a, b) => a.twSpend - b.twSpend,
+      render: (text) => {
+        return <span>{numberFormat(text?.twSpend)}</span>;
+      },
+    },
   ];
 
   useEffect(() => {
     const list = columns.slice(0).map((d) => d.title);
 
     setColumnsList(list);
-    console.log(list);
     setTableColumnConfig(["TOTAL SALES"]);
     setGraphColumnConfig(["TOTAL SALES"]);
   }, []);
