@@ -25,7 +25,7 @@ export default function CategoryPerformanceReport() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    week: [],
+    week: _.range(0, 54, 1),
     year: defaultYear(),
     category: null,
   });
@@ -52,13 +52,11 @@ export default function CategoryPerformanceReport() {
   }, [filter]);
 
   useEffect(() => {
-    if (CategoryPerformanceListRes.length !== 0) {
-      setList(CategoryPerformanceListRes);
+    if (CategoryPerformanceListRes.categories.length !== 0) {
+      setList(CategoryPerformanceListRes.categories);
       setTableLoading(false);
     }
   }, [CategoryPerformanceListRes]);
-
-  const listLength = list.length;
 
   const findWeeksCount = useMemo(
     () =>
@@ -75,7 +73,7 @@ export default function CategoryPerformanceReport() {
     () => [
       {
         title: "Row Labels",
-        width: 110,
+        width: 115,
         dataIndex: "name",
         key: "name",
         fixed: "left",
@@ -96,7 +94,7 @@ export default function CategoryPerformanceReport() {
       },
       {
         title: "% Change week over week",
-        width: 160,
+        width: 170,
         dataIndex: "cwow",
         key: "cwow",
       },
@@ -106,72 +104,50 @@ export default function CategoryPerformanceReport() {
 
   const res = useMemo(
     () =>
-      list?.reduce(
-        (acc, item, key) => {
-          const { data, totals } = acc;
-          const { change_week_over_week, total, weekly_report } = item;
+      list?.reduce((acc, item, key) => {
+        const { change_week_over_week, total, weekly_report } = item;
 
-          const weeks = (type, formatter = (val) => val) =>
-            weekly_report.reduce((wacc, witem) => {
-              wacc[witem.week_name] = formatter(witem[type]);
-              return wacc;
-            }, {});
+        const weeks = (type, formatter = (val) => val) =>
+          weekly_report.reduce((wacc, witem) => {
+            wacc[witem.week_name] = formatter(witem[type]);
+            return wacc;
+          }, {});
 
-          const row1 = { name: item.category };
-          const row2 = {
-            name: "Shipped Revenue",
-            ...weeks("shipped_revenue", currencyFormat),
-            total: currencyFormat(total?.shipped_revenue),
-            cwow: percentageFormat(change_week_over_week.shipped_revenue),
-          };
-          const row3 = {
-            name: "TACoS",
-            ...weeks("TACoS", percentageFormat),
-            total: percentageFormat(total?.TACoS),
-            cwow: percentageFormat(change_week_over_week.TACoS),
-          };
-          const row4 = {
-            name: "Ad Sales",
-            ...weeks("ad_sales", currencyFormat),
-            total: currencyFormat(total?.ad_sales),
-            cwow: percentageFormat(change_week_over_week.ad_sales),
-          };
-          const row5 = {
-            name: "Ad Spend",
-            ...weeks("ad_spend", currencyFormat),
-            total: currencyFormat(total?.ad_spend),
-            cwow: percentageFormat(change_week_over_week.ad_spend),
-          };
-          data.push(row1);
-          data.push(row2);
-          data.push(row3);
-          data.push(row4);
-          data.push(row5);
+        const row1 = { name: item.category };
+        const row2 = {
+          name: "Shipped Revenue",
+          ...weeks("shipped_revenue", currencyFormat),
+          total: currencyFormat(total?.shipped_revenue),
+          cwow: percentageFormat(change_week_over_week.shipped_revenue),
+        };
+        const row3 = {
+          name: "TACoS",
+          ...weeks("TACoS", percentageFormat),
+          total: percentageFormat(total?.TACoS),
+          cwow: percentageFormat(change_week_over_week.TACoS),
+        };
+        const row4 = {
+          name: "Ad Sales",
+          ...weeks("ad_sales", currencyFormat),
+          total: currencyFormat(total?.ad_sales),
+          cwow: percentageFormat(change_week_over_week.ad_sales),
+        };
+        const row5 = {
+          name: "Ad Spend",
+          ...weeks("ad_spend", currencyFormat),
+          total: currencyFormat(total?.ad_spend),
+          cwow: percentageFormat(change_week_over_week.ad_spend),
+        };
+        acc.push(row1);
+        acc.push(row2);
+        acc.push(row3);
+        acc.push(row4);
+        acc.push(row5);
 
-          totals["Shipped Revenue"] += total?.shipped_revenue;
-          totals["TACoS"] += total?.TACoS;
-          totals["Ad Sales"] += total?.ad_sales;
-          totals["Ad Spend"] += total?.ad_spend;
-
-          return acc;
-        },
-        {
-          data: [],
-          totals: {
-            "Shipped Revenue": 0,
-            TACoS: 0,
-            "Ad Sales": 0,
-            "Ad Spend": 0,
-          },
-        }
-      ) || [],
+        return acc;
+      }, []) || [],
     [list, filter]
   );
-
-  const shippedRevenue = currencyFormat(res.totals["Shipped Revenue"]);
-  const tACoS = percentageFormat(res.totals["TACoS"] / list.length);
-  const adSales = currencyFormat(res.totals["Ad Sales"]);
-  const adSpend = currencyFormat(res.totals["Ad Spend"]);
 
   return (
     <>
@@ -254,15 +230,24 @@ export default function CategoryPerformanceReport() {
                             },
                             {
                               title: "",
-                              width: 25,
+                              width: 30,
                             },
                           ]}
                           dataSource={[
                             {
-                              shippedRevenue,
-                              tACoS,
-                              adSales,
-                              adSpend,
+                              shippedRevenue: currencyFormat(
+                                CategoryPerformanceListRes.grandTotal
+                                  .shipped_revenue
+                              ),
+                              tACoS: percentageFormat(
+                                CategoryPerformanceListRes.grandTotal.TACoS
+                              ),
+                              adSales: currencyFormat(
+                                CategoryPerformanceListRes.grandTotal.ad_sales
+                              ),
+                              adSpend: currencyFormat(
+                                CategoryPerformanceListRes.grandTotal.ad_spend
+                              ),
                             },
                           ]}
                           size={"small"}
@@ -270,7 +255,7 @@ export default function CategoryPerformanceReport() {
                         <Table
                           pagination={false}
                           columns={columns}
-                          dataSource={res.data}
+                          dataSource={res}
                           loading={tableLoading}
                           scroll={{
                             x:
