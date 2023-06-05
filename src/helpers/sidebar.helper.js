@@ -202,5 +202,5 @@ export const userMenus = [
   //     "inventory-management"
   //   ),
   // ]),
-  getItem("Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
+  getItem("Brand Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
 ];

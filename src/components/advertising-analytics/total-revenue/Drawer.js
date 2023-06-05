@@ -59,8 +59,8 @@ export default function Drawers(props) {
         <div className="card-footer py-3">
           <button
             onClick={() => {
-              setColumnConfig(columnsList);
-              onHide();
+              setColumnConfig(["TOTAL SALES"]);
+              setSelectedColumns(["TOTAL SALES"]);
             }}
             type="reset"
             className="btn fs-7 btn-light btn-active-light-dark me-2"

@@ -59,7 +59,7 @@ export default function EditBrand() {
       tabComponent: General,
     },
     {
-      tabHeading: "Users",
+      tabHeading: "Users Access",
       key: "users",
       icon: <AddUserSvg />,
       tabComponent: UserSettings,

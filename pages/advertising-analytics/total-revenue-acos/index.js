@@ -22,9 +22,11 @@ export default function TotalRevenueAcos() {
   const advertisements = useSelector(selectAdvertisingTotalRevenue);
 
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [tableConfigOpen, setTableConfigOpen] = useState(false);
+  const [graphConfigOpen, setGraphConfigOpen] = useState(false);
   const [columnsList, setColumnsList] = useState([]);
-  const [columnConfig, setColumnConfig] = useState([]);
+  const [tableColumnConfig, setTableColumnConfig] = useState([]);
+  const [graphColumnConfig, setGraphColumnConfig] = useState([]);
 
   const [filter, setFilter] = useState({
     week: _.range(1, defaultWeek() + 1),
@@ -223,7 +225,9 @@ export default function TotalRevenueAcos() {
     const list = columns.slice(0).map((d) => d.title);
 
     setColumnsList(list);
-    setColumnConfig(list);
+    console.log(list);
+    setTableColumnConfig(["TOTAL SALES"]);
+    setGraphColumnConfig(["TOTAL SALES"]);
   }, []);
 
   return (
@@ -232,18 +236,32 @@ export default function TotalRevenueAcos() {
         <div className="container-fluid">
           {TopBarFilter(filter, setFilter, "Week")}
 
-          <Graph
-            loading={loading}
-            chartData={advertisementsData}
-            columnConfig={columnConfig}
-          />
+          <div className="mt-5 col-lg-12">
+            <div className="card mb-7 pt-5">
+              <div className="card-body pt-2">
+                <div className="mb-5 d-flex flex-row justify-content-end">
+                  <button
+                    onClick={() => setGraphConfigOpen(true)}
+                    className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
+                  >
+                    Configuration
+                  </button>
+                </div>
+                <Graph
+                  loading={loading}
+                  chartData={advertisementsData}
+                  columnConfig={graphColumnConfig}
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="mt-5 col-lg-12">
             <div className="card mb-7 pt-5">
               <div className="card-body pt-2">
                 <div className="mb-5 d-flex flex-row justify-content-end">
                   <button
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => setTableConfigOpen(true)}
                     className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
                   >
                     Configuration
@@ -255,7 +273,8 @@ export default function TotalRevenueAcos() {
                 ) : (
                   <ASINTable
                     columns={columns.filter(
-                      (c) => c.title == "WEEK" || columnConfig.includes(c.title)
+                      (c) =>
+                        c.title == "WEEK" || tableColumnConfig.includes(c.title)
                     )}
                     dataSource={advertisementsData}
                     ellipsis
@@ -274,13 +293,22 @@ export default function TotalRevenueAcos() {
             </div>
           </div>
         </div>
-        {isOpen && (
+        {tableConfigOpen && (
           <Drawers
             columnsList={columnsList.slice(1)}
-            columnConfig={columnConfig}
-            setColumnConfig={setColumnConfig}
-            open={isOpen}
-            onHide={() => setIsOpen(false)}
+            columnConfig={tableColumnConfig}
+            setColumnConfig={setTableColumnConfig}
+            open={tableConfigOpen}
+            onHide={() => setTableConfigOpen(false)}
+          />
+        )}
+        {graphConfigOpen && (
+          <Drawers
+            columnsList={columnsList.slice(1)}
+            columnConfig={graphColumnConfig}
+            setColumnConfig={setGraphColumnConfig}
+            open={graphConfigOpen}
+            onHide={() => setGraphConfigOpen(false)}
           />
         )}
       </div>
