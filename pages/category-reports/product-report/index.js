@@ -38,10 +38,22 @@ export default function ProductReportPage() {
   const [list, setList] = useState([]);
   const [columnToggle, setColumnToggle] = useState(columnToggleInitialValues);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const data = JSON.parse(localStorage.getItem("cr-pr") || "[]");
+      if (data.length !== 0) {
+        setColumnToggle(data);
+      }
+    }
+  }, [setColumnToggle]);
+
   const onChange = (checkedValues) => {
-    setColumnToggle(
-      checkedValues.length === 0 ? columnToggleInitialValues : checkedValues
+    const valid = checkedValues.some(
+      (item) => item === "sales" || item === "ad_spend" || item === "ad_sales"
     );
+    const data = valid ? checkedValues : columnToggleInitialValues;
+    localStorage.setItem("cr-pr", JSON.stringify(data));
+    setColumnToggle(data);
   };
 
   const [filter, setFilter] = useState({
