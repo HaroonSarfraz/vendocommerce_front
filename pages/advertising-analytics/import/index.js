@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Form, Input, message, Upload } from "antd";
-import { createBrandRequest } from "@/src/api/brands.api";
+import { ImportAdvertising } from "@/src/api/advertisingImport.api";
 import { UploadOutlined } from "@ant-design/icons";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import Link from "next/link";
@@ -24,22 +24,14 @@ export default function Import() {
   const onFinish = (values) => {
     setSubmit(true);
 
-    const data = {
-      file: values.file,
-      u_amazon_seller_name: values.brand_name,
-      users: {
-        connect: values.user_accounts.map((id) => ({ id: id })),
-      },
-    };
-
-    createBrandRequest(data)
+    ImportAdvertising(values)
       .then((res) => {
         setSubmit(false);
         if (res.status >= 200 && res.status <= 299) {
-          message.success("Brand Created Successfully");
+          message.success("Advertising Import Completed");
           router.push("/brands");
         } else {
-          message.error("unable to create user");
+          message.error("Unable to Import");
         }
       })
       .catch((err) => message.error(err));
@@ -90,7 +82,10 @@ export default function Import() {
                       </div>
                     </div>
                     <p> Click here to download the sample for Upload</p>
-                    <Link href="/files/advertisements.xlsx" download={true}>
+                    <Link
+                      href="/files/advertising_template.xlsx"
+                      download={true}
+                    >
                       Download Sample
                     </Link>
                     <div className="mt-8 pt-8 d-flex border-top">

@@ -61,18 +61,6 @@ export default function TopBarFilter(filter, setFilter, type) {
                   allowClear
                 />
               </div>
-              <div className="position-relative">
-                <Input
-                  placeholder="Search in All Fields"
-                  style={{
-                    width: 250,
-                  }}
-                  // value={searchText || null}
-                  // onChange={setSearchText}
-                  onPressEnter={() => {}}
-                  size="large"
-                />
-              </div>
             </div>
           </div>
         </div>

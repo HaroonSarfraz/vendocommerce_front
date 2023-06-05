@@ -175,7 +175,7 @@ export default function UserSettings({ brand }) {
                 <div className="row">
                   <div className="col-12 d-flex flex-row mb-5">
                     <UsersGroupAddSvg />
-                    <h4 className="mx-5 mt-1">Users</h4>
+                    <h4 className="mx-5 mt-1">Users Access</h4>
                   </div>
                 </div>
 
