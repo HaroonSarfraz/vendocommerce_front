@@ -53,7 +53,6 @@ const CustomDrawer = (props) => {
         placement="top"
         onClose={handleClose}
         open={open}
-        forceRender
         height={"100vh"}
         {...rest}
       >

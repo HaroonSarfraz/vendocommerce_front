@@ -93,6 +93,7 @@ const initialState = {
   },
   categoryPerformanceReport: {
     categoryPerformanceList: {
+      status: false,
       categories: [],
       grandTotal: {
         shipped_revenue: 0,

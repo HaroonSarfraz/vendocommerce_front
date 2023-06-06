@@ -53,7 +53,7 @@ export default function CategoryPerformanceReport() {
   }, [filter]);
 
   useEffect(() => {
-    if (CategoryPerformanceListRes.categories.length !== 0) {
+    if (CategoryPerformanceListRes.status) {
       setList(CategoryPerformanceListRes.categories);
       setTableLoading(false);
     }

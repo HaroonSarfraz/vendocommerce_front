@@ -7,11 +7,13 @@ export const CustomerAcquisitionSliceLTV = createSlice({
   reducers: {
     setCustomerAcquisitionLTV: (state, action) => {
       state.data = action.payload;
+      state.status = true;
     },
   },
 });
 
-export const { setCustomerAcquisitionLTV } = CustomerAcquisitionSliceLTV.actions;
+export const { setCustomerAcquisitionLTV } =
+  CustomerAcquisitionSliceLTV.actions;
 
 export default CustomerAcquisitionSliceLTV.reducer;
 

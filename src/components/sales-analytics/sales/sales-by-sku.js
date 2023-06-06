@@ -3,7 +3,8 @@ import {
   numberFormat,
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
-import { Skeleton } from "antd";
+import { Empty, Skeleton } from "antd";
+import NoData from "../../no-data";
 
 export default function SalesBySKU(tableList, loading) {
   return (
@@ -161,6 +162,14 @@ export default function SalesBySKU(tableList, loading) {
                       <td>{title4Loading()}</td>
                       <td>{title4Loading()}</td>
                     </tr>
+                  ) : tableList.length === 0 ? (
+                    <>
+                      <tr>
+                        <td colSpan={14}>
+                          <NoData />
+                        </td>
+                      </tr>
+                    </>
                   ) : (
                     tableList?.map((d, i) => (
                       <tr key={i}>
