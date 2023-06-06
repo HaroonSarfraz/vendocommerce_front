@@ -124,7 +124,10 @@ const initialState = {
       status: false,
       data: [],
     },
-    salesByMonthGraph: {},
+    salesByMonthGraph: {
+      status: false,
+      data: [],
+    },
   },
   planning: {
     inventoryPlaning: {},

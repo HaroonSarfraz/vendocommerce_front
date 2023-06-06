@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-import { Dropdown, Select, theme } from "antd";
+import { Dropdown, Select, message, theme } from "antd";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSalesByProductList } from "@/src/services/salesByProduct.services";
@@ -19,6 +18,7 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
+import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 
 const { useToken } = theme;
 
@@ -104,13 +104,18 @@ export default function SalesByProducts() {
 
   useEffect(() => {
     const { year, week } = filter;
-    setTableLoading(true);
-    dispatch(
-      getSalesByProductList({
-        search_year: year,
-        search_week: week?.join(","),
-      })
-    );
+    if (week.length > 0) {
+      setTableLoading(true);
+      dispatch(
+        getSalesByProductList({
+          search_year: year,
+          search_week: week?.join(","),
+        })
+      );
+    } else {
+      dispatch(setSalesByProductList({ status: true, data: [] }));
+      message.warning("Please select at least one week");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
@@ -245,7 +250,7 @@ export default function SalesByProducts() {
                       <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">
-                            <th className="min-w-300px " colSpan="2">
+                            <th className="min-w-375px w-375px position-sticky start-0 bg-white">
                               Row Labels
                             </th>
                             {tableColumns?.map((d, i) => (
@@ -285,10 +290,9 @@ export default function SalesByProducts() {
                             {/* <th className='min-w-150px '>Grand Total</th> */}
                           </tr>
                           <tr className="fw-boldest text-dark">
-                            <th className="p-0 " />
-                            <th className="p-0 " />
+                            <th className="p-0 position-sticky start-0 bg-white" />
                             {columnConfig?.map((d, i) => (
-                              <th className="p-0 " key={i}>
+                              <th className="p-0" key={i}>
                                 <div
                                   id={`kt_accordion_1_body_${i + 1}`}
                                   className={
@@ -323,10 +327,7 @@ export default function SalesByProducts() {
                                             return;
                                           }
                                           return (
-                                            <th
-                                              className=" min-w-300px"
-                                              key={y}
-                                            >
+                                            <th className="min-w-300px" key={y}>
                                               {t.label}
                                             </th>
                                           );
@@ -346,11 +347,11 @@ export default function SalesByProducts() {
                             )?.[0]?.[1];
                             return (
                               <tr key={i}>
-                                <td colSpan="2">
+                                <td className="w-375px position-sticky start-0 bg-white">
                                   <div className="fs-7">
                                     <VendoTooltip
                                       title={defaultWeek?.title}
-                                      rule
+                                      placement="top"
                                       row={3}
                                     >
                                       <a
@@ -360,7 +361,9 @@ export default function SalesByProducts() {
                                         title="Click to view on Amazon"
                                         target="_blank"
                                       >
-                                        {defaultWeek?.title || "-"}
+                                        <span className="one min-w-350px">
+                                          {defaultWeek?.title || "-"}
+                                        </span>
                                       </a>
                                     </VendoTooltip>
                                     <span className="d-flex mt-0">
