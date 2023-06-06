@@ -4,7 +4,7 @@ export const currencyFormat = (price) => {
   const formatter = Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: (price | 0) < price ? 2 : 0
+    maximumFractionDigits: (price | 0) < price ? 2 : 0,
   });
 
   return formatter.format(price);
@@ -21,5 +21,9 @@ export const numberFormat = (num) => {
 export const percentageFormat = (num) => {
   if (!num) return "0%";
 
-  return `${Math.round(num*100)/100}%`;
+  return `${Math.round(num * 100) / 100}%`;
+};
+
+export const coloredTextClass = (num = 0) => {
+  return parseInt(num) < 0 ? "text-danger" : "text-success";
 };

@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }) {
   const [hideMenus, setHideMenus] = useState(false);
 
   const user = isMount ? JSON.parse(localStorage.getItem("user") || "{}") : {};
+  const brand = isMount ? JSON.parse(localStorage.getItem("brand") || "{}") : {};
 
   const checkWidth = () => {
     isMount && setHideMenus(690 > window.innerWidth);
@@ -66,6 +67,7 @@ export default function DashboardLayout({ children }) {
       >
         <Sidebar
           user={user}
+          brand={brand}
           hideMenus={hideMenus}
           collapsed={collapsed}
           userType={GetModules()}

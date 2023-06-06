@@ -2,6 +2,7 @@ import {
   currencyFormat,
   numberFormat,
   percentageFormat,
+  coloredTextClass,
 } from "@/src/helpers/formatting.helpers";
 import { Skeleton } from "antd";
 
@@ -117,82 +118,34 @@ export default function LSales(reportData, loading) {
                   <></>
                 ) : (
                   <tr>
-                    <td
-                      className={`${
-                        parseInt(
-                          (reportData?.totalSalesLastWeek || "0")
-                            ?.toString()
-                            ?.replace("$" || "%" || "", "")
-                        ) < 0
-                          ? "text-danger"
-                          : "text-success"
-                      }`}
-                    >
-                      {currencyFormat(reportData?.totalSalesLastWeek)}
-                    </td>
-                    <td className="text-success">
-                      {currencyFormat(reportData?.upLwDiff)}
-                    </td>
-                    <td>{percentageFormat(reportData?.upVsLw)}</td>
                     <td>{currencyFormat(reportData?.totalSalesLastWeek)}</td>
-                    <td>{currencyFormat(reportData?.vsSalesL4wk)}</td>
-                    <td
-                      className={`${
-                        parseInt(
-                          (reportData?.vsSalesDiff || "0")
-                            ?.toString()
-                            ?.replace("$" || "%" || "", "")
-                        ) < 0
-                          ? "text-danger"
-                          : "text-success"
-                      }`}
-                    >
-                      {currencyFormat(reportData?.vsSalesDiff)}
+                    <td className={coloredTextClass(reportData?.upVsLw)}>
+                      {currencyFormat(reportData?.upVsLw)}
                     </td>
-                    <td className="text-danger">
-                      {percentageFormat(reportData?.vsSalesChg)}
+                    <td className={coloredTextClass(reportData?.upLwDiff)}>
+                      {percentageFormat(reportData?.upLwDiff)}
+                    </td>
+                    <td>{currencyFormat(reportData?.totalSalesLastWeek)}</td>
+                    <td>{currencyFormat(reportData?.totalSalesL4wk)}</td>
+                    <td className={coloredTextClass(reportData?.totalSalesL4wkChange)}>
+                      {currencyFormat(reportData?.totalSalesL4wkChange)}
+                    </td>
+                    <td className={coloredTextClass(reportData?.totalSalesL4wkDiff)}>
+                      {percentageFormat(reportData?.totalSalesL4wkDiff)}
                     </td>
                     <td>{numberFormat(reportData?.unitsLw)}</td>
-                    <td
-                      className={`${
-                        parseInt(
-                          (reportData?.UnitsDiff || "0")
-                            ?.toString()
-                            ?.replace("$" || "%" || "", "")
-                        ) < 0
-                          ? "text-danger"
-                          : "text-success"
-                      }`}
-                    >
+                    <td className={coloredTextClass(reportData?.UnitsDiff)}>
                       {numberFormat(reportData?.UnitsDiff)}
                     </td>
-                    <td>{percentageFormat(reportData?.UnitsChg)}</td>
+                    <td className={coloredTextClass(reportData?.UnitsChg)}>
+                      {percentageFormat(reportData?.UnitsChg)}
+                    </td>
                     <td>{numberFormat(reportData?.vsUnitsLw)}</td>
                     <td>{numberFormat(reportData?.vsUnitsL4wk)}</td>
-                    <td
-                      className={`${
-                        parseInt(
-                          (reportData?.vsUnitsDiff || "0")
-                            ?.toString()
-                            ?.replace("$" || "%" || "", "")
-                        ) < 0
-                          ? "text-danger"
-                          : "text-success"
-                      }`}
-                    >
+                    <td className={coloredTextClass(reportData?.vsUnitsDiff)}>
                       {numberFormat(reportData?.vsUnitsDiff)}
                     </td>
-                    <td
-                      className={`${
-                        parseInt(
-                          (reportData?.vsUnitsChg || "0")
-                            ?.toString()
-                            ?.replace("$" || "%" || "", "")
-                        ) < 0
-                          ? "text-danger"
-                          : "text-success"
-                      }`}
-                    >
+                    <td className={coloredTextClass(reportData?.vsUnitsChg)}>
                       {percentageFormat(reportData?.vsUnitsChg)}
                     </td>
                   </tr>
