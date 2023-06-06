@@ -37,8 +37,14 @@ export default function RSales(reportData, loading) {
                   <tr>
                     <td>{currencyFormat(reportData?.ytdSales)}</td>
                     <td>{currencyFormat(reportData?.lastYearSales)}</td>
-                    <td className="text-danger">
-                      {percentageFormat(reportData?.salesChg)}
+                    <td
+                      className={`${
+                        reportData?.lastYearSalesChange < 0
+                          ? "text-danger"
+                          : "text-success"
+                      }`}
+                    >
+                      {percentageFormat(reportData?.lastYearSalesChange)}
                     </td>
                   </tr>
                 )}

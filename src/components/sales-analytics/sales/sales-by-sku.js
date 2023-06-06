@@ -172,49 +172,49 @@ export default function SalesBySKU(tableList, loading) {
                         <td>
                           {d?.startdate || ""} to {d?.enddate || ""}
                         </td>
-                        <td>{currencyFormat(d?.sales?.twSales)}</td>
-                        <td>{currencyFormat(d?.sales?.salesDiff)}</td>
+                        <td>{currencyFormat(d?.this_week_total_sales)}</td>
+                        <td>{currencyFormat(d?.this_week_sales_diff)}</td>
                         <td
                           className={`${
-                            d?.sales?.salesChange < 0
+                            d?.this_week_sales_change < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {percentageFormat(d?.sales?.salesChange)}
+                          {percentageFormat(d?.this_week_sales_change)}
                         </td>
-                        <td>{d?.units?.twUnits || "0"}</td>
-                        <td>{d?.units?.unitsDiff || "0"}</td>
+                        <td>{numberFormat(d?.this_week_total_units || "0")}</td>
+                        <td>{numberFormat(d?.this_week_units_diff) || "0"}</td>
                         <td
                           className={`${
-                            d?.units?.unitsChange < 0
+                            d?.this_week_units_change < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {percentageFormat(d?.units?.unitsChange)}
+                          {percentageFormat(d?.this_week_units_change)}
                         </td>
-                        <td>{currencyFormat(d?.sales?.prevWeekSales)}</td>
-                        <td>{currencyFormat(d?.sales?.salesDiffLy)}</td>
+                        <td>{currencyFormat(d?.last_year_total_sales)}</td>
+                        <td>{currencyFormat(d?.last_year_sales_diff)}</td>
                         <td
                           className={`${
-                            d?.sales?.salesChangeLy < 0
+                            d?.last_year_sales_change < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {percentageFormat(d?.sales?.salesChangeLy)}
+                          {percentageFormat(d?.last_year_sales_change)}
                         </td>
-                        <td>{numberFormat(d?.units?.prevWeekUnits)}</td>
-                        <td>{numberFormat(d?.units?.unitsDiffLy)}</td>
+                        <td>{numberFormat(d?.last_year_total_units)}</td>
+                        <td>{numberFormat(d?.last_year_units_diff)}</td>
                         <td
                           className={`${
-                            d?.units?.unitsChangeLy < 0
+                            d?.last_year_units_change < 0
                               ? "text-danger"
                               : "text-success"
                           }`}
                         >
-                          {percentageFormat(d?.units?.unitsChangeLy)}
+                          {percentageFormat(d?.last_year_units_change)}
                         </td>
                       </tr>
                     ))

@@ -48,7 +48,10 @@ const initialState = {
     },
   },
   salesByProduct: {
-    salesByProductList: {},
+    salesByProductList: {
+      status: false,
+      data: {},
+    },
     saveColumnConfiguration: {},
     salesByProductColumnList: {},
     saveTableConfiguration: {},
