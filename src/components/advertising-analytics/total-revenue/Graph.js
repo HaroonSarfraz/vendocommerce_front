@@ -54,7 +54,7 @@ export default function Graph({ loading, chartData, columnConfig }) {
               yaxis: {
                 labels: {
                   formatter: (value) => {
-                    return value.toFixed(0);
+                    return numberFormat(value.toFixed(0));
                   },
                 },
               },

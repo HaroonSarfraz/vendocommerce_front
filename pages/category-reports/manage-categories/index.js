@@ -69,6 +69,8 @@ export default function ManageCategory() {
       setTableLoading(false);
       const isValidData = Array.isArray(CategoryListRes.data);
       isValidData && setList(CategoryListRes.data);
+    } else if (CategoryListRes.status === false) {
+      setTableLoading(false);
     }
   }, [CategoryListRes]);
 

@@ -7,16 +7,36 @@ import {
   setSalesBySkuDetails,
   setSalesSkuDetailsList,
 } from "../store/slice/salesBySku.slice";
+import initialState from "../store/initialState";
 
 export const getSalesBySkuDetails = (data) => {
   return (dispatch) => {
     fetchSalesBySkuDetails(data)
       .then((res) => {
-        if (res.data) {
-          dispatch(setSalesBySkuDetails({status: true, data: res.data.items.summary}));
-          dispatch(setSalesSkuDetailsList({status: true, data: res.data.items.details}));
+        if (res.status === 200) {
+          dispatch(
+            setSalesBySkuDetails({ status: true, data: res.data.items.summary })
+          );
+          dispatch(
+            setSalesSkuDetailsList({
+              status: true,
+              data: res.data.items.details,
+            })
+          );
         } else {
           message.error(res.data.message);
+          dispatch(
+            setSalesBySkuDetails({
+              ...initialState.salesBySku.salesBySkuDetails,
+              status: false,
+            })
+          );
+          dispatch(
+            setSalesSkuDetailsList({
+              ...initialState.salesBySku.salesSkuDetailsList,
+              status: false,
+            })
+          );
         }
       })
       .catch((err) => {

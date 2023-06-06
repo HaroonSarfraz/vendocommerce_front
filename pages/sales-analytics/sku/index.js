@@ -36,7 +36,9 @@ export default function SalesBySku() {
 
   const getList = (e) => {
     setDetailsLoading(true);
-    setLoading(true);
+    if (salesSKUDetailsList.status) {
+      setLoading(true);
+    }
     // dispatch(
     //   getSalesBySkuDetailsList({
     //     start_date: moment(dateFilter[0]['$d']).format('MM-DD-YYYY'),
@@ -56,7 +58,6 @@ export default function SalesBySku() {
   useEffect(() => {
     const time = setTimeout(() => {
       if (dateFilter && dateFilter?.length === 2) {
-        setLoading(true);
         getList();
       }
     }, 1000);

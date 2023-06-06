@@ -67,6 +67,8 @@ export default function CategoryProductList() {
       setTableLoading(false);
       const isValidData = Array.isArray(CategoryProductListRes.data);
       isValidData && setList(CategoryProductListRes.data);
+    } else if (CategoryProductListRes.status === false) {
+      setTableLoading(false);
     }
   }, [CategoryProductListRes]);
 

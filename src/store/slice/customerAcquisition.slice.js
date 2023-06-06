@@ -6,8 +6,8 @@ export const CustomerAcquisitionSlice = createSlice({
   name: "customerAcquisition",
   reducers: {
     setCustomerAcquisition: (state, action) => {
-      state.data = action.payload;
-      state.status = true;
+      state = { ...state, ...action.payload };
+      return state;
     },
   },
 });

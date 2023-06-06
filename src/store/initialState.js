@@ -25,11 +25,11 @@ const initialState = {
     },
   },
   customerAcquisition: {
-    status: false,
+    status: null,
     data: [],
   },
   customerAcquisitionLTV: {
-    status: false,
+    status: null,
     data: [],
   },
   sales: {
@@ -39,17 +39,17 @@ const initialState = {
   },
   salesBySku: {
     salesSkuDetailsList: {
-      status: false,
+      status: null,
       data: [],
     },
     salesBySkuDetails: {
-      status: false,
+      status: null,
       data: {},
     },
   },
   salesByProduct: {
     salesByProductList: {
-      status: false,
+      status: null,
       data: {},
     },
     saveColumnConfiguration: {},
@@ -76,24 +76,27 @@ const initialState = {
   },
   advertisingTotalRevenue: {
     list: {
-      status: false,
+      status: null,
       data: [],
     },
   },
   salesByWeek: {
     salesWeekDetailList: {
-      status: false,
+      status: null,
       data: [],
     },
-    salesWeekGraph: {},
+    salesWeekGraph: {
+      status: null,
+      data: {},
+    },
     salesWeekData: {
-      status: false,
+      status: null,
       data: {},
     },
   },
   categoryPerformanceReport: {
     categoryPerformanceList: {
-      status: false,
+      status: null,
       categories: [],
       grandTotal: {
         shipped_revenue: 0,
@@ -106,27 +109,27 @@ const initialState = {
   },
   productReportList: {
     data: [],
-    status: false,
+    status: null,
   },
   categoryProductList: {
     data: [],
-    status: false,
+    status: null,
   },
   categoryList: {
     data: [],
-    status: false,
+    status: null,
   },
   salesByMonth: {
     salesByMonthData: {
-      status: false,
+      status: null,
       data: {},
     },
     salesByMonthDetail: {
-      status: false,
+      status: null,
       data: [],
     },
     salesByMonthGraph: {
-      status: false,
+      status: null,
       data: [],
     },
   },

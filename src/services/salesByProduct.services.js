@@ -11,19 +11,31 @@ import {
   setSaveColumnConfiguration,
   setSaveTableConfiguration,
 } from "../store/slice/salesByProduct.slice";
+import initialState from "../store/initialState";
 
 export const getSalesByProductList = (data) => {
   return (dispatch) => {
+    message.destroy();
+    message.loading({ content: "Loading...", duration: 0 });
     fetchSalesByProductList(data)
       .then((res) => {
         if (res.status === 200) {
-          dispatch(setSalesByProductList({status: true, data: res.data}));
+          dispatch(setSalesByProductList({ status: true, data: res.data }));
         } else {
+          dispatch(
+            setSalesByProductList({
+              ...initialState.salesByProduct.salesByProductList,
+              status: false,
+            })
+          );
           message.error(res.data.message);
         }
       })
       .catch((err) => {
         message.error(err?.response?.message || "Something Went Wrong.");
+      })
+      .finally(() => {
+        message.destroy();
       });
   };
 };

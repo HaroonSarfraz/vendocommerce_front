@@ -4,6 +4,7 @@ import {
   selectCategoryList,
   setCategoryList,
 } from "../store/slice/categoryList.slice";
+import initialState from "../store/initialState";
 
 export const getCategoryList = (
   data = {
@@ -14,12 +15,15 @@ export const getCategoryList = (
   }
 ) => {
   return (dispatch) => {
-    dispatch(setCategoryList({ status: false }));
+    dispatch(setCategoryList({ status: null }));
     fetchCategoryList(data)
       .then((res) => {
         if (res.status === 200) {
           dispatch(setCategoryList({ ...res.data, status: true }));
         } else {
+          dispatch(
+            setCategoryList({ ...initialState.categoryList, status: false })
+          );
           message.error(res.data.message);
         }
       })
