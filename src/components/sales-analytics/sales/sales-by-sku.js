@@ -183,8 +183,8 @@ export default function SalesBySKU(tableList, loading) {
                         >
                           {percentageFormat(d?.sales?.salesChange)}
                         </td>
-                        <td>{d?.units?.twUnits || "0"}</td>
-                        <td>{d?.units?.unitsDiff || "0"}</td>
+                        <td>{numberFormat(d?.units?.twUnits || "0")}</td>
+                        <td>{numberFormat(d?.units?.unitsDiff) || "0"}</td>
                         <td
                           className={`${
                             d?.units?.unitsChange < 0
