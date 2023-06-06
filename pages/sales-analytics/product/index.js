@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-import { Dropdown, Select, theme } from "antd";
+import { Dropdown, Select, message, theme } from "antd";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSalesByProductList } from "@/src/services/salesByProduct.services";
@@ -13,8 +12,13 @@ import _ from "lodash";
 import { defaultWeek, defaultYear } from "@/src/config";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
-import { numberFormat } from "@/src/helpers/formatting.helpers";
+import {
+  currencyFormat,
+  numberFormat,
+  percentageFormat,
+} from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
+import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 
 const { useToken } = theme;
 
@@ -39,17 +43,17 @@ export default function SalesByProducts() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState({
-    week: [defaultWeek()],
+    week: _.range(1, defaultWeek()),
     year: defaultYear(),
   });
 
   const columnsList = [
-    { label: "Sum of Sessions", value: "total_session" },
     {
       label: "Sum of Ordered Product Sales",
       value: "total_ordered_product_sales",
     },
     { label: "Sum of Total Order Items", value: "total_order_items" },
+    { label: "Sum of Sessions", value: "total_session" },
     { label: "Sum of Sessions - Mobile App", value: "mobile_app_sessions" },
     { label: "Sum of Sessions - Browser", value: "browser_sessions" },
     { label: "Sum of Session Percentage", value: "avg_session_percentage" },
@@ -100,33 +104,66 @@ export default function SalesByProducts() {
 
   useEffect(() => {
     const { year, week } = filter;
-    setTableLoading(true);
-    dispatch(
-      getSalesByProductList({
-        search_year: year,
-        search_week: week?.join(","),
-      })
-    );
+    if (week.length > 0) {
+      setTableLoading(true);
+      dispatch(
+        getSalesByProductList({
+          search_year: year,
+          search_week: week?.join(","),
+        })
+      );
+    } else {
+      dispatch(setSalesByProductList({ status: true, data: [] }));
+      message.warning("Please select at least one week");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   useEffect(() => {
     if (salesByProductList?.status) {
+      let max = [];
       if (salesByProductList?.data) {
-        const getMax = Object.values(salesByProductList?.data).map((d, i) => {
-          return Object.keys(d);
+        let getMax = [];
+        Object.values(salesByProductList?.data).map((d, i) => {
+          getMax = _.uniq(getMax.concat(Object.keys(d)));
         });
-        var index = getMax
-          ?.map((d) => d?.length)
-          .indexOf(Math.max(...getMax?.map((d) => d?.length)));
-        setTableColumns(getMax[index]);
+
+        getMax = getMax.filter((a) => a !== "GrandTotal");
+        max = getMax.concat(["Grand Total"]);
+        setTableColumns(max);
       }
-      setList(salesByProductList?.data || []);
+
+      const allKeys = {};
+      const data = {};
+      max.map((k) => {
+        allKeys[k] = {};
+      });
+
+      Object.keys(salesByProductList?.data).map((a) => {
+        data[a] = {
+          ...allKeys,
+          ..._.pick(salesByProductList?.data[a], ...max),
+        };
+      });
+
+      setList(data);
+
       setTableLoading(false);
     } else if (salesByProductList?.status === false) {
       setTableLoading(false);
     }
   }, [salesByProductList]);
+
+  const formatter = (field, value) => {
+    if (field === "total_ordered_product_sales") {
+      return currencyFormat(value);
+    }
+    if (field.startsWith("avg")) {
+      return percentageFormat(value);
+    }
+
+    return numberFormat(value);
+  };
 
   return (
     <DashboardLayout>
@@ -213,12 +250,12 @@ export default function SalesByProducts() {
                       <table className="table align-middle table-row-dashed table-row-gray-300 fs-7 gy-4 gx-5 border-top-d">
                         <thead>
                           <tr className="fw-boldest text-dark">
-                            <th className="min-w-300px " colSpan="2">
+                            <th className="min-w-375px w-375px position-sticky start-0 bg-white">
                               Row Labels
                             </th>
                             {tableColumns?.map((d, i) => (
                               <th className="min-w-150px" key={i}>
-                                {d === "GrandTotal" ? (
+                                {d === "Grand Total" ? (
                                   <>{d}</>
                                 ) : (
                                   <>
@@ -253,10 +290,9 @@ export default function SalesByProducts() {
                             {/* <th className='min-w-150px '>Grand Total</th> */}
                           </tr>
                           <tr className="fw-boldest text-dark">
-                            <th className="p-0 " />
-                            <th className="p-0 " />
+                            <th className="p-0 position-sticky start-0 bg-white" />
                             {columnConfig?.map((d, i) => (
-                              <th className="p-0 " key={i}>
+                              <th className="p-0" key={i}>
                                 <div
                                   id={`kt_accordion_1_body_${i + 1}`}
                                   className={
@@ -291,10 +327,7 @@ export default function SalesByProducts() {
                                             return;
                                           }
                                           return (
-                                            <th
-                                              className=" min-w-300px"
-                                              key={y}
-                                            >
+                                            <th className="min-w-300px" key={y}>
                                               {t.label}
                                             </th>
                                           );
@@ -314,11 +347,11 @@ export default function SalesByProducts() {
                             )?.[0]?.[1];
                             return (
                               <tr key={i}>
-                                <td colSpan="2">
+                                <td className="w-375px position-sticky start-0 bg-white">
                                   <div className="fs-7">
                                     <VendoTooltip
                                       title={defaultWeek?.title}
-                                      rule
+                                      placement="top"
                                       row={3}
                                     >
                                       <a
@@ -328,7 +361,9 @@ export default function SalesByProducts() {
                                         title="Click to view on Amazon"
                                         target="_blank"
                                       >
-                                        {defaultWeek?.title || "-"}
+                                        <span className="one min-w-350px">
+                                          {defaultWeek?.title || "-"}
+                                        </span>
                                       </a>
                                     </VendoTooltip>
                                     <span className="d-flex mt-0">
@@ -356,7 +391,7 @@ export default function SalesByProducts() {
                                   </div>
                                 </td>
                                 {Object.entries(d)?.map((r, t) => {
-                                  if (r?.[0] === "GrandTotal") {
+                                  if (r?.[0] === "Grand Total") {
                                     return;
                                   }
                                   const defaultValue =
@@ -368,12 +403,10 @@ export default function SalesByProducts() {
                                           className="d-block"
                                           style={{ width: 150 }}
                                         >
-                                          {selectedColumn ==
-                                            "total_ordered_product_sales" &&
-                                            "$"}
-                                          {defaultValue || 0}
-                                          {selectedColumn.startsWith("avg") &&
-                                            "%"}
+                                          {formatter(
+                                            selectedColumn,
+                                            defaultValue
+                                          )}
                                         </span>
                                         <div
                                           id={`kt_accordion_1_body_${t + 1}`}
@@ -402,13 +435,10 @@ export default function SalesByProducts() {
                                                       key={j}
                                                       className="min-w-300px"
                                                     >
-                                                      {h.value ===
-                                                        "total_ordered_product_sales" &&
-                                                        "$"}
-                                                      {r?.[1]?.[h.value] ?? 0}
-                                                      {h.value.startsWith(
-                                                        "avg"
-                                                      ) && "%"}
+                                                      {formatter(
+                                                        h.value,
+                                                        r?.[1]?.[h.value]
+                                                      )}
                                                     </td>
                                                   );
                                                 })}
@@ -425,17 +455,22 @@ export default function SalesByProducts() {
                                     className="d-block"
                                     style={{ width: 100 }}
                                   >
-                                    {selectedColumn ==
-                                      "total_ordered_product_sales" && "$"}
-                                    {numberFormat(
-                                      Object.values(d || {}).reduce(
-                                        (partialSum, a) =>
-                                          partialSum +
-                                          Number(a?.[selectedColumn] || 0),
-                                        0
-                                      )
+                                    {formatter(
+                                      selectedColumn,
+                                      selectedColumn.startsWith("avg")
+                                        ? _.mean(
+                                            Object.values(d || {})
+                                              .map((a) =>
+                                                Number(a?.[selectedColumn] || 0)
+                                              )
+                                              .slice(0, -1)
+                                          )
+                                        : _.sum(
+                                            Object.values(d || {}).map((a) =>
+                                              Number(a?.[selectedColumn] || 0)
+                                            )
+                                          )
                                     )}
-                                    {selectedColumn.startsWith("avg") && "%"}
                                   </span>
                                 </td>
                               </tr>

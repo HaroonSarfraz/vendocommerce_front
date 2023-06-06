@@ -26,7 +26,7 @@ export default function CategoryPerformanceReport() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    week: _.range(0, 54, 1),
+    week: _.range(1, defaultWeek() + 1),
     year: defaultYear(),
     category: null,
   });

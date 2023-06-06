@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, message } from "antd";
 import { selectFilter } from "@/src/helpers/selectFilter";
 import { KeySvg } from "@/src/assets";
 import { getAmazonSpApiCredentialsList } from "@/src/services/brands.services";
 import { selectAmazonSpApiCredentialsList } from "@/src/store/slice/brands.slice";
 import { deleteAmazonSpApiCredentialsRequest } from "@/src/api/brands.api";
 
-import CredentialsTable from "./credentials-table";
 import Loading from "@/src/components/loading";
+
+import { Modal } from "antd";
+import ASINTable from "@/src/components/table";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
+const { confirm } = Modal;
 
 const formItemLayout = {
   labelCol: {
@@ -32,12 +39,21 @@ export default function SPCredentials({ brand }) {
   );
 
   useEffect(() => {
-    // dispatch(getAmazonSpApiCredentialsList(brand.id));
+    dispatch(getAmazonSpApiCredentialsList(brand.id));
   }, []);
 
   useEffect(() => {
-    if (amazonSpApiCredentialsList) {
-      setList(amazonSpApiCredentialsList.data);
+    if (amazonSpApiCredentialsList.status) {
+      setList(
+        amazonSpApiCredentialsList.data.map((d) => {
+          const data = JSON.parse(d.credential_details);
+          return {
+            ...data,
+            marketplace: d.marketplace,
+            brand_amazon_seller_name: brand.u_amazon_seller_name,
+          };
+        })
+      );
       setLoading(false);
     }
   }, [amazonSpApiCredentialsList]);
@@ -92,13 +108,126 @@ export default function SPCredentials({ brand }) {
       .then((res) => {
         if (res.status === 200) {
           dispatch(getAmazonSpApiCredentialsList(brand.id));
-          message.success("User has been Removed from Brand Successfully");
+          message.success("SP API Credentials has been deleted successfully");
         } else {
-          message.error("Unable to remove user");
+          message.error("Unable to delete SP API Credentials");
         }
       })
       .catch((err) => message.error(err?.response?.message));
   };
+
+  const columns = [
+    {
+      title: "Action",
+      width: 70,
+      align: "left",
+      render: (text) => {
+        const showDeleteConfirm = () => {
+          confirm({
+            title: `Are you sure to delete ${text.name} Credentials?`,
+            icon: <ExclamationCircleFilled />,
+            content: "",
+            okText: "Yes",
+            okType: "danger",
+            cancelText: "No",
+            onOk() {
+              deleteAmazonSpApiCredentials(text.id);
+            },
+            onCancel() {},
+          });
+        };
+        return (
+          <div className="d-flex">
+            <FontAwesomeIcon
+              onClick={showDeleteConfirm}
+              icon={faTrashCan}
+              className="text-danger fs-3 cursor-pointer"
+            />
+          </div>
+        );
+      },
+    },
+    {
+      title: "#",
+      align: "left",
+      key: "id",
+      render: (_, __, i) => {
+        return <span>{1 + i}</span>;
+      },
+    },
+    {
+      title: "Seller Account Name",
+      key: "seller_id",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.brand_amazon_seller_name || "N/A"}</b>;
+      },
+    },
+    {
+      title: "ARN",
+      key: "arn",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.role_arn || "N/A"}</b>;
+      },
+    },
+    {
+      title: "Region",
+      key: "region",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.region || "N/A"}</b>;
+      },
+    },
+    {
+      title: "Marketplace",
+      key: "marketplace",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.marketplace || "N/A"}</b>;
+      },
+    },
+    {
+      title: "AWS Access Key",
+      key: "access_key",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.access_key || "N/A"}</b>;
+      },
+    },
+    {
+      title: "AWS Secret Key",
+      key: "secret_key",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.secret_key || "N/A"}</b>;
+      },
+    },
+    {
+      title: "LWA Client ID",
+      key: "client_id",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.client_id || "N/A"}</b>;
+      },
+    },
+    {
+      title: "LWA Secret",
+      key: "client_secret",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.client_secret || "N/A"}</b>;
+      },
+    },
+    {
+      title: "Refresh Token",
+      key: "access_token",
+      align: "left",
+      render: (text) => {
+        return <b>{text?.access_token || "N/A"}</b>;
+      },
+    },
+  ];
 
   return (
     <div className="container-fluid">
@@ -212,9 +341,17 @@ export default function SPCredentials({ brand }) {
                 {loading ? (
                   <Loading />
                 ) : (
-                  <CredentialsTable
-                    list={list}
-                    deleteAction={deleteAmazonSpApiCredentials}
+                  <ASINTable
+                    columns={columns}
+                    dataSource={list}
+                    rowKey="key"
+                    pagination={false}
+                    scroll={{
+                      x:
+                        columns
+                          ?.map((d) => d.width)
+                          .reduce((a, b) => a + b, 0) + 300,
+                    }}
                   />
                 )}
               </div>

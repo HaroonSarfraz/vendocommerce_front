@@ -38,7 +38,7 @@ export const deleteBrandRequest = (id) => {
 };
 
 export const fetchAmazonSpApiCredentialsRequest = (id) => {
-  return request.get(`/brands/${id}/amazon-sp-api-credentials`);
+  return request.get(`/brands/${id}/credentials?type=SP-API`);
 };
 
 export const deleteAmazonSpApiCredentialsRequest = (id, credID) => {
@@ -46,7 +46,7 @@ export const deleteAmazonSpApiCredentialsRequest = (id, credID) => {
 };
 
 export const fetchAmazonAdvertisingCredentialsRequest = (id) => {
-  return request.get(`/brands/${id}/amazon-advertising-credentials`);
+  return request.get(`/brands/${id}/credentials?type=Advertising-API`);
 };
 
 export const deleteAmazonAdvertisingCredentialsRequest = (id, credID) => {

@@ -57,7 +57,7 @@ export default function ProductReportPage() {
   };
 
   const [filter, setFilter] = useState({
-    week: _.range(0, defaultWeek() + 1),
+    week: _.range(1, defaultWeek() + 1),
     year: defaultYear(),
     asin: "",
     category: "",
