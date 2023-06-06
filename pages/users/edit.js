@@ -45,6 +45,17 @@ export default function Users() {
         if (res.status === 200) {
           setSubmit(false);
           message.success("User updated successfully");
+          const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+          if (res.data.id == localUser.id) {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                ...localUser,
+                u_name: res.data.u_name,
+                u_email: res.data.u_email,
+              })
+            );
+          }
         }
       })
       .catch((err) => console.error(err));

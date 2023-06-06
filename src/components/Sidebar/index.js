@@ -18,7 +18,7 @@ export default function Sidebar(props) {
   const router = useRouter();
   const dispatch = useDispatch();
   const [current, setCurrent] = useState("dashboard");
-  const { user, collapsed, hideMenus, userType } = props;
+  const { user, collapsed, hideMenus, userType, brand } = props;
   const isMount = useMount();
 
   useEffect(() => {
@@ -46,10 +46,10 @@ export default function Sidebar(props) {
     const menu = userType ? adminMenus : userMenus;
 
     // To be Fixed later
-    if(router?.route === "/brands/edit") {
+    if (router?.route === "/brands/edit") {
       return ["brands/edit?activeTab=general", "brands"];
     }
-    if(router?.route === "/users/edit") {
+    if (router?.route === "/users/edit") {
       return ["users"];
     }
 
@@ -125,16 +125,6 @@ export default function Sidebar(props) {
               style={{ display: "grid", justifyItems: "center" }}
               className="mb-4 symbol symbol-75px"
             >
-              <Image
-                src="/images/150-26.jpg"
-                width={collapsed ? 55 : 75}
-                height={collapsed ? 55 : 75}
-                style={{
-                  transition: "width 0.4s, 0.4s",
-                }}
-                alt="avatar"
-                priority
-              />
               {collapsed && (
                 <Tooltip
                   title={
@@ -143,13 +133,16 @@ export default function Sidebar(props) {
                       style={{ transition: "width 0.4s, 0.4s" }}
                     >
                       <Link
-                        href={"/"}
-                        className="text-active-light text-hover-primary fs-4 fw-boldest "
+                        href={{ pathname: "/users/edit", query: user }}
+                        as={`/users/edit`}
                       >
                         {user?.u_name}
                       </Link>
                       <span className="text-gray-600 fw-bold d-block fs-7 mb-1">
                         {user?.u_email}
+                      </span>
+                      <span className="text-gray-600 fw-bold d-block fs-7 mb-1 mt-2">
+                        {brand?.name}
                       </span>
                     </div>
                   }
@@ -159,6 +152,7 @@ export default function Sidebar(props) {
                     icon={faCircleInfo}
                     color="#A1A5B7"
                     style={{ marginTop: "20px" }}
+                    className=" w-20px h-20px"
                   />
                 </Tooltip>
               )}
@@ -167,13 +161,18 @@ export default function Sidebar(props) {
             {!collapsed && (
               <div className="text-center">
                 <Link
-                  href={"/"}
-                  className="text-gray-900 text-hover-primary fs-4 fw-boldest"
+                  href={{ pathname: "/users/edit", query: user }}
+                  as={`/users/edit`}
+                  className="ml-2"
                 >
                   {isMount ? user?.u_name : "Loading.."}
                 </Link>
                 <span className="text-gray-600 fw-bold d-block fs-7 mb-1">
                   {isMount ? user?.u_email : "Loading.."}
+                </span>
+
+                <span className="text-gray-600 fw-bold d-block fs-7 mb-1 mt-3">
+                  {isMount ? brand?.name : "Loading.."}
                 </span>
               </div>
             )}
