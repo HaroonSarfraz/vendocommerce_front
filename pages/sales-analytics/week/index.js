@@ -84,26 +84,32 @@ export default function SalesByWeek() {
     setDetailsLoading(true);
     setGraphSelected([]);
 
-    const { week, year } = filter;
-    dispatch(
-      getSalesWeekDetailList({
-        search_year: year,
-        search_week: week?.sort()?.join(","),
-      })
-    );
-    dispatch(
-      getSalesWeekGraph({
-        search_year: year,
-        search_week: week?.sort()?.join(","),
-        graph_filter_type: graphFilter,
-      })
-    );
-    dispatch(
-      getSalesWeekData({
-        search_week: week?.join(","),
-        search_year: year,
-      })
-    );
+    const time = setTimeout(() => {
+      const { week, year } = filter;
+      dispatch(
+        getSalesWeekDetailList({
+          search_year: year,
+          search_week: week?.sort()?.join(","),
+        })
+      );
+      dispatch(
+        getSalesWeekGraph({
+          search_year: year,
+          search_week: week?.sort()?.join(","),
+          graph_filter_type: graphFilter,
+        })
+      );
+      dispatch(
+        getSalesWeekData({
+          search_week: week?.join(","),
+          search_year: year,
+        })
+      );
+    }, 600);
+
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   useEffect(() => {
@@ -111,13 +117,18 @@ export default function SalesByWeek() {
     setGraphLoading(true);
     setGraphSelected([]);
 
-    dispatch(
-      getSalesWeekGraph({
-        search_year: year,
-        search_week: week?.sort()?.join(","),
-        graph_filter_type: graphFilter,
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getSalesWeekGraph({
+          search_year: year,
+          search_week: week?.sort()?.join(","),
+          graph_filter_type: graphFilter,
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [graphFilter]);
 
   useEffect(() => {

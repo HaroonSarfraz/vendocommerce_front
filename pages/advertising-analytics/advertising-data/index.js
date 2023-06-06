@@ -68,13 +68,17 @@ export default function AdvertisingData() {
     setLastWeekKPIsLoading(true);
     setYearToDayKPIsLoading(true);
     setGraphsLoading(true);
-
-    dispatch(
-      getAdvertising({
-        search_year: filter?.year,
-        search_week: filter?.week?.join(","),
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getAdvertising({
+          search_year: filter?.year,
+          search_week: filter?.week?.join(","),
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   return (

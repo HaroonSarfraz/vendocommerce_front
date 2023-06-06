@@ -70,10 +70,11 @@ export default function TopBarFilter(filter, setFilter, type) {
               </div>
               <div className="position-relative">
                 <Select
+                  mode="multiple"
                   placeholder="Category"
                   size="large"
-                  style={{ width: 200 }}
-                  value={filter?.["category"] || null}
+                  style={{ width: 300 }}
+                  value={filter?.["category"]}
                   disabled={CategoryListRes?.data.length === 0}
                   onChange={(e) => {
                     setFilter({
@@ -82,10 +83,6 @@ export default function TopBarFilter(filter, setFilter, type) {
                     });
                   }}
                   options={[
-                    {
-                      value: null,
-                      label: "All",
-                    },
                     ...(CategoryListRes?.data?.map((item) => ({
                       value: item.name,
                       label: item.name,

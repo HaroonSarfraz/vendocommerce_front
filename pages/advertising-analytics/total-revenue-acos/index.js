@@ -47,13 +47,17 @@ export default function TotalRevenueAcos() {
 
   useEffect(() => {
     setLoading(true);
-
-    dispatch(
-      getAdvertising({
-        search_year: filter?.year,
-        search_week: filter?.week?.join(","),
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getAdvertising({
+          search_year: filter?.year,
+          search_week: filter?.week?.join(","),
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   const showDSP = advertisementsData.reduce(

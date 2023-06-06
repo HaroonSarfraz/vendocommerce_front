@@ -27,27 +27,32 @@ export default function CustomerAcquisitionNewVSRepeat() {
   const CustomerAcquisitionRes = useSelector(selectCustomerAcquisition);
 
   const totalCustomers = CustomerAcquisitionRes.data.reduce(
-    (a, b) => a + b.customer_count,
+    (a, b) => a + parseFloat(b.customer_count),
     0
   );
   const repeatingCustomers = CustomerAcquisitionRes.data.reduce(
-    (a, b) => a + b.old_customer_count,
+    (a, b) => a + parseFloat(b.old_customer_count),
     0
   );
   const newCustomers = CustomerAcquisitionRes.data.reduce(
-    (a, b) => a + b.new_customer_count,
+    (a, b) => a + parseFloat(b.new_customer_count),
     0
   );
 
   useEffect(() => {
     setLoading(true);
     const { year, month } = filter;
-    dispatch(
-      getCustomerAcquisition({
-        search_year: year,
-        search_month: month?.join(","),
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getCustomerAcquisition({
+          search_year: year,
+          search_month: month?.join(","),
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   useEffect(() => {
