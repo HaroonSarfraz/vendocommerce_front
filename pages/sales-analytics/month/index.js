@@ -2,7 +2,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useState } from "react";
-import { Modal, Select, Skeleton } from "antd";
+import { Empty, Modal, Select, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { DotChartOutlined } from "@ant-design/icons";
 import Loading from "@/src/components/loading";
@@ -32,6 +32,7 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import { ExportToExcel, exportToExcel } from "@/src/hooks/Excelexport";
+import NoData from "@/src/components/no-data";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -503,178 +504,190 @@ export default function SalesByMonth() {
                           </tr>
                         </thead>
                         <tbody className="text-gray-700 fw-bold">
-                          {salesByMonthDetail?.map((d, i) => {
-                            return (
-                              <>
-                                <tr className>
-                                  <td className>
-                                    <FontAwesomeIcon
-                                      className="las la-angle-down text-dark fs-4"
-                                      icon={
-                                        expand === i ? faAngleUp : faAngleDown
-                                      }
-                                      onClick={() => {
-                                        setExpand((prev) =>
-                                          prev === i ? setExpand(null) : i
-                                        );
-                                      }}
-                                    />
-                                  </td>
-                                  <td>
-                                    <a
-                                      href="#"
-                                      className="fw-boldest text-dark"
+                          {salesByMonthDetail.length === 0 ? (
+                            <tr>
+                              <td colSpan={11}>
+                                <NoData />
+                              </td>
+                            </tr>
+                          ) : (
+                            salesByMonthDetail?.map((d, i) => {
+                              return (
+                                <>
+                                  <tr className>
+                                    <td className>
+                                      <FontAwesomeIcon
+                                        className="las la-angle-down text-dark fs-4"
+                                        icon={
+                                          expand === i ? faAngleUp : faAngleDown
+                                        }
+                                        onClick={() => {
+                                          setExpand((prev) =>
+                                            prev === i ? setExpand(null) : i
+                                          );
+                                        }}
+                                      />
+                                    </td>
+                                    <td>
+                                      <a
+                                        href="#"
+                                        className="fw-boldest text-dark"
+                                      >
+                                        {d?.month_name}
+                                      </a>
+                                    </td>
+                                    <td>
+                                      {currencyFormat(
+                                        d?.totalOrderedProductSales
+                                      )}
+                                    </td>
+                                    <td>{numberFormat(d?.totalSession)}</td>
+                                    <td>
+                                      {percentageFormat(
+                                        d?.totalSessionPercentage
+                                      )}
+                                    </td>
+                                    <td>{numberFormat(d?.totalPageViews)}</td>
+                                    <td>
+                                      {percentageFormat(
+                                        d?.avgPageViewPercentage
+                                      )}
+                                    </td>
+                                    <td>{percentageFormat(d?.avgBuyBox)}</td>
+                                    <td>{numberFormat(d?.totalUnitOrdered)}</td>
+                                    <td>
+                                      {percentageFormat(d?.avgUnitSession)}
+                                    </td>
+                                    <td>{numberFormat(d?.totalOrderItems)}</td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      colSpan={11}
+                                      className="hiddenRow  bg-light bg-opacity-100"
                                     >
-                                      {d?.month_name}
-                                    </a>
-                                  </td>
-                                  <td>
-                                    {currencyFormat(
-                                      d?.totalOrderedProductSales
-                                    )}
-                                  </td>
-                                  <td>{numberFormat(d?.totalSession)}</td>
-                                  <td>
-                                    {percentageFormat(
-                                      d?.totalSessionPercentage
-                                    )}
-                                  </td>
-                                  <td>{numberFormat(d?.totalPageViews)}</td>
-                                  <td>
-                                    {percentageFormat(d?.avgPageViewPercentage)}
-                                  </td>
-                                  <td>{percentageFormat(d?.avgBuyBox)}</td>
-                                  <td>{numberFormat(d?.totalUnitOrdered)}</td>
-                                  <td>{percentageFormat(d?.avgUnitSession)}</td>
-                                  <td>{numberFormat(d?.totalOrderItems)}</td>
-                                </tr>
-                                <tr>
-                                  <td
-                                    colSpan={11}
-                                    className="hiddenRow  bg-light bg-opacity-100"
-                                  >
-                                    {expand === i && (
-                                      <div>
-                                        <div className="table-responsive m-0">
-                                          <table
-                                            className="table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0"
-                                            id
-                                          >
-                                            <thead className="border-bottom border-bottom-dashed">
-                                              <tr className="fw-bolder text-gray-800">
-                                                <th className="min-w-50px p-0" />
-                                                <th className="min-w-250px p-0" />
-                                                <th className="min-w-225px p-0" />
-                                                <th className="min-w-150px p-0" />
-                                                <th className="min-w-225px p-0" />
-                                                <th className="min-w-175px p-0" />
-                                                <th className="min-w-250px p-0" />
-                                                <th className="min-w-250px p-0" />
-                                                <th className="min-w-200px p-0" />
-                                                <th className="min-w-250px p-0" />
-                                                <th className="min-w-225px p-0" />
-                                              </tr>
-                                            </thead>
-                                            <tbody className="text-gray-700 fw-bold">
-                                              {d?.asin_data?.map((r, t) => {
-                                                return (
-                                                  <tr key={r} data-key={0}>
-                                                    <td />
-                                                    <td>
-                                                      <div className="fs-7">
-                                                        <b className="one mb-2 ">
-                                                          <Link
-                                                            className="text-dark"
-                                                            href={`https://amazon.com/dp/${r?.child_asin}`}
-                                                            title="Click to view on Amazon"
-                                                            target="_blank"
-                                                          >
-                                                            {r?.title}
-                                                          </Link>
-                                                        </b>
-                                                        <span className="d-flex mt-0">
-                                                          <b className="fw-boldest me-2 text-dark">
-                                                            Parent ASIN:{" "}
-                                                          </b>{" "}
-                                                          {r?.parent_asin}
-                                                        </span>
-                                                        <span className="d-flex mt-1">
-                                                          <b className="fw-boldest me-2 text-dark">
-                                                            Child ASIN:{" "}
-                                                          </b>{" "}
-                                                          <Link
-                                                            href={`https://amazon.com/dp/${r?.child_asin}`}
-                                                            target="_blank"
-                                                          >
-                                                            {r?.child_asin}
-                                                          </Link>
-                                                        </span>
-                                                        <span className="d-flex mt-1">
-                                                          <b className="fw-boldest me-2 text-dark">
-                                                            SKU:{" "}
-                                                          </b>{" "}
-                                                          {r?.sku}
-                                                        </span>
-                                                      </div>
-                                                    </td>
-                                                    <td>
-                                                      {currencyFormat(
-                                                        r?.total_ordered_product_sales
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {numberFormat(
-                                                        r?.total_session
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {percentageFormat(
-                                                        r?.avg_session_percentage
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {numberFormat(
-                                                        r?.total_page_views
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {percentageFormat(
-                                                        r?.avg_page_view_percentage
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {percentageFormat(
-                                                        r?.avg_buy_box_percentage
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {numberFormat(
-                                                        r?.total_ordered_units
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {percentageFormat(
-                                                        r?.avg_unit_session_percentage
-                                                      )}
-                                                    </td>
-                                                    <td>
-                                                      {numberFormat(
-                                                        r?.total_order_items
-                                                      )}
-                                                    </td>
-                                                  </tr>
-                                                );
-                                              })}
-                                            </tbody>
-                                          </table>
+                                      {expand === i && (
+                                        <div>
+                                          <div className="table-responsive m-0">
+                                            <table
+                                              className="table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0"
+                                              id
+                                            >
+                                              <thead className="border-bottom border-bottom-dashed">
+                                                <tr className="fw-bolder text-gray-800">
+                                                  <th className="min-w-50px p-0" />
+                                                  <th className="min-w-250px p-0" />
+                                                  <th className="min-w-225px p-0" />
+                                                  <th className="min-w-150px p-0" />
+                                                  <th className="min-w-225px p-0" />
+                                                  <th className="min-w-175px p-0" />
+                                                  <th className="min-w-250px p-0" />
+                                                  <th className="min-w-250px p-0" />
+                                                  <th className="min-w-200px p-0" />
+                                                  <th className="min-w-250px p-0" />
+                                                  <th className="min-w-225px p-0" />
+                                                </tr>
+                                              </thead>
+                                              <tbody className="text-gray-700 fw-bold">
+                                                {d?.asin_data?.map((r, t) => {
+                                                  return (
+                                                    <tr key={r} data-key={0}>
+                                                      <td />
+                                                      <td>
+                                                        <div className="fs-7">
+                                                          <b className="one mb-2 ">
+                                                            <Link
+                                                              className="text-dark"
+                                                              href={`https://amazon.com/dp/${r?.child_asin}`}
+                                                              title="Click to view on Amazon"
+                                                              target="_blank"
+                                                            >
+                                                              {r?.title}
+                                                            </Link>
+                                                          </b>
+                                                          <span className="d-flex mt-0">
+                                                            <b className="fw-boldest me-2 text-dark">
+                                                              Parent ASIN:{" "}
+                                                            </b>{" "}
+                                                            {r?.parent_asin}
+                                                          </span>
+                                                          <span className="d-flex mt-1">
+                                                            <b className="fw-boldest me-2 text-dark">
+                                                              Child ASIN:{" "}
+                                                            </b>{" "}
+                                                            <Link
+                                                              href={`https://amazon.com/dp/${r?.child_asin}`}
+                                                              target="_blank"
+                                                            >
+                                                              {r?.child_asin}
+                                                            </Link>
+                                                          </span>
+                                                          <span className="d-flex mt-1">
+                                                            <b className="fw-boldest me-2 text-dark">
+                                                              SKU:{" "}
+                                                            </b>{" "}
+                                                            {r?.sku}
+                                                          </span>
+                                                        </div>
+                                                      </td>
+                                                      <td>
+                                                        {currencyFormat(
+                                                          r?.total_ordered_product_sales
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {numberFormat(
+                                                          r?.total_session
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {percentageFormat(
+                                                          r?.avg_session_percentage
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {numberFormat(
+                                                          r?.total_page_views
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {percentageFormat(
+                                                          r?.avg_page_view_percentage
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {percentageFormat(
+                                                          r?.avg_buy_box_percentage
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {numberFormat(
+                                                          r?.total_ordered_units
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {percentageFormat(
+                                                          r?.avg_unit_session_percentage
+                                                        )}
+                                                      </td>
+                                                      <td>
+                                                        {numberFormat(
+                                                          r?.total_order_items
+                                                        )}
+                                                      </td>
+                                                    </tr>
+                                                  );
+                                                })}
+                                              </tbody>
+                                            </table>
+                                          </div>
                                         </div>
-                                      </div>
-                                    )}
-                                  </td>
-                                </tr>
-                              </>
-                            );
-                          })}
+                                      )}
+                                    </td>
+                                  </tr>
+                                </>
+                              );
+                            })
+                          )}
                         </tbody>
                       </table>
                     </div>

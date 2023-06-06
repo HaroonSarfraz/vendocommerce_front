@@ -13,6 +13,7 @@ import { currencyFormat } from "@/src/helpers/formatting.helpers";
 import { percentageFormat } from "@/src/helpers/formatting.helpers";
 import { getCategoryList } from "@/src/services/categoryList.services";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
+import { CustomDrawer } from "../modal";
 
 export default function CategoryPerformanceReport() {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ export default function CategoryPerformanceReport() {
   }, [filter]);
 
   useEffect(() => {
-    if (CategoryPerformanceListRes.categories.length !== 0) {
+    if (CategoryPerformanceListRes.status) {
       setList(CategoryPerformanceListRes.categories);
       setTableLoading(false);
     }
@@ -149,6 +150,48 @@ export default function CategoryPerformanceReport() {
     [list, filter]
   );
 
+  const totalColumn = [
+    {
+      title: "Week",
+      width: 90,
+      dataIndex: "week",
+      key: "week",
+      fixed: "left",
+    },
+    {
+      title: "Shipped Revenue Total",
+      width: 90,
+      dataIndex: "shippedRevenue",
+      key: "shippedRevenue",
+    },
+    {
+      title: "TACoS Average",
+      width: 90,
+      dataIndex: "tACoS",
+      key: "tACoS",
+    },
+    {
+      title: "Ad Sales Total",
+      width: 90,
+      dataIndex: "adSales",
+      key: "adSales",
+    },
+    {
+      title: "Ad Spend Total",
+      width: 90,
+      dataIndex: "adSpend",
+      key: "adSpend",
+    },
+  ];
+
+  const weeklyTotal = CategoryPerformanceListRes.weeklyTotal.map((item) => ({
+    week: item.week_name,
+    shippedRevenue: currencyFormat(item.shipped_revenue),
+    tACoS: percentageFormat(item.TACoS),
+    adSales: currencyFormat(item.ad_sales),
+    adSpend: currencyFormat(item.ad_spend),
+  }));
+
   return (
     <>
       <div
@@ -173,12 +216,45 @@ export default function CategoryPerformanceReport() {
                     </span>
                   </h3>
                   <div className="card-toolbar gap-3">
-                    <button
+                    <CustomDrawer
+                      width={"100vw"}
+                      height={"100vh"}
+                      title={"Week by Week Total"}
+                      placement={"right"}
+                      opener={
+                        <button
+                          disabled={tableLoading}
+                          className="btn btn-light-danger btn-sm fw-bolder"
+                        >
+                          Week by Week Total
+                        </button>
+                      }
+                    >
+                      {({}) => {
+                        return (
+                          <Table
+                            pagination={false}
+                            columns={totalColumn}
+                            dataSource={weeklyTotal}
+                            loading={tableLoading}
+                            scroll={{
+                              x:
+                                totalColumn
+                                  ?.map((d) => d.width)
+                                  .reduce((a, b) => a + b, 0) + 300,
+                            }}
+                            size={"small"}
+                          />
+                        );
+                      }}
+                    </CustomDrawer>
+
+                    {/* <button
                       className="btn btn-light-danger btn-sm fw-bolder"
                       onClick={() => setModalOpen(true)}
                     >
                       Import Data
-                    </button>
+                    </button> */}
                     <ExportToExcel
                       columns={columns.map((item) => item.title) || []}
                       rows={res.data}
@@ -199,40 +275,7 @@ export default function CategoryPerformanceReport() {
                       <>
                         <Table
                           pagination={false}
-                          columns={[
-                            {
-                              title: "",
-                              width: 80,
-                            },
-                            {
-                              title: "Shipped Revenue Total",
-                              width: 90,
-                              dataIndex: "shippedRevenue",
-                              key: "shippedRevenue",
-                            },
-                            {
-                              title: "TACoS Average",
-                              width: 90,
-                              dataIndex: "tACoS",
-                              key: "tACoS",
-                            },
-                            {
-                              title: "Ad Sales Total",
-                              width: 90,
-                              dataIndex: "adSales",
-                              key: "adSales",
-                            },
-                            {
-                              title: "Ad Spend Total",
-                              width: 90,
-                              dataIndex: "adSpend",
-                              key: "adSpend",
-                            },
-                            {
-                              title: "",
-                              width: 30,
-                            },
-                          ]}
+                          columns={totalColumn.slice(1)}
                           dataSource={[
                             {
                               shippedRevenue: currencyFormat(

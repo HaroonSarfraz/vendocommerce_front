@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import cloneDeep from "lodash/cloneDeep";
-import { Select, Skeleton } from "antd";
+import { Empty, Select, Skeleton } from "antd";
 import { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,7 @@ import {
   numberFormat,
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
+import NoData from "@/src/components/no-data";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -225,10 +226,10 @@ export default function SalesByWeek() {
       y: {
         formatter: function (val, { seriesIndex, w }) {
           const heading = w?.config?.series[seriesIndex]?.name || "";
-          if(heading.includes("Sales")) {
+          if (heading.includes("Sales")) {
             return currencyFormat(val);
           }
-          if(heading.includes("Percentage")) {
+          if (heading.includes("Percentage")) {
             return percentageFormat(val);
           }
           return numberFormat(val);
@@ -466,166 +467,180 @@ export default function SalesByWeek() {
                           </tr>
                         </thead>
                         <tbody className="text-gray-700 fw-bold">
-                          {isDetails?.map((d, i) => (
-                            <>
-                              <tr className>
-                                <td className>
-                                  <FontAwesomeIcon
-                                    icon={
-                                      expand === i ? faAngleUp : faAngleDown
-                                    }
-                                    color="#181C32"
-                                    onClick={() => {
-                                      setExpand((prev) =>
-                                        prev === i ? setExpand(null) : i
-                                      );
-                                    }}
-                                  />
-                                </td>
-                                <td>
-                                  {d?.start_date}&nbsp;to&nbsp;{d?.end_date}
-                                </td>
-                                <td>
-                                  <span className="fw-boldest text-dark">
-                                    {d?.week_name}
-                                  </span>
-                                </td>
-                                <td>
-                                  {currencyFormat(d?.totalOrderedProductSales)}
-                                </td>
-                                <td>{numberFormat(d?.totalSession)}</td>
-                                <td>
-                                  {percentageFormat(d?.totalSessionPercentage)}
-                                </td>
-                                <td>{numberFormat(d?.totalPageViews)}</td>
-                                <td>
-                                  {percentageFormat(d?.avgPageViewPercentage)}
-                                </td>
-                                <td>{percentageFormat(d?.avgBuyBox)}</td>
-                                <td>{numberFormat(d?.totalUnitOrdered)}</td>
-                                <td>{percentageFormat(d?.avgUnitSession)}</td>
-                                <td>{numberFormat(d?.totalOrderItems)}</td>
-                              </tr>
-                              <tr>
-                                <td
-                                  colSpan={12}
-                                  className="hiddenRow  bg-light bg-opacity-100"
-                                >
-                                  {expand === i && (
-                                    <div className="table-responsive m-0">
-                                      <table
-                                        className="table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0"
-                                        id
-                                      >
-                                        {/*begin::Table body*/}
-                                        <thead className="border-bottom border-bottom-dashed">
-                                          <tr className="fw-bolder text-gray-800">
-                                            <th className="min-w-50px p-0" />
-                                            <th className="min-w-275px p-0" />
-                                            <th className="min-w-150px p-0" />
-                                            <th className="min-w-225px p-0" />
-                                            <th className="min-w-150px p-0" />
-                                            <th className="min-w-225px p-0" />
-                                            <th className="min-w-175px p-0" />
-                                            <th className="min-w-250px p-0" />
-                                            <th className="min-w-150px p-0" />
-                                            <th className="min-w-200px p-0" />
-                                            <th className="min-w-250px p-0" />
-                                            <th className="min-w-225px p-0" />
-                                          </tr>
-                                        </thead>
-                                        <tbody className="text-gray-700 fw-bold">
-                                          {d?.asin_data?.map((r, t) => (
-                                            <tr data-key={t} key={t}>
-                                              <td />
-                                              <td>
-                                                <div className="fs-7">
-                                                  <b className="one mb-2 ">
-                                                    <a
-                                                      className="text-dark"
-                                                      href="https://amazon.com/dp/B09M88F21R"
-                                                      title="Click to view on Amazon"
-                                                      target="_blank"
-                                                    >
-                                                      {r?.title}
-                                                    </a>
-                                                  </b>
-                                                  <span className="d-flex mt-0">
-                                                    <b className="fw-boldest me-2 text-dark">
-                                                      Parent ASIN:{" "}
-                                                    </b>
-                                                    {r?.parent_asin}
-                                                  </span>
-                                                  <span className="d-flex mt-1">
-                                                    <b className="fw-boldest me-2 text-dark">
-                                                      Child ASIN:{" "}
-                                                    </b>{" "}
-                                                    <a href="#">
-                                                      {r?.child_asin}
-                                                    </a>
-                                                  </span>
-                                                  <span className="d-flex mt-1">
-                                                    <b className="fw-boldest me-2 text-dark">
-                                                      SKU:{" "}
-                                                    </b>
-                                                    {r?.sku}
-                                                  </span>
-                                                </div>
-                                              </td>
-                                              <td />
-                                              <td>
-                                                {currencyFormat(
-                                                  r?.total_ordered_product_sales
-                                                )}
-                                              </td>
-                                              <td>
-                                                {numberFormat(r?.total_session)}
-                                              </td>
-                                              <td>
-                                                {percentageFormat(
-                                                  r?.avg_session_percentage
-                                                )}
-                                              </td>
-                                              <td>
-                                                {numberFormat(
-                                                  r?.total_page_views
-                                                )}
-                                              </td>
-                                              <td>
-                                                {percentageFormat(
-                                                  r?.avg_page_view_percentage
-                                                )}
-                                              </td>
-                                              <td>
-                                                {percentageFormat(
-                                                  r?.avg_buy_box_percentage
-                                                )}
-                                              </td>
-                                              <td>
-                                                {numberFormat(
-                                                  r?.total_ordered_units
-                                                )}
-                                              </td>
-                                              <td>
-                                                {percentageFormat(
-                                                  r?.avg_unit_session_percentage
-                                                )}
-                                              </td>
-                                              <td>
-                                                {numberFormat(
-                                                  r?.total_order_items
-                                                )}
-                                              </td>
+                          {isDetails.length === 0 ? (
+                            <tr>
+                              <td colSpan={12}>
+                                <NoData />
+                              </td>
+                            </tr>
+                          ) : (
+                            isDetails?.map((d, i) => (
+                              <>
+                                <tr className>
+                                  <td className>
+                                    <FontAwesomeIcon
+                                      icon={
+                                        expand === i ? faAngleUp : faAngleDown
+                                      }
+                                      color="#181C32"
+                                      onClick={() => {
+                                        setExpand((prev) =>
+                                          prev === i ? setExpand(null) : i
+                                        );
+                                      }}
+                                    />
+                                  </td>
+                                  <td>
+                                    {d?.start_date}&nbsp;to&nbsp;{d?.end_date}
+                                  </td>
+                                  <td>
+                                    <span className="fw-boldest text-dark">
+                                      {d?.week_name}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    {currencyFormat(
+                                      d?.totalOrderedProductSales
+                                    )}
+                                  </td>
+                                  <td>{numberFormat(d?.totalSession)}</td>
+                                  <td>
+                                    {percentageFormat(
+                                      d?.totalSessionPercentage
+                                    )}
+                                  </td>
+                                  <td>{numberFormat(d?.totalPageViews)}</td>
+                                  <td>
+                                    {percentageFormat(d?.avgPageViewPercentage)}
+                                  </td>
+                                  <td>{percentageFormat(d?.avgBuyBox)}</td>
+                                  <td>{numberFormat(d?.totalUnitOrdered)}</td>
+                                  <td>{percentageFormat(d?.avgUnitSession)}</td>
+                                  <td>{numberFormat(d?.totalOrderItems)}</td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    colSpan={12}
+                                    className="hiddenRow  bg-light bg-opacity-100"
+                                  >
+                                    {expand === i && (
+                                      <div className="table-responsive m-0">
+                                        <table
+                                          className="table align-middle table-row-gray-300 table-row-dashed fs-7 gy-4 gx-5 bg-white mb-0"
+                                          id
+                                        >
+                                          {/*begin::Table body*/}
+                                          <thead className="border-bottom border-bottom-dashed">
+                                            <tr className="fw-bolder text-gray-800">
+                                              <th className="min-w-50px p-0" />
+                                              <th className="min-w-275px p-0" />
+                                              <th className="min-w-150px p-0" />
+                                              <th className="min-w-225px p-0" />
+                                              <th className="min-w-150px p-0" />
+                                              <th className="min-w-225px p-0" />
+                                              <th className="min-w-175px p-0" />
+                                              <th className="min-w-250px p-0" />
+                                              <th className="min-w-150px p-0" />
+                                              <th className="min-w-200px p-0" />
+                                              <th className="min-w-250px p-0" />
+                                              <th className="min-w-225px p-0" />
                                             </tr>
-                                          ))}
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  )}
-                                </td>
-                              </tr>
-                            </>
-                          ))}
+                                          </thead>
+                                          <tbody className="text-gray-700 fw-bold">
+                                            {d?.asin_data?.map((r, t) => (
+                                              <tr data-key={t} key={t}>
+                                                <td />
+                                                <td>
+                                                  <div className="fs-7">
+                                                    <b className="one mb-2 ">
+                                                      <a
+                                                        className="text-dark"
+                                                        href="https://amazon.com/dp/B09M88F21R"
+                                                        title="Click to view on Amazon"
+                                                        target="_blank"
+                                                      >
+                                                        {r?.title}
+                                                      </a>
+                                                    </b>
+                                                    <span className="d-flex mt-0">
+                                                      <b className="fw-boldest me-2 text-dark">
+                                                        Parent ASIN:{" "}
+                                                      </b>
+                                                      {r?.parent_asin}
+                                                    </span>
+                                                    <span className="d-flex mt-1">
+                                                      <b className="fw-boldest me-2 text-dark">
+                                                        Child ASIN:{" "}
+                                                      </b>{" "}
+                                                      <a href="#">
+                                                        {r?.child_asin}
+                                                      </a>
+                                                    </span>
+                                                    <span className="d-flex mt-1">
+                                                      <b className="fw-boldest me-2 text-dark">
+                                                        SKU:{" "}
+                                                      </b>
+                                                      {r?.sku}
+                                                    </span>
+                                                  </div>
+                                                </td>
+                                                <td />
+                                                <td>
+                                                  {currencyFormat(
+                                                    r?.total_ordered_product_sales
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {numberFormat(
+                                                    r?.total_session
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {percentageFormat(
+                                                    r?.avg_session_percentage
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {numberFormat(
+                                                    r?.total_page_views
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {percentageFormat(
+                                                    r?.avg_page_view_percentage
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {percentageFormat(
+                                                    r?.avg_buy_box_percentage
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {numberFormat(
+                                                    r?.total_ordered_units
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {percentageFormat(
+                                                    r?.avg_unit_session_percentage
+                                                  )}
+                                                </td>
+                                                <td>
+                                                  {numberFormat(
+                                                    r?.total_order_items
+                                                  )}
+                                                </td>
+                                              </tr>
+                                            ))}
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    )}
+                                  </td>
+                                </tr>
+                              </>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>

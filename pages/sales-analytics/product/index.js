@@ -22,6 +22,77 @@ import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 
 const { useToken } = theme;
 
+const columnsList = [
+  {
+    label: "Sum of Ordered Product Sales",
+    value: "total_ordered_product_sales",
+  },
+  {
+    label: "Sum of Total Order Items",
+    value: "total_order_items",
+  },
+  {
+    label: "Sum of Sessions",
+    value: "total_session",
+  },
+  {
+    label: "Sum of Sessions - Mobile App",
+    value: "mobile_app_sessions",
+  },
+  {
+    label: "Sum of Sessions - Browser",
+    value: "browser_sessions",
+  },
+  {
+    label: "Sum of Session Percentage",
+    value: "avg_session_percentage",
+  },
+  {
+    label: "Sum of Session Percentage - Mobile App",
+    value: "avg_mobile_app_session_percentage",
+  },
+  {
+    label: "Sum of Session Percentage - Browser",
+    value: "avg_browser_session_percentage",
+  },
+  {
+    label: "Sum of Page Views",
+    value: "total_page_views",
+  },
+  {
+    label: "Sum of Page Views - Mobile App",
+    value: "total_mobile_app_page_views",
+  },
+  {
+    label: "Sum of Page Views - Browser",
+    value: "total_browser_page_views",
+  },
+  {
+    label: "Sum of Page Views Percentage",
+    value: "avg_page_view_percentage",
+  },
+  {
+    label: "Sum of Page Views Percentage - Mobile App",
+    value: "avg_mobile_app_page_views_percentage",
+  },
+  {
+    label: "Sum of Page Views Percentage - Browser",
+    value: "avg_browser_page_views_percentage",
+  },
+  {
+    label: "Sum of Buy Box Percentage",
+    value: "avg_buy_box_percentage",
+  },
+  {
+    label: "Sum of Units Ordered",
+    value: "total_ordered_units",
+  },
+  {
+    label: "Sum of Unit Session Percentage",
+    value: "avg_unit_session_percentage",
+  },
+];
+
 export default function SalesByProducts() {
   const { token } = useToken();
   const dispatch = useDispatch();
@@ -46,53 +117,6 @@ export default function SalesByProducts() {
     week: _.range(1, defaultWeek()),
     year: defaultYear(),
   });
-
-  const columnsList = [
-    {
-      label: "Sum of Ordered Product Sales",
-      value: "total_ordered_product_sales",
-    },
-    { label: "Sum of Total Order Items", value: "total_order_items" },
-    { label: "Sum of Sessions", value: "total_session" },
-    { label: "Sum of Sessions - Mobile App", value: "mobile_app_sessions" },
-    { label: "Sum of Sessions - Browser", value: "browser_sessions" },
-    { label: "Sum of Session Percentage", value: "avg_session_percentage" },
-    {
-      label: "Sum of Session Percentage - Mobile App",
-      value: "avg_mobile_app_session_percentage",
-    },
-    {
-      label: "Sum of Session Percentage - Browser",
-      value: "avg_browser_session_percentage",
-    },
-    { label: "Sum of Page Views", value: "total_page_views" },
-    {
-      label: "Sum of Page Views - Mobile App",
-      value: "total_mobile_app_page_views",
-    },
-    { label: "Sum of Page Views - Browser", value: "total_browser_page_views" },
-    {
-      label: "Sum of Page Views Percentage",
-      value: "avg_page_view_percentage",
-    },
-    {
-      label: "Sum of Page Views Percentage - Mobile App",
-      value: "avg_mobile_app_page_views_percentage",
-    },
-    {
-      label: "Sum of Page Views Percentage - Browser",
-      value: "avg_browser_page_views_percentage",
-    },
-    {
-      label: "Sum of Buy Box Percentage",
-      value: "avg_buy_box_percentage",
-    },
-    { label: "Sum of Units Ordered", value: "total_ordered_units" },
-    {
-      label: "Sum of Unit Session Percentage",
-      value: "avg_unit_session_percentage",
-    },
-  ];
 
   useEffect(() => {
     setColumnConfig(columnsList);
@@ -149,19 +173,20 @@ export default function SalesByProducts() {
       setList(data);
 
       setTableLoading(false);
-    } else if (salesByProductList?.status === false) {
-      setTableLoading(false);
     }
   }, [salesByProductList]);
 
   const formatter = (field, value) => {
-    if (field === "total_ordered_product_sales") {
-      return currencyFormat(value);
-    }
-    if (field.startsWith("avg")) {
-      return percentageFormat(value);
-    }
-
+    if (field === "total_ordered_product_sales") return currencyFormat(value);
+    if (field.startsWith("avg")) return percentageFormat(value);
+    if (field === "total_order_items") return numberFormat(value);
+    if (field === "total_session") return numberFormat(value);
+    if (field === "mobile_app_sessions") return numberFormat(value);
+    if (field === "browser_sessions") return numberFormat(value);
+    if (field === "total_page_views") return numberFormat(value);
+    if (field === "total_mobile_app_page_views") return numberFormat(value);
+    if (field === "total_browser_page_views") return numberFormat(value);
+    if (field === "total_ordered_units") return numberFormat(value);
     return numberFormat(value);
   };
 

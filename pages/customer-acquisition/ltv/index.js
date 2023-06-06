@@ -43,7 +43,7 @@ export default function SalesByMonth() {
   }, [year, month]);
 
   useEffect(() => {
-    if (!_.isEmpty(CustomerAcquisitionLTVRes)) {
+    if (CustomerAcquisitionLTVRes.status) {
       setList(CustomerAcquisitionLTVRes.data || []);
       setLoading(false);
     } else if (CustomerAcquisitionLTVRes?.status === false) {

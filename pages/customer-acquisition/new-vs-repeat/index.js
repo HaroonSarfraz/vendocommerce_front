@@ -51,7 +51,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
   }, [filter]);
 
   useEffect(() => {
-    if (!_.isEmpty(CustomerAcquisitionRes)) {
+    if (CustomerAcquisitionRes.status) {
       setList(CustomerAcquisitionRes.data || []);
       setLoading(false);
     } else if (CustomerAcquisitionRes?.status === false) {

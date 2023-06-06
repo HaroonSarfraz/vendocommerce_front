@@ -86,7 +86,11 @@ export default function TotalRevenueAcos() {
       align: "center",
       sorter: (a, b) => a.spendChange - b.spendChange,
       render: (text) => {
-        return <span>{percentageFormat(text?.spendChange)}</span>;
+        return (
+          <span style={{ color: text.spendChange < 0 ? "red" : "green" }}>
+            {percentageFormat(text?.spendChange)}
+          </span>
+        );
       },
     },
     {
@@ -104,7 +108,11 @@ export default function TotalRevenueAcos() {
       align: "center",
       sorter: (a, b) => a.adChange - b.adChange,
       render: (text) => {
-        return <span>{percentageFormat(text?.adChange)}</span>;
+        return (
+          <span style={{ color: text.adChange < 0 ? "red" : "green" }}>
+            {percentageFormat(text?.adChange)}
+          </span>
+        );
       },
     },
     {
@@ -122,7 +130,13 @@ export default function TotalRevenueAcos() {
       align: "center",
       sorter: (a, b) => a.organicSalesChange - b.organicSalesChange,
       render: (text) => {
-        return <span>{percentageFormat(text?.organicSalesChange)}</span>;
+        return (
+          <span
+            style={{ color: text.organicSalesChange < 0 ? "red" : "green" }}
+          >
+            {percentageFormat(text?.organicSalesChange)}
+          </span>
+        );
       },
     },
     {
@@ -140,7 +154,11 @@ export default function TotalRevenueAcos() {
       align: "center",
       sorter: (a, b) => a.ACoS_percentage - b.ACoS_percentage,
       render: (text) => {
-        return <span>{percentageFormat(text?.ACoS_percentage)}</span>;
+        return (
+          <span style={{ color: text.ACoS_percentage < 0 ? "red" : "green" }}>
+            {percentageFormat(text?.ACoS_percentage)}
+          </span>
+        );
       },
     },
     {
