@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { fetchProductReportList } from "../api/productReport.api";
 import { setProductReportList } from "../store/slice/productReport.slice";
+import initialState from "../store/initialState";
 
 export const getProductReportList = (data) => {
   return (dispatch) => {
@@ -9,9 +10,20 @@ export const getProductReportList = (data) => {
     fetchProductReportList(data)
       .then((res) => {
         if (res.status === 200) {
-          dispatch(setProductReportList(res.data));
+          dispatch(
+            setProductReportList({
+              status: true,
+              data: res.data,
+            })
+          );
         } else {
           message.error(res.data.message);
+          dispatch(
+            setProductReportList({
+              ...initialState.productReportList,
+              status: false,
+            })
+          );
         }
       })
       .catch((err) => {

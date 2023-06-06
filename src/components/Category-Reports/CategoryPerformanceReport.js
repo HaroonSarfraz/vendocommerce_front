@@ -56,6 +56,8 @@ export default function CategoryPerformanceReport() {
     if (CategoryPerformanceListRes.status) {
       setList(CategoryPerformanceListRes.categories);
       setTableLoading(false);
+    } else if (CategoryPerformanceListRes.status === false) {
+      setTableLoading(false);
     }
   }, [CategoryPerformanceListRes]);
 

@@ -134,6 +134,7 @@ export default function SalesByWeek() {
   useEffect(() => {
     if (SalesWeekGraphRes?.status === true) {
       const series_ = [];
+      console.log(SalesWeekGraphRes);
       let labels_ = [];
       if (SalesWeekGraphRes?.data?.length !== 0) {
         labels_ = SalesWeekGraphRes?.data?.map((d) => d?.label);
@@ -228,8 +229,8 @@ export default function SalesByWeek() {
     },
     yaxis: {
       labels: {
-        formatter: (value) => {
-          return value.toFixed(0);
+        formatter: (value, amy) => {
+          return numberFormat(value);
         },
       },
     },
@@ -267,7 +268,6 @@ export default function SalesByWeek() {
       strokeDashArray: 4,
     },
   };
-
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">

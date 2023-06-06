@@ -7,7 +7,6 @@ export const CategoryPerformanceSlice = createSlice({
   reducers: {
     setCategoryPerformanceList: (state, action) => {
       state.categoryPerformanceList = action.payload;
-      state.categoryPerformanceList.status = true;
     },
   },
 });

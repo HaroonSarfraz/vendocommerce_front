@@ -27,9 +27,9 @@ export default function SalesByMonth() {
 
   const { year, month } = filter;
 
+
   useEffect(() => {
     let time = setTimeout(() => {
-      setLoading(true);
       dispatch(
         getCustomerAcquisitionLTV({
           search_year: year,

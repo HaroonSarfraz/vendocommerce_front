@@ -21,7 +21,7 @@ export default function TotalRevenueAcos() {
 
   const advertisements = useSelector(selectAdvertisingTotalRevenue);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tableConfigOpen, setTableConfigOpen] = useState(false);
   const [graphConfigOpen, setGraphConfigOpen] = useState(false);
   const [columnsList, setColumnsList] = useState([]);
@@ -34,7 +34,6 @@ export default function TotalRevenueAcos() {
   });
 
   const [advertisementsData, setAdvertisementsData] = useState([]);
-
   useEffect(() => {
     if (advertisements?.status === true) {
       setAdvertisementsData(advertisements?.data || []);
@@ -46,7 +45,6 @@ export default function TotalRevenueAcos() {
   }, [advertisements]);
 
   useEffect(() => {
-    setLoading(true);
     const time = setTimeout(() => {
       dispatch(
         getAdvertising({

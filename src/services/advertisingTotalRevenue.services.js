@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { fetchAdvertisingTotalRevenue } from "../api/advertisingTotalRevenue.api";
 import { setAdvertisingTotalRevenue } from "../store/slice/advertisingTotalRevenue.slice";
+import initialState from "../store/initialState";
 
 export const getAdvertising = (data) => {
   return (dispatch) => {
@@ -14,6 +15,12 @@ export const getAdvertising = (data) => {
             })
           );
         } else {
+          dispatch(
+            setAdvertisingTotalRevenue({
+              ...initialState.advertisingTotalRevenue.list,
+              status: false,
+            })
+          );
           message.error(res.data.message);
         }
       })

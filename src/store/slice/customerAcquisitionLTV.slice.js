@@ -6,8 +6,8 @@ export const CustomerAcquisitionSliceLTV = createSlice({
   name: "customerAcquisitionLTV",
   reducers: {
     setCustomerAcquisitionLTV: (state, action) => {
-      state.data = action.payload;
-      state.status = true;
+      state = { ...state, ...action.payload };
+      return state;
     },
   },
 });

@@ -89,9 +89,12 @@ export default function ProductReportPage() {
     if (ProductReportListRes.status) {
       setList(ProductReportListRes.data);
       setTableLoading(false);
+    } else if (ProductReportListRes.status === false) {
+      setTableLoading(false);
     }
   }, [ProductReportListRes]);
 
+  console.log(ProductReportListRes);
   const findWeeksCount = useMemo(
     () =>
       _.uniqBy(

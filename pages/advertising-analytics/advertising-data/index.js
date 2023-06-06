@@ -111,6 +111,7 @@ export default function AdvertisingData() {
                 loading={graphsLoading}
                 chartData={advertisementsData}
                 formatter={currencyFormat}
+                yaxisFormatter={currencyFormat}
                 columns={[{ name: "Total Revenue", data: "revenue" }]}
               />
             </div>
@@ -120,6 +121,7 @@ export default function AdvertisingData() {
                 loading={graphsLoading}
                 chartData={advertisementsData}
                 formatter={currencyFormat}
+                yaxisFormatter={currencyFormat}
                 columns={[{ name: "Spends", data: "spend" }]}
               />
             </div>
@@ -129,6 +131,7 @@ export default function AdvertisingData() {
                 loading={graphsLoading}
                 chartData={advertisementsData}
                 formatter={percentageFormat}
+                yaxisFormatter={percentageFormat}
                 columns={[{ name: "ACoS", data: "ACoS_percentage" }]}
               />
             </div>
@@ -138,6 +141,7 @@ export default function AdvertisingData() {
                 loading={graphsLoading}
                 chartData={advertisementsData}
                 formatter={currencyFormat}
+                yaxisFormatter={currencyFormat}
                 columns={[{ name: "CPO", data: "CPO" }]}
               />
             </div>
@@ -147,6 +151,7 @@ export default function AdvertisingData() {
                 loading={graphsLoading}
                 chartData={advertisementsData}
                 formatter={numberFormat}
+                yaxisFormatter={numberFormat}
                 columns={[
                   {
                     name: "Total Sales",

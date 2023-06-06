@@ -118,6 +118,8 @@ export default function SalesByProducts() {
     year: defaultYear(),
   });
 
+  console.log(salesByProductList, tableLoading);
+
   useEffect(() => {
     setColumnConfig(columnsList);
     setSelectedColumn(columnsList[1].value);
@@ -130,7 +132,6 @@ export default function SalesByProducts() {
     const time = setTimeout(() => {
       const { year, week } = filter;
       if (week.length > 0) {
-        setTableLoading(true);
         dispatch(
           getSalesByProductList({
             search_year: year,
@@ -177,6 +178,8 @@ export default function SalesByProducts() {
 
       setList(data);
 
+      setTableLoading(false);
+    } else if (salesByProductList?.status === false) {
       setTableLoading(false);
     }
   }, [salesByProductList]);
