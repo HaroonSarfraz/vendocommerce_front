@@ -46,7 +46,7 @@ export const getSalesByMonthGraph = (data) => {
   return (dispatch) => {
     fetchSalesByMonthGraph(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status == 200 && res.data) {
           dispatch(setSalesByMonthGraph({status: true, data: res.data}));
         } else {
           message.error(res.data.message);

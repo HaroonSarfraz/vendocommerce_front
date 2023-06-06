@@ -14,7 +14,8 @@ export default function SalesBySkuTable({ loading, list }) {
   const columns = [
     {
       title: "Row Labels",
-      width: 500,
+      width: 320,
+      fixed: "left",
       align: "left",
       sorter: (a, b) => a.title.localeCompare(b.title),
       render: (text) => {
@@ -34,9 +35,9 @@ export default function SalesBySkuTable({ loading, list }) {
               />
             </div>
             <div className="d-flex justify-content-start flex-column">
-              <span className="text-dark fw-boldest  fs-6 one mb-1">
+              <span className="text-dark fw-boldest fs-6 one mb-1">
                 <Tooltip row={2} rule title={text?.title}>
-                  {text?.title || ""}
+                  {text?.title?.substring(0, 50) || ""}
                 </Tooltip>
               </span>
               <span className="text-muted font-weight-bold  fs-12 d-flex mt-1">
