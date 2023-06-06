@@ -89,24 +89,20 @@ export default function TopBarFilter(filter, setFilter, type) {
                   defaultValue="All"
                   placeholder="Category"
                   size="large"
-                  style={{ width: 200 }}
-                  value={filter?.["category"] || null}
+                  style={{ width: 300 }}
+                  value={filter?.["category"]}
                   onChange={(e) => {
                     setFilter({
                       ...filter,
                       ["category"]: e,
                     });
                   }}
-                  options={[
-                    {
-                      value: null,
-                      label: "All",
-                    },
-                    ...(CategoryListRes?.data?.map((item) => ({
-                      value: item.id,
+                  options={
+                    CategoryListRes?.data?.map((item) => ({
+                      value: item.name,
                       label: item.name,
-                    })) || []),
-                  ]}
+                    })) || []
+                  }
                 />
               </div>
             </div>

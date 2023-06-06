@@ -127,7 +127,11 @@ export default function SalesByWeek(loading, chartData) {
                   yaxis: {
                     labels: {
                       formatter: (value) => {
-                        return value.toFixed(0);
+                        const formatBy = options.find(
+                          (fid) => fid.value === graphSelected
+                        )?.formatter;
+                        console.log();
+                        return formatBy?.(value) || value;
                       },
                     },
                   },
@@ -158,13 +162,27 @@ export default function SalesByWeek(loading, chartData) {
               <>
                 {chart}
                 <Drawer
-                  title="Sales By Week Chart"
+                  title={"Sales By Week Chart"}
                   placement="top"
                   onClose={() => setOpen(false)}
                   open={open}
                   forceRender
                   height={"100vh"}
                 >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      marginBottom: 16,
+                    }}
+                  >
+                    <Select
+                      defaultValue="Sales by week"
+                      style={{ width: 200 }}
+                      onChange={(e) => setGraphSelected(e)}
+                      options={options}
+                    />
+                  </div>
                   {cloneElement(chart, {
                     height: (window.outerWidth / window.outerHeight) * 300,
                   })}

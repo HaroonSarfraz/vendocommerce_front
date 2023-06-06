@@ -54,10 +54,15 @@ export default function SalesBySku() {
   };
 
   useEffect(() => {
-    if (dateFilter && dateFilter?.length === 2) {
-      setLoading(true);
-      getList();
-    }
+    const time = setTimeout(() => {
+      if (dateFilter && dateFilter?.length === 2) {
+        setLoading(true);
+        getList();
+      }
+    }, 1000);
+    return () => {
+      clearTimeout(time);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateFilter]);
 

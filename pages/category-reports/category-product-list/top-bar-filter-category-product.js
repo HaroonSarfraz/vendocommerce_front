@@ -15,6 +15,7 @@ export default function TopBarFilter(filter, setFilter) {
                 <Select
                   defaultValue="All"
                   placeholder="Category"
+                  mode="multiple"
                   size="large"
                   style={{ width: 200 }}
                   value={filter?.["search[category]"] || null}
@@ -24,16 +25,12 @@ export default function TopBarFilter(filter, setFilter) {
                       ["search[category]"]: e,
                     });
                   }}
-                  options={[
-                    {
-                      value: "",
-                      label: "All",
-                    },
-                    ...(CategoryListRes?.data?.map((item) => ({
-                      value: item.id,
+                  options={
+                    CategoryListRes?.data?.map((item) => ({
+                      value: item.name,
                       label: item.name,
-                    })) || []),
-                  ]}
+                    })) || []
+                  }
                 />
               </div>
               <div className="position-relative">

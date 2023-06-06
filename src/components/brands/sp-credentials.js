@@ -33,6 +33,7 @@ export default function SPCredentials({ brand }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
+  const [uspRegion, setUspRegion] = useState(null);
 
   const amazonSpApiCredentialsList = useSelector(
     selectAmazonSpApiCredentialsList
@@ -59,15 +60,20 @@ export default function SPCredentials({ brand }) {
   }, [amazonSpApiCredentialsList]);
 
   const loginWithAmazon = (values) => {
-    const email = brand.email || JSON.parse(localStorage.getItem("user")).email;
-    const url = `https://sellercentral.amazon.com/apps/authorize/consent?application_id=${process.env.NEXT_PUBLIC_APPLICATION_ID}&version=beta&state=${email}!!${values.seller_account_name}!!${values.usp_region}!!${values.marketplace}`;
-    window.open(url, "_blank", "noreferrer");
+    console.log(values);
+    // const email = brand.email || JSON.parse(localStorage.getItem("user")).email;
+    // const url = `https://sellercentral.amazon.com/apps/authorize/consent?application_id=${process.env.NEXT_PUBLIC_APPLICATION_ID}&version=beta&state=${email}!!${values.seller_account_name}!!${values.usp_region}!!${values.marketplace}`;
+    // window.open(url, "_blank", "noreferrer");
   };
 
-  const regionOptions = [{ label: "us-east-1", value: "us-east-1" }];
+  const regionOptions = [
+    { label: "us-east-1", value: "us-east-1" },
+    { label: "us-west-2", value: "us-west-2" },
+    { label: "eu-west-1", value: "eu-west-1" },
+  ];
 
   const marketplaceOptions = [
-    {
+    uspRegion === "us-east-1" && {
       label: "North America Region",
       options: [
         { label: "Brazil", value: "A2Q3Y263D00KWC" },
@@ -76,32 +82,37 @@ export default function SPCredentials({ brand }) {
         { label: "USA", value: "ATVPDKIKX0DER" },
       ],
     },
-    {
+    uspRegion === "eu-west-1" && {
       label: "Europe Region",
       options: [
-        { label: "United Arab Emirates (U.A.E.)", value: "A2VIGQ35RCS4UG" },
-        { label: "Germany", value: "A1PA6795UKMFR9" },
         { label: "Spain", value: "A1RKKUPIHCS9HS" },
-        { label: "France", value: "A13V1IB3VIYZZH" },
         { label: "UK", value: "A1F83G8C2ARO7P" },
-        { label: "India", value: "A21TJRUUN4KGV" },
-        { label: "Italy", value: "APJ6JRA9NG5V4" },
+        { label: "France", value: "A13V1IB3VIYZZH" },
         { label: "Netherlands", value: "A1805IZSGTT6HS" },
+        { label: "Germany", value: "A1PA6795UKMFR9" },
+        { label: "Italy", value: "APJ6JRA9NG5V4" },
         { label: "Saudi Arabia", value: "A17E79C6D8DWNP" },
         { label: "Turkey", value: "A33AVAJ2PDY3EV" },
+        { label: "United Arab Emirates (U.A.E.)", value: "A2VIGQ35RCS4UG" },
+        { label: "India", value: "A21TJRUUN4KGV" },
+        // { label: "Poland", value: "" },
+        // { label: "Sweden", value: "" },
+        //
       ],
     },
-    {
+    uspRegion === "us-west-2" && {
       label: "Far East Region",
-      options: [{ label: "Singapore", value: "A19VAU5U5O7RUS" }],
-      options: [{ label: "Australia", value: "A39IBJ37TRP1C6" }],
-      options: [{ label: "Japan", value: "A1VC38T7YXB528" }],
+      options: [
+        { label: "Singapore", value: "A19VAU5U5O7RUS" },
+        { label: "Australia", value: "A39IBJ37TRP1C6" },
+        { label: "Japan", value: "A1VC38T7YXB528" },
+      ],
     },
-    {
+    uspRegion === "us-west-2" && {
       label: "China Region",
       options: [{ label: "China", value: "AAHKV2X7AFYLW" }],
     },
-  ];
+  ].filter(Boolean);
 
   const deleteAmazonSpApiCredentials = (id) => {
     deleteAmazonSpApiCredentialsRequest(brand.id, id)
@@ -283,6 +294,9 @@ export default function SPCredentials({ brand }) {
                         style={{
                           width: "100%",
                         }}
+                        name="usp_region"
+                        value={uspRegion}
+                        onChange={setUspRegion}
                         size="large"
                         placeholder="Select Region"
                         options={regionOptions}
@@ -305,8 +319,16 @@ export default function SPCredentials({ brand }) {
                         },
                       ]}
                       hasFeedback
+                      help={
+                        !uspRegion && (
+                          <div style={{ marginBottom: 12 }}>
+                            Select your <b>Region</b> first
+                          </div>
+                        )
+                      }
                     >
                       <Select
+                        disabled={!uspRegion}
                         style={{
                           width: "100%",
                         }}

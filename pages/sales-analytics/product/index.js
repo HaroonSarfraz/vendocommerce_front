@@ -127,19 +127,24 @@ export default function SalesByProducts() {
   }, []);
 
   useEffect(() => {
-    const { year, week } = filter;
-    if (week.length > 0) {
-      setTableLoading(true);
-      dispatch(
-        getSalesByProductList({
-          search_year: year,
-          search_week: week?.join(","),
-        })
-      );
-    } else {
-      dispatch(setSalesByProductList({ status: true, data: [] }));
-      message.warning("Please select at least one week");
-    }
+    const time = setTimeout(() => {
+      const { year, week } = filter;
+      if (week.length > 0) {
+        setTableLoading(true);
+        dispatch(
+          getSalesByProductList({
+            search_year: year,
+            search_week: week?.join(","),
+          })
+        );
+      } else {
+        dispatch(setSalesByProductList({ status: true, data: [] }));
+        message.warning("Please select at least one week");
+      }
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 

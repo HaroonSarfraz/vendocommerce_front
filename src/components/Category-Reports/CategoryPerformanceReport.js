@@ -28,7 +28,7 @@ export default function CategoryPerformanceReport() {
   const [filter, setFilter] = useState({
     week: _.range(1, defaultWeek() + 1),
     year: defaultYear(),
-    category: null,
+    category: [],
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function CategoryPerformanceReport() {
         getCategoryPerformanceList({
           search_year: year,
           search_week: week?.join(","),
-          category,
+          category: category.join(","),
         })
       );
     }, 600);
@@ -232,19 +232,22 @@ export default function CategoryPerformanceReport() {
                     >
                       {({}) => {
                         return (
-                          <Table
-                            pagination={false}
-                            columns={totalColumn}
-                            dataSource={weeklyTotal}
-                            loading={tableLoading}
-                            scroll={{
-                              x:
-                                totalColumn
-                                  ?.map((d) => d.width)
-                                  .reduce((a, b) => a + b, 0) + 300,
-                            }}
-                            size={"small"}
-                          />
+                          <>
+                            {TopBarFilter(filter, setFilter, "Week")}
+                            <Table
+                              pagination={false}
+                              columns={totalColumn}
+                              dataSource={weeklyTotal}
+                              loading={tableLoading}
+                              scroll={{
+                                x:
+                                  totalColumn
+                                    ?.map((d) => d.width)
+                                    .reduce((a, b) => a + b, 0) + 300,
+                              }}
+                              size={"small"}
+                            />
+                          </>
                         );
                       }}
                     </CustomDrawer>

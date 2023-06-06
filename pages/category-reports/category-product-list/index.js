@@ -36,7 +36,7 @@ export default function CategoryProductList() {
     limit: 20,
     order: "desc",
     orderBy: undefined,
-    "search[category]": "",
+    "search[category]": [],
     "search[asin]": "",
     "search[sku]": undefined,
     "search[product_title]": undefined,

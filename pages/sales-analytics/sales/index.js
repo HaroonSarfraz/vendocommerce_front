@@ -73,25 +73,29 @@ export default function Sales() {
     setSalesGraphLoading(true);
     setReportCallOutLoading(true);
     setSalesByWeekLoading(true);
-
-    dispatch(
-      getSalesGraphData({
-        search_year: filter?.year,
-        search_week: filter?.week?.join(","),
-      })
-    );
-    dispatch(
-      getSalesReportCallOuts({
-        search_year: filter?.year,
-        search_week: filter?.week?.join(","),
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getSalesGraphData({
+          search_year: filter?.year,
+          search_week: filter?.week?.join(","),
+        })
+      );
+      dispatch(
+        getSalesReportCallOuts({
+          search_year: filter?.year,
+          search_week: filter?.week?.join(","),
+        })
+      );
+    }, 600);
     // dispatch(
     //   getSalesByWeekData({
     //     search_year: filter?.year,
     //     search_week: filter?.week?.join(","),
     //   })
     // );
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   return (

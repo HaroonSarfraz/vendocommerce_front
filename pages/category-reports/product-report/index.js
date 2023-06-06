@@ -60,7 +60,7 @@ export default function ProductReportPage() {
     week: _.range(1, defaultWeek() + 1),
     year: defaultYear(),
     asin: "",
-    category: "",
+    category: [],
   });
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function ProductReportPage() {
           search_year: year,
           search_week: week?.join(","),
           asin,
-          category,
+          category: category.join(","),
         })
       );
     }, 600);

@@ -106,38 +106,48 @@ export default function SalesByMonth() {
     setSalesByMonthDetailLoading(true);
     setGraphSelected([]);
 
-    dispatch(
-      getSalesByMonthData({
-        search_year: year,
-        search_month: month?.join(","),
-      })
-    );
-    dispatch(
-      getSalesByMonthDetail({
-        search_year: year,
-        search_month: month?.join(","),
-      })
-    );
-    dispatch(
-      getSalesByMonthGraph({
-        search_year: year,
-        search_month: month?.join(","),
-        graph_filter_type: graphFilter,
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getSalesByMonthData({
+          search_year: year,
+          search_month: month?.join(","),
+        })
+      );
+      dispatch(
+        getSalesByMonthDetail({
+          search_year: year,
+          search_month: month?.join(","),
+        })
+      );
+      dispatch(
+        getSalesByMonthGraph({
+          search_year: year,
+          search_month: month?.join(","),
+          graph_filter_type: graphFilter,
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [filter]);
 
   useEffect(() => {
     setSalesByMonthGraphLoading(true);
     setGraphSelected([]);
 
-    dispatch(
-      getSalesByMonthGraph({
-        search_year: filter?.year,
-        search_month: filter?.month?.join(","),
-        graph_filter_type: graphFilter,
-      })
-    );
+    const time = setTimeout(() => {
+      dispatch(
+        getSalesByMonthGraph({
+          search_year: filter?.year,
+          search_month: filter?.month?.join(","),
+          graph_filter_type: graphFilter,
+        })
+      );
+    }, 600);
+    return () => {
+      clearTimeout(time);
+    };
   }, [graphFilter]);
 
   useEffect(() => {
