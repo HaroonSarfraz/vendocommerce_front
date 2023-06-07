@@ -128,10 +128,10 @@ export default function LSales(reportData, loading) {
                     <td>{currencyFormat(reportData?.totalSalesLastWeek)}</td>
                     <td>{currencyFormat(reportData?.totalSalesL4wk)}</td>
                     <td className={coloredTextClass(reportData?.totalSalesL4wkDiff)}>
-                      {percentageFormat(reportData?.totalSalesL4wkDiff)}
+                      {currencyFormat(reportData?.totalSalesL4wkDiff)}
                     </td>
                     <td className={coloredTextClass(reportData?.totalSalesL4wkChange)}>
-                      {currencyFormat(reportData?.totalSalesL4wkChange)}
+                      {percentageFormat(reportData?.totalSalesL4wkChange)}
                     </td>
                     <td>{numberFormat(reportData?.unitsLw)}</td>
                     <td className={coloredTextClass(reportData?.UnitsDiff)}>
