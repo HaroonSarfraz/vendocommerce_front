@@ -60,10 +60,9 @@ export default function SPCredentials({ brand }) {
   }, [amazonSpApiCredentialsList]);
 
   const loginWithAmazon = (values) => {
-    console.log(values);
-    // const email = brand.email || JSON.parse(localStorage.getItem("user")).email;
-    // const url = `https://sellercentral.amazon.com/apps/authorize/consent?application_id=${process.env.NEXT_PUBLIC_APPLICATION_ID}&version=beta&state=${email}!!${values.seller_account_name}!!${values.usp_region}!!${values.marketplace}`;
-    // window.open(url, "_blank", "noreferrer");
+    const email = brand.email || JSON.parse(localStorage.getItem("user")).email;
+    const url = `https://sellercentral.amazon.com/apps/authorize/consent?application_id=${process.env.NEXT_PUBLIC_APPLICATION_ID}&version=beta&state=${brand.id}!!${values.seller_account_name}!!${values.usp_region}!!${values.marketplace}`;
+    window.open(url, "_blank", "noreferrer");
   };
 
   const regionOptions = [
