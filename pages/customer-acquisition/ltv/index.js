@@ -19,14 +19,13 @@ export default function SalesByMonth() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: [defaultMonth() - 1],
+    month: _.range(0, defaultMonth()),
     year: defaultYear(),
   });
 
   const CustomerAcquisitionLTVRes = useSelector(selectCustomerAcquisitionLTV);
 
   const { year, month } = filter;
-
 
   useEffect(() => {
     let time = setTimeout(() => {
@@ -98,8 +97,8 @@ export default function SalesByMonth() {
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
           {TopBarFilter(filter, setFilter, "Month", {
-            month: !true,
-            year: true,
+            month: false,
+            year: false,
           })}
 
           <div className="col-lg-12">
