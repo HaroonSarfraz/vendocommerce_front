@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const clientID = process.env.NEXT_PUBLIC_ADVERTISING_CLIENT_ID;
-const returnURL = process.env.NEXT_PUBLIC_ADVERTISING_RETURN_URL;
 const { confirm } = Modal;
 
 export default function AdvertisingCredentials({ brand }) {
@@ -59,7 +58,10 @@ export default function AdvertisingCredentials({ brand }) {
       var options = {};
       options.scope = "advertising::campaign_management";
       options.response_type = "code";
-      amazon.Login.authorize(options, `${returnURL}?state=${brand.id}`);
+      amazon.Login.authorize(
+        options,
+        `${window.location.origin}/api/callbacks/advertising-auth?state=${brand.id}`
+      );
       return false;
     };
   }, []);
@@ -69,7 +71,9 @@ export default function AdvertisingCredentials({ brand }) {
       .then((res) => {
         if (res.status === 200) {
           dispatch(getAmazonAdvertisingCredentialsList(brand.id));
-          message.success("Amazon Advertising Credentials has been deleted successfully");
+          message.success(
+            "Amazon Advertising Credentials has been deleted successfully"
+          );
         } else {
           message.error("Unable to delete Amazon Advertising Credentials");
         }
