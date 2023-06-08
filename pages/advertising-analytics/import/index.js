@@ -23,18 +23,27 @@ export default function Import() {
 
   const onFinish = (values) => {
     setSubmit(true);
+    const formData = new FormData();
+    formData.append("file", values.file[0].originFileObj);
 
-    ImportAdvertising(values)
+    ImportAdvertising(formData)
       .then((res) => {
         setSubmit(false);
         if (res.status >= 200 && res.status <= 299) {
-          message.success("Advertising Import Completed");
-          router.push("/brands");
+          message.success(res.data.message);
         } else {
           message.error("Unable to Import");
         }
       })
-      .catch((err) => message.error(err));
+      .catch((err) => message.error("holla"));
+  };
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+
+    return e?.fileList;
   };
 
   return (
@@ -61,6 +70,8 @@ export default function Import() {
                           name="file"
                           label="Browse"
                           className="fw-bolder"
+                          valuePropName="fileList"
+                          getValueFromEvent={normFile}
                           rules={[
                             {
                               required: true,
@@ -69,11 +80,7 @@ export default function Import() {
                           ]}
                           hasFeedback
                         >
-                          <Upload
-                            name="file"
-                            accept=".xlsx"
-                            beforeUpload={() => false}
-                          >
+                          <Upload name="file" accept=".xlsx" maxCount={1}>
                             <Button icon={<UploadOutlined />}>
                               Click to upload
                             </Button>
