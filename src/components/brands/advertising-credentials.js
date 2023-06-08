@@ -59,7 +59,7 @@ export default function AdvertisingCredentials({ brand }) {
       var options = {};
       options.scope = "advertising::campaign_management";
       options.response_type = "code";
-      amazon.Login.authorize(options, returnURL);
+      amazon.Login.authorize(options, `${returnURL}?state=${brand.id}`);
       return false;
     };
   }, []);
