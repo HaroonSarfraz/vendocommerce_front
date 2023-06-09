@@ -20,7 +20,7 @@ import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectUserList } from "@/src/store/slice/users.slice";
 import { selectBrandList } from "@/src/store/slice/brands.slice";
-import { NoDataSvg } from "@/src/assets";
+import NoData from "@/src/components/no-data";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const { confirm } = Modal;
@@ -383,7 +383,7 @@ export default function Users() {
                       />
                     </div>
                   ) : (
-                    <NoDataSvg />
+                    <NoData />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}
