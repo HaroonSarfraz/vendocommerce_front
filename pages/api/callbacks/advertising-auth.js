@@ -8,6 +8,6 @@ export default function handler(req, res) {
       }`
     );
 
-    res.status(200).json({ status: "success" });
+    res.redirect(307, `/brands/edit?brandId=${req.query.state}&activeTab=advertisingCredentials`)
   }
 }
