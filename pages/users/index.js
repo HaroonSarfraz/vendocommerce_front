@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getUserList } from "@/src/services/users.services";
+import { getBrandList } from "@/src/services/brands.services";
 import AccountsModal from "@/src/components/permissions/AccountsModal";
 import ModulesModal from "@/src/components/permissions/ModulesModal";
 import { updateUserRequest, deleteUserRequest } from "@/src/api/users.api";
@@ -18,7 +19,8 @@ import { Input, Modal, message } from "antd";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { selectUserList } from "@/src/store/slice/users.slice";
-import { NoDataSvg } from "@/src/assets";
+import { selectBrandList } from "@/src/store/slice/brands.slice";
+import NoData from "@/src/components/no-data";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 
 const { confirm } = Modal;
@@ -28,7 +30,8 @@ export default function Users() {
   const router = useRouter();
   const [accountsModal, setAccountsModal] = useState(false);
   const [modulesModal, setModulesModal] = useState(false);
-  const [clickedAccount, setClickedAccount] = useState("");
+  const [clickedAccount, setClickedAccount] = useState({});
+  const [loadingBrands, setLoadingBrands] = useState(true);
 
   const handleAccountsModal = () => {
     setAccountsModal(!accountsModal);
@@ -47,6 +50,7 @@ export default function Users() {
   const [pageSize, setPageSize] = useState(DefaultPerPage);
 
   const userList = useSelector(selectUserList);
+  const brandList = useSelector(selectBrandList);
 
   useEffect(() => {
     if (userList) {
@@ -57,6 +61,10 @@ export default function Users() {
       // fakeActionUser()
     }
   }, [userList]);
+
+  useEffect(() => {
+    dispatch(getBrandList({ perPage: 9999 }));
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -95,6 +103,16 @@ export default function Users() {
       getUserList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
+
+  useEffect(() => {
+    if (userList) {
+      setList(userList.items);
+      setLoading(false);
+      setTotalPage(userList.count);
+    } else if (userList?.status === false) {
+      // fakeActionUser()
+    }
+  }, [clickedAccount]);
 
   const changeUserStatus = (id, status) => {
     updateUserRequest(id, { user_status: status })
@@ -160,7 +178,7 @@ export default function Users() {
       },
     },
     {
-      title: "Accounts",
+      title: "Brands",
       width: 90,
       align: "center",
       render: (text) => {
@@ -168,8 +186,8 @@ export default function Users() {
           <span
             className="cursor-pointer"
             onClick={() => {
+              setClickedAccount({id: text.id, name: text.u_name});
               handleAccountsModal();
-              setClickedAccount(text.u_email);
             }}
           >
             View All
@@ -203,24 +221,24 @@ export default function Users() {
         );
       },
     },
-    {
-      title: "Modules",
-      width: 90,
-      align: "center",
-      render: (text) => {
-        return (
-          <span
-            className="cursor-pointer"
-            onClick={() => {
-              handleModulesModal();
-              setClickedAccount(text.u_email);
-            }}
-          >
-            View All
-          </span>
-        );
-      },
-    },
+    // {
+    //   title: "Modules",
+    //   width: 90,
+    //   align: "center",
+    //   render: (text) => {
+    //     return (
+    //       <span
+    //         className="cursor-pointer"
+    //         onClick={() => {
+    //           handleModulesModal();
+    //           setClickedAccount(text.u_email);
+    //         }}
+    //       >
+    //         View All
+    //       </span>
+    //     );
+    //   },
+    // },
     {
       title: "Created At",
       width: 150,
@@ -365,7 +383,7 @@ export default function Users() {
                       />
                     </div>
                   ) : (
-                    <NoDataSvg />
+                    <NoData />
                   )}
                   <Pagination
                     loading={loading || list?.length === 0}
@@ -385,12 +403,13 @@ export default function Users() {
         isOpen={accountsModal}
         account={clickedAccount}
         closeModal={handleAccountsModal}
+        brandList={brandList}
       />
-      <ModulesModal
+      {/* <ModulesModal
         isOpen={modulesModal}
         account={clickedAccount}
         closeModal={handleModulesModal}
-      />
+      /> */}
     </DashboardLayout>
   );
 }
