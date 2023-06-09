@@ -17,6 +17,8 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import EditCatagoryProductData from "@/src/components/EditCatagoryProductData";
 import { getCategoryList } from "@/src/services/categoryList.services";
 import { selectCategoryList } from "@/src/store/slice/categoryList.slice";
+import CustomModal from "@/src/components/modal";
+import UploadCategoryProductData from "@/src/components/Category-Reports/UploadCategoryProductData";
 
 export default function CategoryProductList() {
   const [tableLoading, setTableLoading] = useState(true);
@@ -185,11 +187,27 @@ export default function CategoryProductList() {
               <div className="card-body pt-2">
                 <div className="mb-5 d-flex flex-row justify-content-between">
                   <h1>Category Product List</h1>
-                  <Link href="/category-reports/manage-categories/create-category">
-                    <button className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3">
-                      + Create New
-                    </button>
-                  </Link>
+                  <div>
+                    <CustomModal
+                      title={"Upload Category Product Data"}
+                      width={600}
+                      opener={
+                        <button className="btn btn-light-danger btn-sm mx-3 fw-bolder">
+                          Import Data
+                        </button>
+                      }
+                      footer={null}
+                    >
+                      {({ handleOk }) => (
+                        <UploadCategoryProductData handleOk={handleOk} />
+                      )}
+                    </CustomModal>
+                    <Link href="/category-reports/manage-categories/create-category">
+                      <button className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3">
+                        + Create New
+                      </button>
+                    </Link>
+                  </div>
                 </div>
                 {tableLoading ? (
                   <Loading />
