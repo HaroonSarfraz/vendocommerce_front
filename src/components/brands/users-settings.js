@@ -27,7 +27,7 @@ const formItemLayout = {
 };
 const { confirm } = Modal;
 
-export default function UserSettings({ brand }) {
+export default function UserSettings({ brand, userRole }) {
   const dispatch = useDispatch();
   const [addUserForm] = Form.useForm();
   const userList = useSelector(selectUserList);
@@ -46,7 +46,7 @@ export default function UserSettings({ brand }) {
   );
 
   useEffect(() => {
-    dispatch(getUserList({ perPage: 9999 }));
+    userRole !== "User" && dispatch(getUserList({ perPage: 9999 }));
   }, []);
 
   const options = userList.items.map((user) => {
@@ -79,6 +79,11 @@ export default function UserSettings({ brand }) {
   };
 
   const deleteUser = (userID) => {
+    if(userRole == "User") {
+      message.warning("You are not allowed to perform this action!");
+      return;
+    }
+
     removeUserFromBrandRequest(brand.id, userID)
       .then((res) => {
         if (res.status === 200) {
@@ -170,6 +175,7 @@ export default function UserSettings({ brand }) {
                 layout="vertical"
                 form={addUserForm}
                 name="register"
+                disabled={ userRole == "User" }
                 onFinish={addUser}
               >
                 <div className="row">

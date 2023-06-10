@@ -86,7 +86,7 @@ export default function Header(props) {
               </p>
               {current?.name === "Dashboard" ? (
                 <small className="text-muted fs-6 fw-bold ms-1 pt-1">
-                  You’ve got 24 New Sales
+                  Waiting for approval...
                 </small>
               ) : (
                 <ul className="breadcrumb breadcrumb-separatorless fw-bolder fs-7 pt-1 mt-1">
