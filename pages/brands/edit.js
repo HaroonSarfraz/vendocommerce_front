@@ -21,7 +21,12 @@ export default function EditBrand() {
   const { brandId, activeTab } = router?.query ?? {};
   const { TabPane } = Tabs;
   const [brand, setBrand] = useState({});
+  const [userRole, setUserRole] = useState({});
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setUserRole(JSON.parse(localStorage.getItem("user"))?.role);
+  }, []);
 
   useEffect(() => {
     const localBrand = JSON.parse(localStorage.getItem("brand"))?.id;
@@ -135,7 +140,7 @@ export default function EditBrand() {
                   </div>
                 </div>
               ) : (
-                <tab.tabComponent brand={brand} />
+                <tab.tabComponent brand={brand} userRole={userRole} />
               )}
             </TabPane>
           ))}
