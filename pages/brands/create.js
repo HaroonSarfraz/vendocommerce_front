@@ -1,68 +1,7 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Input, message, Select } from "antd";
-import { getUserList } from "@/src/services/users.services";
-import { createBrandRequest } from "@/src/api/brands.api";
-import _ from "lodash";
-import { selectUserList } from "@/src/store/slice/users.slice";
-
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { UserLgSvg } from "@/src/assets";
-import { selectFilter } from "@/src/helpers/selectFilter";
 import General from "@/src/components/brands/general-settings";
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 16,
-    },
-    sm: {
-      span: 16,
-    },
-  },
-};
-
-export default function Users() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const [form] = Form.useForm();
-  const [submit, setSubmit] = useState(false);
-
-  const userList = useSelector(selectUserList);
-
-  useEffect(() => {
-    dispatch(getUserList({ perPage: 1000 }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const onFinish = (values) => {
-    setSubmit(true);
-
-    const data = {
-      name: values.name,
-      u_amazon_seller_name: values.brand_name,
-      users: {
-        connect: values.user_accounts.map((id) => ({ id: id })),
-      },
-    };
-
-    createBrandRequest(data)
-      .then((res) => {
-        setSubmit(false);
-        if (res.status >= 200 && res.status <= 299) {
-          message.success("Brand Created Successfully");
-          router.push("/brands");
-        } else {
-          message.error("unable to create user");
-        }
-      })
-      .catch((err) => message.error(err));
-  };
-
-  const options = userList.items.map((user) => {
-    return { label: user.u_name, value: user.id };
-  });
+export default function Brands() {
 
   return (
     <DashboardLayout>

@@ -186,7 +186,7 @@ export default function Users() {
           <span
             className="cursor-pointer"
             onClick={() => {
-              setClickedAccount({id: text.id, name: text.u_name});
+              setClickedAccount({ id: text.id, name: text.u_name });
               handleAccountsModal();
             }}
           >
@@ -301,10 +301,7 @@ export default function Users() {
 
         return (
           <div className="d-flex">
-            <Link
-              href={{ pathname: "/users/edit", query: text }}
-              as={`/users/edit`}
-            >
+            <Link href={`/users/edit?userId=${text.id}&activeTab=general`}>
               <FontAwesomeIcon
                 icon={faPenToSquare}
                 style={{ marginRight: "10px" }}

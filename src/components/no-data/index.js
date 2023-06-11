@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NoDataWrapper } from "./style";
-import { isClient } from "@/src/helpers/isClient";
 import { NoDataSvg } from "@/src/assets";
 
 const NoData = (props) => {
+  const [isClient, setIsClient] = useState(false);
+
   const {
     message,
     showNew = false,
@@ -13,18 +14,20 @@ const NoData = (props) => {
     height,
     ...rest
   } = props;
+
   const checkHeight = () => {
     return isClient ? window.innerHeight : 0;
   };
+
   useEffect(() => {
-    if (isClient) {
-      window.addEventListener("resize", (e) => {
-        checkHeight();
-      });
-      return () => {
-        window.removeEventListener("resize", () => {});
-      };
-    }
+    setIsClient(true);
+
+    window.addEventListener("resize", (e) => {
+      checkHeight();
+    });
+    return () => {
+      window.removeEventListener("resize", () => {});
+    };
   }, []);
 
   return (

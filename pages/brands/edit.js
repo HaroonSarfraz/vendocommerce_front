@@ -31,7 +31,7 @@ export default function EditBrand() {
   useEffect(() => {
     const localBrand = JSON.parse(localStorage.getItem("brand"))?.id;
 
-    if (brandId || localBrand) {
+    if (router.isReady && (brandId || localBrand)) {
       fetchBrand(brandId || localBrand)
         .then((res) => {
           if (res.status == 200 && res.data) {
