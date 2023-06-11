@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Form, Input, message, Select } from "antd";
 import { createBrandRequest, updateBrandRequest } from "@/src/api/brands.api";

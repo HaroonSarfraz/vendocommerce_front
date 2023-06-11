@@ -161,8 +161,7 @@ export default function Sidebar(props) {
             {!collapsed && (
               <div className="text-center">
                 <Link
-                  href={{ pathname: "/users/edit", query: user }}
-                  as={`/users/edit`}
+                  href={"/users/edit?activeTab=general"}
                   className="ml-2"
                 >
                   {isMount ? user?.u_name : "Loading.."}

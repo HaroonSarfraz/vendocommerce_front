@@ -17,7 +17,6 @@ export default function AccountsModal({
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
-    console.log(account.id);
     if (isOpen && account?.id) {
       fetchUserBrands(account.id)
         .then((res) => {
