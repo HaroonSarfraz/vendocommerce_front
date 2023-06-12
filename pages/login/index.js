@@ -29,9 +29,10 @@ export default function Login() {
       .then((res) => {
         setSending(false);
         if (res.status >= 200 && res.status <= 299 && isClient) {
-          localStorage.setItem("user", JSON.stringify(res.data));
-          var decoded = jwt_decode(res.data.access_token);
-          setCookie(cookies["TOKEN"], res.data.access_token, {
+          const user = res.data;
+          localStorage.setItem("user", JSON.stringify(user));
+          var decoded = jwt_decode(user.access_token);
+          setCookie(cookies["TOKEN"], user.access_token, {
             maxAge: decoded.exp,
           });
           const from = router.query.from;
@@ -42,11 +43,25 @@ export default function Login() {
               : fetchUserBrandList().then((res) => {
                   if (res.status >= 200 && res.status <= 299) {
                     if (res.data.brands.length > 0) {
-                      localStorage.setItem(
-                        "brand",
-                        JSON.stringify(res.data.brands[0].brand)
-                      );
-                      router.push(from || "/sales-analytics/sales");
+                      if (res.data.brands?.length === 1) {
+                        localStorage.setItem(
+                          "brand",
+                          JSON.stringify({
+                            ...res.data.brands[0].brand,
+                            role: res.data.brands[0].role,
+                          })
+                        );
+                        router.push("/sales-analytics/sales");
+                      } else {
+                        localStorage.setItem(
+                          "user",
+                          JSON.stringify({
+                            ...user,
+                            role: user.role === "Admin" ? "Admin" : "Manager",
+                          })
+                        );
+                        router.push("/brands");
+                      }
                     } else {
                       router.push("/dashboard");
                     }

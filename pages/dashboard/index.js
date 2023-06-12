@@ -26,11 +26,25 @@ export default function Dashboard() {
               res.status <= 299 &&
               res.data.brands?.length > 0
             ) {
-              localStorage.setItem(
-                "brand",
-                JSON.stringify(res.data.brands[0].brand)
-              );
-              router.push("/sales-analytics/sales");
+              if (res.data.brands?.length === 1) {
+                localStorage.setItem(
+                  "brand",
+                  JSON.stringify({
+                    ...res.data.brands[0].brand,
+                    role: res.data.brands[0].role,
+                  })
+                );
+                router.push("/sales-analytics/sales");
+              } else {
+                localStorage.setItem(
+                  "user",
+                  JSON.stringify({
+                    ...user,
+                    role: user.role === "Admin" ? "Admin" : "Manager",
+                  })
+                );
+                router.push("/brands");
+              }
             } else {
               setLoading(false);
             }
