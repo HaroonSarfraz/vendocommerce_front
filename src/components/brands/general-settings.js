@@ -67,7 +67,6 @@ export default function General({ brand, userRole }) {
                 layout="vertical"
                 form={editForm}
                 name="register"
-                disabled={userRole == "User"}
                 onFinish={onFinish}
               >
                 <div className="row">
