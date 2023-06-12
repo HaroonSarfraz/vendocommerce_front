@@ -144,13 +144,6 @@ export default function Signup() {
                       </div>
                     </div>
                     <Form.Item
-                      name="u_amazon_seller_name"
-                      label="Amazon Seller Name"
-                      hasFeedback
-                    >
-                      <Input size="large" autoComplete="off" />
-                    </Form.Item>
-                    <Form.Item
                       name="u_password"
                       label="Password"
                       rules={[

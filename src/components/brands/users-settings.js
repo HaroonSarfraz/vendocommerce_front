@@ -49,9 +49,11 @@ export default function UserSettings({ brand, userRole }) {
     userRole !== "User" && dispatch(getUserList({ perPage: 9999 }));
   }, []);
 
-  const options = userList.items.map((user) => {
-    return { label: user.u_name, value: user.id };
-  });
+  const options = userList.items
+    .map((user) => {
+      return { label: user.u_name, value: user.id };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const addUser = (values) => {
     setAddUserSubmit(true);
@@ -79,7 +81,7 @@ export default function UserSettings({ brand, userRole }) {
   };
 
   const deleteUser = (userID) => {
-    if(userRole == "User") {
+    if (userRole == "User") {
       message.warning("You are not allowed to perform this action!");
       return;
     }
@@ -175,7 +177,7 @@ export default function UserSettings({ brand, userRole }) {
                 layout="vertical"
                 form={addUserForm}
                 name="register"
-                disabled={ userRole == "User" }
+                disabled={userRole == "User"}
                 onFinish={addUser}
               >
                 <div className="row">
