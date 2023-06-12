@@ -46,7 +46,7 @@ export default function UserSettings({ brand, userRole }) {
   );
 
   useEffect(() => {
-    userRole !== "User" && dispatch(getUserList({ perPage: 9999 }));
+    userRole === "Admin" && dispatch(getUserList({ perPage: 9999 }));
   }, []);
 
   const options = userList.items
@@ -172,94 +172,96 @@ export default function UserSettings({ brand, userRole }) {
         <div className="col-lg-12">
           <div className="card mb-7">
             <div className="card-body">
-              <Form
-                {...formItemLayout}
-                layout="vertical"
-                form={addUserForm}
-                name="register"
-                disabled={userRole == "User"}
-                onFinish={addUser}
-              >
-                <div className="row">
-                  <div className="col-12 d-flex flex-row mb-5">
-                    <UsersGroupAddSvg />
-                    <h4 className="mx-5 mt-1">Users Access</h4>
-                  </div>
+              <div className="row">
+                <div className="col-12 d-flex flex-row mb-5">
+                  <UsersGroupAddSvg />
+                  <h4 className="mx-5 mt-1">Users Access</h4>
                 </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-12 col-sm-4 col-md-4 col-lg-6">
-                    <Form.Item
-                      name="user_id"
-                      label="Add New User"
-                      className="fw-bolder"
-                      rules={[
-                        {
-                          required: true,
-                          message: "User cannot be blank",
-                        },
-                      ]}
-                      hasFeedback
-                    >
-                      <Select
-                        style={{
-                          width: "100%",
-                        }}
-                        size="large"
-                        placeholder="Select User"
-                        options={options}
-                        filterOption={selectFilter}
-                        disabled={options.length === 0}
-                      />
-                    </Form.Item>
-                  </div>
-                  <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                    <Form.Item
-                      name="role"
-                      label="Role"
-                      className="fw-bolder"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Role cannot be blank",
-                        },
-                      ]}
-                      hasFeedback
-                    >
-                      <Select
-                        style={{
-                          width: "100%",
-                        }}
-                        size="large"
-                        placeholder="Select Role"
-                        options={roleOptions}
-                        filterOption={selectFilter}
-                      />
-                    </Form.Item>
-                  </div>
-                  <div className="col-12 col-sm-4 col-md-4 col-lg-4">
-                    <Form.Item className="d-flex">
-                      <Button
-                        htmlType="submit"
-                        disabled={addUserSubmit}
-                        className="btn btn-sm btn-primary"
+              {userRole === "Admin" && (
+                <Form
+                  {...formItemLayout}
+                  layout="vertical"
+                  form={addUserForm}
+                  name="register"
+                  disabled={userRole == "User"}
+                  onFinish={addUser}
+                >
+                  <div className="row">
+                    <div className="col-12 col-sm-4 col-md-4 col-lg-6">
+                      <Form.Item
+                        name="user_id"
+                        label="Add New User"
+                        className="fw-bolder"
+                        rules={[
+                          {
+                            required: true,
+                            message: "User cannot be blank",
+                          },
+                        ]}
+                        hasFeedback
                       >
-                        {addUserSubmit || options.length === 0 ? (
-                          <span>
-                            Please wait...
-                            <span className="spinner-border spinner-border-sm align-middle ms-2" />
-                          </span>
-                        ) : (
-                          <span className="indicator-label">Add User</span>
-                        )}
-                      </Button>
-                    </Form.Item>
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          size="large"
+                          placeholder="Select User"
+                          options={options}
+                          filterOption={selectFilter}
+                          disabled={options.length === 0}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                      <Form.Item
+                        name="role"
+                        label="Role"
+                        className="fw-bolder"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Role cannot be blank",
+                          },
+                        ]}
+                        hasFeedback
+                      >
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          size="large"
+                          placeholder="Select Role"
+                          options={roleOptions}
+                          filterOption={selectFilter}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+                      <Form.Item className="d-flex">
+                        <Button
+                          htmlType="submit"
+                          disabled={addUserSubmit}
+                          className="btn btn-sm btn-primary"
+                        >
+                          {addUserSubmit || options.length === 0 ? (
+                            <span>
+                              Please wait...
+                              <span className="spinner-border spinner-border-sm align-middle ms-2" />
+                            </span>
+                          ) : (
+                            <span className="indicator-label">Add User</span>
+                          )}
+                        </Button>
+                      </Form.Item>
+                    </div>
                   </div>
-                </div>
-              </Form>
+                </Form>
+              )}
               <div className="mt-6">
                 <ASINTable
-                  columns={columns}
+                  columns={columns.filter((c) => userRole === "Admin" || c.title !== "Action" )}
                   dataSource={users}
                   ellipsis
                   rowKey="key"
