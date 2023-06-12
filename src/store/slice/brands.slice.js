@@ -8,6 +8,9 @@ export const brandsSlice = createSlice({
     setBrandList: (state, action) => {
       state.brandList = action.payload;
     },
+    setUserBrandList: (state, action) => {
+      state.userBrandList = action.payload;
+    },
     setAmazonSpApiCredentialsList: (state, action) => {
       state.amazonSpApiCredentials = action.payload;
     },
@@ -17,11 +20,12 @@ export const brandsSlice = createSlice({
   },
 });
 
-export const { setBrandList, setAmazonSpApiCredentialsList, setAmazonAdvertisingCredentialsList } = brandsSlice.actions;
+export const { setBrandList, setUserBrandList, setAmazonSpApiCredentialsList, setAmazonAdvertisingCredentialsList } = brandsSlice.actions;
 
 export default brandsSlice.reducer;
 
 const selectBrandList = (state) => state.brands.brandList;
+const selectUserBrandList = (state) => state.brands.userBrandList;
 const selectAmazonSpApiCredentialsList = (state) =>
   state.brands.amazonSpApiCredentials;
 const selectAmazonAdvertisingCredentialsList = (state) =>
@@ -29,6 +33,7 @@ const selectAmazonAdvertisingCredentialsList = (state) =>
 
 export {
   selectBrandList,
+  selectUserBrandList,
   selectAmazonSpApiCredentialsList,
   selectAmazonAdvertisingCredentialsList,
 };

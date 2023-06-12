@@ -54,10 +54,8 @@ export default function DashboardLayout({ children }) {
 
   const GetModules = () =>
     isMount && localStorage.getItem("brand")
-      ? false
-      : user?.role === "User"
-      ? false
-      : true;
+      ? "User"
+      : user?.role
 
   return (
     <div className="d-flex flex-column flex-root" style={{ height: "100vh" }}>

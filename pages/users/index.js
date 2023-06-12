@@ -31,7 +31,6 @@ export default function Users() {
   const [accountsModal, setAccountsModal] = useState(false);
   const [modulesModal, setModulesModal] = useState(false);
   const [clickedAccount, setClickedAccount] = useState({});
-  const [loadingBrands, setLoadingBrands] = useState(true);
 
   const handleAccountsModal = () => {
     setAccountsModal(!accountsModal);
@@ -41,7 +40,7 @@ export default function Users() {
     setModulesModal(!modulesModal);
   };
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
 
   const [page, setPage] = useState(1);
@@ -103,16 +102,6 @@ export default function Users() {
       getUserList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
-
-  useEffect(() => {
-    if (userList) {
-      setList(userList.items);
-      setLoading(false);
-      setTotalPage(userList.count);
-    } else if (userList?.status === false) {
-      // fakeActionUser()
-    }
-  }, [clickedAccount]);
 
   const changeUserStatus = (id, status) => {
     updateUserRequest(id, { user_status: status })
@@ -396,12 +385,14 @@ export default function Users() {
           </div>
         </div>
       </div>
-      <AccountsModal
-        isOpen={accountsModal}
-        account={clickedAccount}
-        closeModal={handleAccountsModal}
-        brandList={brandList}
-      />
+      {accountsModal && (
+        <AccountsModal
+          isOpen={accountsModal}
+          account={clickedAccount}
+          closeModal={handleAccountsModal}
+          brandList={brandList}
+        />
+      )}
       {/* <ModulesModal
         isOpen={modulesModal}
         account={clickedAccount}

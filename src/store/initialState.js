@@ -9,6 +9,10 @@ const initialState = {
     switchUser: {},
   },
   brands: {
+    userBrandList: {
+      data: [],
+      status: false,
+    },
     brandList: {
       data: [],
       count: 0,

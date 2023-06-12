@@ -75,43 +75,45 @@ export default function Users() {
           activeKey={activeTab}
           onChange={handleTabChange}
           className="h-100 custom-tabs"
-          items={tabs.map((tab, i) => {
-            return {
-              label: (
-                <div
-                  className={`${
-                    activeTab === tab.key ? "bg-black text-white" : "bg-light"
-                  } font-weight-bold px-5 py-3 rounded custom-tab-pane`}
-                >
-                  <div className="col-12 d-flex flex-row align-items-center">
-                    <div className="icon">{tab.icon}</div>
-                    <p className="mx-3 my-auto">{tab.tabHeading}</p>
+          items={tabs
+            .filter((t) => userRole === "Admin" || t.key !== "brands")
+            .map((tab, i) => {
+              return {
+                label: (
+                  <div
+                    className={`${
+                      activeTab === tab.key ? "bg-black text-white" : "bg-light"
+                    } font-weight-bold px-5 py-3 rounded custom-tab-pane`}
+                  >
+                    <div className="col-12 d-flex flex-row align-items-center">
+                      <div className="icon">{tab.icon}</div>
+                      <p className="mx-3 my-auto">{tab.tabHeading}</p>
+                    </div>
                   </div>
-                </div>
-              ),
-              key: tab.key,
-              className: `${
-                activeTab !== tab.key ? "border border-secondary" : ""
-              } rounded-top rounded-bottom-start rounded-bottom-end`,
-              children: (
-                <div>
-                  {loading ? (
-                    <div className="container-fluid">
-                      <div className="col-lg-12">
-                        <div className="card mb-7">
-                          <div className="card-body">
-                            <Loading />
+                ),
+                key: tab.key,
+                className: `${
+                  activeTab !== tab.key ? "border border-secondary" : ""
+                } rounded-top rounded-bottom-start rounded-bottom-end`,
+                children: (
+                  <div>
+                    {loading ? (
+                      <div className="container-fluid">
+                        <div className="col-lg-12">
+                          <div className="card mb-7">
+                            <div className="card-body">
+                              <Loading />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <tab.tabComponent user={user} userRole={userRole} />
-                  )}
-                </div>
-              ),
-            };
-          })}
+                    ) : (
+                      <tab.tabComponent user={user} userRole={userRole} />
+                    )}
+                  </div>
+                ),
+              };
+            })}
         />
       </div>
     </DashboardLayout>

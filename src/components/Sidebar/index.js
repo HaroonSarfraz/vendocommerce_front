@@ -7,7 +7,7 @@ import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { adminMenus, userMenus } from "@/src/helpers/sidebar.helper";
+import { adminMenus, managerMenus, userMenus } from "@/src/helpers/sidebar.helper";
 import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
 import { deleteCookie } from "cookies-next";
@@ -42,8 +42,22 @@ export default function Sidebar(props) {
     return [];
   };
 
+  const menus = {
+    Admin: adminMenus,
+    Manager: managerMenus,
+    User: userMenus,
+  }
+
+  const menuItems = () => {
+    if(brand?.role === "User") {
+      return menus[userType].filter((i) => i.label !== "Brand Settings")
+    } else {
+      return menus[userType]
+    }
+  }
+
   const checkMenu = () => {
-    const menu = userType ? adminMenus : userMenus;
+    const menu = menus[userType];
 
     // To be Fixed later
     if (router?.route === "/brands/edit") {
@@ -204,7 +218,7 @@ export default function Sidebar(props) {
               }}
               inlineCollapsed={collapsed}
               defaultOpenKeys={defaultSubMenuSelected()}
-              items={userType ? adminMenus : userMenus}
+              items={menuItems()}
             />
           </div>
           <div
