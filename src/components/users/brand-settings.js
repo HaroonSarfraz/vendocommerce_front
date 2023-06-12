@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, message, Select, Modal } from "antd";
-import { getUserList } from "@/src/services/users.services";
+import { getBrandList } from "@/src/services/brands.services";
 import {
   addUserToBrandRequest,
   removeUserFromBrandRequest,
 } from "@/src/api/brands.api";
 import _ from "lodash";
 import { selectFilter } from "@/src/helpers/selectFilter";
-import { selectUserList } from "@/src/store/slice/users.slice";
-import { UsersGroupAddSvg } from "@/src/assets";
+import { selectBrandList, setBrandList } from "@/src/store/slice/brands.slice";
+import { KeySvg } from "@/src/assets";
 import ASINTable from "@/src/components/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { ExclamationCircleFilled } from "@ant-design/icons";
+import { fetchUserBrands } from "@/src/api/users.api";
 
 const formItemLayout = {
   labelCol: {
@@ -25,74 +26,86 @@ const formItemLayout = {
     },
   },
 };
+
 const { confirm } = Modal;
 
-export default function UserSettings({ brand, userRole }) {
+export default function BrandSettings({ user, userRole }) {
   const dispatch = useDispatch();
-  const [addUserForm] = Form.useForm();
-  const userList = useSelector(selectUserList);
-
-  const [addUserSubmit, setAddUserSubmit] = useState(false);
-
-  const [users, setUsers] = useState(
-    (brand?.users || []).map((u, index) => {
-      return {
-        user_id: u.user.id,
-        index: index + 1,
-        role: u.role,
-        name: u.user.u_name,
-      };
-    })
-  );
+  const [addBrandForm] = Form.useForm();
+  const brandList = useSelector(selectBrandList);
+  const [addBrandSubmit, setAddBrandSubmit] = useState(false);
+  const [userBrands, setUserBrands] = useState([]);
+  const [brands, setBrands] = useState([]);
 
   useEffect(() => {
-    userRole !== "User" && dispatch(getUserList({ perPage: 9999 }));
+    userRole === "Admin" && dispatch(getBrandList({ perPage: 9999, orderBy: "u_amazon_seller_name", order: "asc" }));
   }, []);
 
-  const options = userList.items
-    .map((user) => {
-      return { label: user.u_name, value: user.id };
-    })
-    .sort((a, b) => a.label.localeCompare(b.label));
-
-  const addUser = (values) => {
-    setAddUserSubmit(true);
-
-    addUserToBrandRequest(brand.id, values.user_id, values.role)
+  useEffect(() => {
+    fetchUserBrands(user.id)
       .then((res) => {
-        setAddUserSubmit(false);
+        if (res.status >= 200 && res.status <= 299) {
+          setUserBrands(res.data.brands);
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+  }, []);
+
+  useEffect(() => {
+    if(brandList.data.length > 0 && userBrands.length > 0) {
+      setBrands(userBrands.map((ub, index) => {
+        const b = brandList.data.find((b) => b.id === ub.brandId);
+        return {
+          ...b,
+          role: ub.role,
+          index: index + 1
+        }
+      }));
+    }
+  }, [brandList.data, userBrands]);
+
+  const options = brandList.data.map((brand) => {
+    return { label: brand.u_amazon_seller_name, value: brand.id };
+  });
+
+  const addBrand = (values) => {
+    setAddBrandSubmit(true);
+
+    addUserToBrandRequest(values.brand_id, user.id, values.role)
+      .then((res) => {
+        setAddBrandSubmit(false);
         if (res.status === 200) {
-          addUserForm.resetFields();
-          setUsers((users) => [
-            ...users,
+          addBrandForm.resetFields();
+          setBrands((brands) => [
+            ...brands,
             {
-              user_id: values.user_id,
-              index: _.max(users.map((u) => u.index)) + 1 || 1,
+              index: _.max(brands.map((u) => u.index)) + 1 || 1,
+              id: values.brand_id,
               role: values.role,
-              name: options.find((u) => u.value === values.user_id).label,
+              u_amazon_seller_name: options.find((u) => u.value === values.brand_id).label,
             },
           ]);
-          message.success("User Added to the Brand Successfully");
+          message.success("Brand added successfully");
         } else {
-          message.error("unable to create user");
+          message.error("unable to add brand");
         }
       })
       .catch((err) => message.error(err?.response?.message));
   };
 
-  const deleteUser = (userID) => {
+  const deleteBrand = (brandID) => {
     if (userRole == "User") {
       message.warning("You are not allowed to perform this action!");
       return;
     }
 
-    removeUserFromBrandRequest(brand.id, userID)
+    removeUserFromBrandRequest(brandID, user.id)
       .then((res) => {
         if (res.status === 200) {
-          setUsers(users.filter((u) => u.user_id !== userID));
-          message.success("User has been Removed from Brand Successfully");
+          setBrands(brands.filter((u) => u.id !== brandID));
+          message.success("Brand has been removed successfully");
         } else {
-          message.error("Unable to remove user");
+          message.error("Unable to remove brand");
         }
       })
       .catch((err) => message.error(err?.response?.message));
@@ -115,13 +128,13 @@ export default function UserSettings({ brand, userRole }) {
       },
     },
     {
-      title: "User Name",
+      title: "Brand",
       width: 120,
       key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      sorter: (a, b) => a.u_amazon_seller_name.localeCompare(b.name),
       align: "left",
       render: (text) => {
-        return <b>{text?.name || "N/A"}</b>;
+        return <b>{text?.u_amazon_seller_name || "N/A"}</b>;
       },
     },
     {
@@ -141,14 +154,14 @@ export default function UserSettings({ brand, userRole }) {
       render: (text) => {
         const showDeleteConfirm = () => {
           confirm({
-            title: `Are you sure to remove ${text.name} user?`,
+            title: `Are you sure to remove ${text.u_amazon_seller_name} brand?`,
             icon: <ExclamationCircleFilled />,
             content: "",
             okText: "Yes",
             okType: "danger",
             cancelText: "No",
             onOk() {
-              deleteUser(text.user_id);
+              deleteBrand(text.id);
             },
             onCancel() {},
           });
@@ -175,28 +188,28 @@ export default function UserSettings({ brand, userRole }) {
               <Form
                 {...formItemLayout}
                 layout="vertical"
-                form={addUserForm}
+                form={addBrandForm}
                 name="register"
                 disabled={userRole == "User"}
-                onFinish={addUser}
+                onFinish={addBrand}
               >
                 <div className="row">
                   <div className="col-12 d-flex flex-row mb-5">
-                    <UsersGroupAddSvg />
-                    <h4 className="mx-5 mt-1">Users Access</h4>
+                    <KeySvg />
+                    <h4 className="mx-5 mt-1">Brands Access</h4>
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col-12 col-sm-4 col-md-4 col-lg-6">
                     <Form.Item
-                      name="user_id"
-                      label="Add New User"
+                      name="brand_id"
+                      label="Add New Brand"
                       className="fw-bolder"
                       rules={[
                         {
                           required: true,
-                          message: "User cannot be blank",
+                          message: "Brand cannot be blank",
                         },
                       ]}
                       hasFeedback
@@ -206,7 +219,7 @@ export default function UserSettings({ brand, userRole }) {
                           width: "100%",
                         }}
                         size="large"
-                        placeholder="Select User"
+                        placeholder="Select Brand"
                         options={options}
                         filterOption={selectFilter}
                         disabled={options.length === 0}
@@ -241,16 +254,16 @@ export default function UserSettings({ brand, userRole }) {
                     <Form.Item className="d-flex">
                       <Button
                         htmlType="submit"
-                        disabled={addUserSubmit}
+                        disabled={addBrandSubmit}
                         className="btn btn-sm btn-primary"
                       >
-                        {addUserSubmit || options.length === 0 ? (
+                        {addBrandSubmit || options.length === 0 ? (
                           <span>
                             Please wait...
                             <span className="spinner-border spinner-border-sm align-middle ms-2" />
                           </span>
                         ) : (
-                          <span className="indicator-label">Add User</span>
+                          <span className="indicator-label">Add Brand</span>
                         )}
                       </Button>
                     </Form.Item>
@@ -260,7 +273,7 @@ export default function UserSettings({ brand, userRole }) {
               <div className="mt-6">
                 <ASINTable
                   columns={columns}
-                  dataSource={users}
+                  dataSource={brands}
                   ellipsis
                   rowKey="key"
                   pagination={false}

@@ -6,6 +6,7 @@ import { fetchUserBrandList } from "@/src/api/brands.api";
 import { useRouter } from "next/router";
 import { isClient } from "@/src/helpers/isClient";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
+import { DashboardSvg } from "@/src/assets";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -25,7 +26,10 @@ export default function Dashboard() {
               res.status <= 299 &&
               res.data.brands?.length > 0
             ) {
-              localStorage.setItem("brand", JSON.stringify(res.data.brands[0].brand));
+              localStorage.setItem(
+                "brand",
+                JSON.stringify(res.data.brands[0].brand)
+              );
               router.push("/sales-analytics/sales");
             } else {
               setLoading(false);
@@ -48,8 +52,17 @@ export default function Dashboard() {
           <div className="container-fluid" id="kt_content_container">
             <div className="row">
               <div className="col-lg-12">
-                <h1>Dashboard</h1>
-                <h4>Your account is under review. Please wait...</h4>
+                <div className="card mb-7">
+                  <div className="card-body">
+                    <div className="col-12 d-flex flex-row mb-5">
+                      <DashboardSvg />
+                      <h1>Dashboard</h1>
+                    </div>
+                    <div className="col-12 d-flex flex-row mb-5">
+                      <h4>Your account is under review. Please wait...</h4>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -12,21 +12,30 @@ import {
   TvSvg,
   UserLgSvg,
 } from "@/src/assets";
-import { General, UserSettings, SPCredentials, AdvertisingCredentials } from "@/src/components/brands";
+import {
+  General,
+  UserSettings,
+  SPCredentials,
+  AdvertisingCredentials,
+} from "@/src/components/brands";
 import { fetchBrand } from "@/src/api/brands.api";
 import Loading from "@/src/components/loading";
 
 export default function EditBrand() {
   const router = useRouter();
   const { brandId, activeTab } = router?.query ?? {};
-  const { TabPane } = Tabs;
   const [brand, setBrand] = useState({});
+  const [userRole, setUserRole] = useState({});
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setUserRole(JSON.parse(localStorage.getItem("user"))?.role);
+  }, []);
 
   useEffect(() => {
     const localBrand = JSON.parse(localStorage.getItem("brand"))?.id;
 
-    if (brandId || localBrand) {
+    if (router.isReady && (brandId || localBrand)) {
       fetchBrand(brandId || localBrand)
         .then((res) => {
           if (res.status == 200 && res.data) {
@@ -104,10 +113,9 @@ export default function EditBrand() {
           activeKey={activeTab}
           onChange={handleTabChange}
           className="h-100 custom-tabs"
-        >
-          {tabs.map((tab, i) => (
-            <TabPane
-              tab={
+          items={tabs.map((tab, i) => {
+            return {
+              label: (
                 <div
                   className={`${
                     activeTab === tab.key ? "bg-black text-white" : "bg-light"
@@ -118,28 +126,31 @@ export default function EditBrand() {
                     <p className="mx-3 my-auto">{tab.tabHeading}</p>
                   </div>
                 </div>
-              }
-              key={tab.key}
-              className={`${
+              ),
+              key: tab.key,
+              className: `${
                 activeTab !== tab.key ? "border border-secondary" : ""
-              } rounded-top rounded-bottom-start rounded-bottom-end`}
-            >
-              {loading ? (
-                <div className="container-fluid">
-                  <div className="col-lg-12">
-                    <div className="card mb-7">
-                      <div className="card-body">
-                        <Loading />
+              } rounded-top rounded-bottom-start rounded-bottom-end`,
+              children: (
+                <div>
+                  {loading ? (
+                    <div className="container-fluid">
+                      <div className="col-lg-12">
+                        <div className="card mb-7">
+                          <div className="card-body">
+                            <Loading />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <tab.tabComponent brand={brand} userRole={userRole} />
+                  )}
                 </div>
-              ) : (
-                <tab.tabComponent brand={brand} />
-              )}
-            </TabPane>
-          ))}
-        </Tabs>
+              ),
+            };
+          })}
+        />
       </div>
     </DashboardLayout>
   );

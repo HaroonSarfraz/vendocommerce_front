@@ -24,7 +24,6 @@ export const adminMenus = [
 ];
 
 export const userMenus = [
-  getItem("Dashboard", "dashboard", <DashboardSvg />),
   getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
     getItem(
       "Sales",

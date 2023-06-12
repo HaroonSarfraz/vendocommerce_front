@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Button, Form, Input, message, Select } from "antd";
 import { createBrandRequest, updateBrandRequest } from "@/src/api/brands.api";
@@ -16,7 +16,7 @@ const formItemLayout = {
   },
 };
 
-export default function General({ brand }) {
+export default function General({ brand, userRole }) {
   const router = useRouter();
   const [editForm] = Form.useForm();
   const [submit, setSubmit] = useState(false);
@@ -67,6 +67,7 @@ export default function General({ brand }) {
                 layout="vertical"
                 form={editForm}
                 name="register"
+                disabled={userRole == "User"}
                 onFinish={onFinish}
               >
                 <div className="row">

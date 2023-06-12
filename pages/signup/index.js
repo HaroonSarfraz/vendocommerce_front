@@ -5,6 +5,9 @@ import React, { useState } from "react";
 import { signUpRequest } from "@/src/api/auth.api";
 import { Button, Form, Input, message } from "antd";
 import { isClient } from "@/src/helpers/isClient";
+import jwt_decode from "jwt-decode";
+import { setCookie } from "cookies-next";
+import { cookies } from "@/src/constants/cookies";
 
 const formItemLayout = {
   labelCol: {
@@ -32,6 +35,10 @@ export default function Signup() {
         if (res.status >= 200 && res.status <= 299 && isClient) {
           res.data.role === "User" && router.push("/dashboard");
           localStorage.setItem("user", JSON.stringify(res.data));
+          var decoded = jwt_decode(res.data.access_token);
+          setCookie(cookies["TOKEN"], res.data.access_token, {
+            maxAge: decoded.exp,
+          });
         } else {
           message.error(res.data.message ?? "Something went wrong");
         }
@@ -136,19 +143,6 @@ export default function Signup() {
                         </Form.Item>
                       </div>
                     </div>
-                    <Form.Item
-                      name="u_amazon_seller_name"
-                      label="Amazon Seller Name"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Amazon Seller Name is required",
-                        },
-                      ]}
-                      hasFeedback
-                    >
-                      <Input size="large" autoComplete="off" />
-                    </Form.Item>
                     <Form.Item
                       name="u_password"
                       label="Password"
