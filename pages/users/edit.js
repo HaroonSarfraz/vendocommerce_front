@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Form, Input, message } from "antd";
 import { updateUserRequest } from "@/src/api/users.api";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
@@ -10,22 +8,8 @@ import { General, BrandSettings } from "@/src/components/users";
 import { Tabs } from "antd";
 import Loading from "@/src/components/loading";
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 16,
-    },
-    sm: {
-      span: 16,
-    },
-  },
-};
-
 export default function Users() {
   const router = useRouter();
-  const { TabPane } = Tabs;
-  const [form] = Form.useForm();
-  const [submit, setSubmit] = useState(false);
   const [userRole, setUserRole] = useState({});
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -60,35 +44,6 @@ export default function Users() {
       }
     }
   }, [userId]);
-
-  const onFinish = (values) => {
-    setSubmit(true);
-
-    const data = {
-      u_name: values.u_name,
-      u_email: values.u_email,
-    };
-
-    updateUserRequest(router?.query?.id, data)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmit(false);
-          message.success("User updated successfully");
-          const localUser = JSON.parse(localStorage.getItem("user") || "{}");
-          if (res.data.id == localUser.id) {
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                ...localUser,
-                u_name: res.data.u_name,
-                u_email: res.data.u_email,
-              })
-            );
-          }
-        }
-      })
-      .catch((err) => console.error(err));
-  };
 
   const handleTabChange = (key) => {
     router.push({
