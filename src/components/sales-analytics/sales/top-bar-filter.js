@@ -17,7 +17,8 @@ export default function TopBarFilter(
                 <Select
                   defaultValue="2022"
                   size="large"
-                  style={{ width: 100 }}
+                  mode="multiple"
+                  style={{ width: 300 }}
                   value={filter?.year || null}
                   disabled={disabled.year}
                   onChange={(e) => {

@@ -20,3 +20,8 @@ export const fetchCategoryProductList = (
     },
   });
 };
+
+
+export const ImportCategoryProductList = (data) => {
+  return request.put("/categories/product-data", data)
+};
