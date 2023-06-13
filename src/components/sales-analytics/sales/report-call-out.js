@@ -43,11 +43,11 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
               ) : (
                 <>
                   <div className="">
-                    <p className="mb-0">Up vs LW</p>
+                    <p className="mb-0">CHG vs LW</p>
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {percentageFormat(reportData?.upVsLw)}
+                      {currencyFormat(reportData?.upVsLw)}
                     </h6>
                   </div>
                 </>
@@ -63,7 +63,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <p className="mb-0">
-                      {currencyFormat(reportData?.upLwDiff)}
+                      {percentageFormat(reportData?.upLwDiff)}
                     </p>
                   </div>
                 </>

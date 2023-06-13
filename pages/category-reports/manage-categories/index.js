@@ -11,19 +11,15 @@ import {
   DeleteCategory,
   getCategoryList,
 } from "@/src/services/categoryList.services";
-import moment from "moment";
-import { Button, Modal, Space, message } from "antd";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  ExclamationCircleFilled,
-} from "@ant-design/icons";
+import { Modal, Space, message } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import CreateCategoryScreen from "@/src/components/CreateCategory";
 import { DeleteCategoryAPI } from "@/src/api/categoryList.api";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "@/src/components/pagination";
+import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 
 const initialFilters = {
   page: "1",
@@ -121,7 +117,13 @@ export default function ManageCategory() {
       key: "created_at",
       render: (text) => {
         return (
-          <span>{moment(text?.created_at).format("YYYY-MM-DD h:mm:ss")}</span>
+          <div>
+            <span>{timeFormat(text.created_at)}</span>
+            <br />
+            <span className="timeStampColor">
+              ({timeSince(text.created_at)})
+            </span>
+          </div>
         );
       },
     },
@@ -133,7 +135,13 @@ export default function ManageCategory() {
       key: "updated_at",
       render: (text) => {
         return (
-          <span>{moment(text?.updated_at).format("YYYY-MM-DD h:mm:ss")}</span>
+          <div>
+            <span>{timeFormat(text.updated_at)}</span>
+            <br />
+            <span className="timeStampColor">
+              ({timeSince(text.updated_at)})
+            </span>
+          </div>
         );
       },
     },

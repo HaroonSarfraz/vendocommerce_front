@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
 import ASINTooltip from "@/src/components/tooltip";
-import { DefaultPerPage, timeSince } from "@/src/config";
+import { DefaultPerPage } from "@/src/config";
+import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -235,11 +235,7 @@ export default function Users() {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.created_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.created_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.created_at)})
@@ -255,11 +251,7 @@ export default function Users() {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.updated_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.updated_at)})

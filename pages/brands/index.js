@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, message, Modal } from "antd";
-import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
-import { DefaultPerPage, timeSince } from "@/src/config";
+import { DefaultPerPage } from "@/src/config";
+import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { getBrandList, getUserBrandList } from "@/src/services/brands.services";
@@ -67,7 +67,11 @@ export default function Users(props) {
   }, [userBrandList]);
 
   const switchBrand = (brand) => {
-    isClient && localStorage.setItem("brand", JSON.stringify({ role: userRole,  ...brand}));
+    isClient &&
+      localStorage.setItem(
+        "brand",
+        JSON.stringify({ role: userRole, ...brand })
+      );
     router.push("/sales-analytics/sales");
   };
 
@@ -221,11 +225,7 @@ export default function Users(props) {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.created_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.created_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.created_at)})
@@ -241,11 +241,7 @@ export default function Users(props) {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.updated_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.updated_at)})
