@@ -62,9 +62,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                     <p className="mb-0">Difference</p>
                   </div>
                   <div className="">
-                    <p className="mb-0">
-                      {currencyFormat(reportData?.upVsLw)}
-                    </p>
+                    <p className="mb-0">{currencyFormat(reportData?.upVsLw)}</p>
                   </div>
                 </>
               )}
@@ -79,7 +77,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0  fw-bolder">
-                      {percentageFormat(reportData?.upVsL4wk)}
+                      {percentageFormat(reportData?.totalSalesL4wkChange)}
                     </h6>
                   </div>
                 </>
@@ -183,7 +181,9 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      <b>{currencyFormat(reportData?.advertisementData?.twSpend)}</b>
+                      <b>
+                        {currencyFormat(reportData?.advertisementData?.twSpend)}
+                      </b>
                     </h6>
                   </div>
                 </>
@@ -249,7 +249,9 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {currencyFormat(reportData?.advertisementData?.totalSales)}
+                      {currencyFormat(
+                        reportData?.advertisementData?.totalSales
+                      )}
                     </h6>
                   </div>
                 </>
