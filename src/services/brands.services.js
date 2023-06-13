@@ -49,6 +49,7 @@ export const getAmazonSpApiCredentialsList = (data) => {
             setAmazonSpApiCredentialsList({ data: res.data, status: true })
           );
         } else {
+          dispatch(setAmazonSpApiCredentialsList({ data: [], status: true }));
           message.error(res.data.message);
         }
       })
@@ -68,6 +69,7 @@ export const getAmazonAdvertisingCredentialsList = (data) => {
             setAmazonAdvertisingCredentialsList({ data: res.data, status: true })
           );
         } else {
+          dispatch(setAmazonAdvertisingCredentialsList({ data: [], status: true }));
           message.error(res.data.message);
         }
       })
