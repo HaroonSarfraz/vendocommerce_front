@@ -3,28 +3,33 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, message, Modal } from "antd";
-import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
-import { DefaultPerPage, timeSince } from "@/src/config";
+import { DefaultPerPage } from "@/src/config";
+import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getBrandList } from "@/src/services/brands.services";
+import { getBrandList, getUserBrandList } from "@/src/services/brands.services";
 import _ from "lodash";
 import { isClient } from "@/src/helpers/isClient";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { selectBrandList } from "@/src/store/slice/brands.slice";
+import {
+  selectBrandList,
+  selectUserBrandList,
+} from "@/src/store/slice/brands.slice";
 import { SwitchUserSvg } from "@/src/assets";
 import NoData from "@/src/components/no-data";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { deleteBrandRequest } from "@/src/api/brands.api";
+import useMount from "@/src/hooks/useMount";
 
 const { confirm } = Modal;
 
 export default function Users(props) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const isMount = useMount();
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -38,6 +43,11 @@ export default function Users(props) {
   const [searchText, setSearchText] = useState("");
 
   const brandList = useSelector(selectBrandList);
+  const userBrandList = useSelector(selectUserBrandList);
+
+  const userRole = isMount
+    ? JSON.parse(localStorage.getItem("user") || "{}")?.role
+    : "User";
 
   useEffect(() => {
     if (brandList) {
@@ -47,18 +57,36 @@ export default function Users(props) {
     }
   }, [brandList]);
 
+  useEffect(() => {
+    if (userBrandList.status) {
+      setList(userBrandList.data.map((d) => ({ ...d.brand, role: d.role })));
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, [userBrandList]);
+
   const switchBrand = (brand) => {
-    isClient && localStorage.setItem("brand", JSON.stringify(brand));
+    isClient &&
+      localStorage.setItem(
+        "brand",
+        JSON.stringify({ role: userRole, ...brand })
+      );
     router.push("/sales-analytics/sales");
   };
 
   useEffect(() => {
     setLoading(true);
-    dispatch(
-      getBrandList({ page: page, perPage: pageSize, search_term: searchText })
-    );
+
+    if (userRole === "Admin") {
+      dispatch(
+        getBrandList({ page: page, perPage: pageSize, search_term: searchText })
+      );
+    } else if (userRole === "Manager") {
+      dispatch(getUserBrandList());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userRole]);
 
   const onPageNo = (e) => {
     setPage(e);
@@ -197,11 +225,7 @@ export default function Users(props) {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.created_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.created_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.created_at)})
@@ -217,11 +241,7 @@ export default function Users(props) {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.updated_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.updated_at)})
@@ -252,18 +272,23 @@ export default function Users(props) {
 
         return (
           <div className="d-flex">
-            <Link href={`/brands/edit?brandId=${text.id}&activeTab=general`}>
+            {text.role !== "User" && (
+              <Link href={`/brands/edit?brandId=${text.id}&activeTab=general`}>
+                <FontAwesomeIcon
+                  icon={faPenToSquare}
+                  style={{ marginRight: "10px" }}
+                  className="text-dark fs-3 cursor-pointer"
+                />
+              </Link>
+            )}
+
+            {userRole === "Admin" && (
               <FontAwesomeIcon
-                icon={faPenToSquare}
-                style={{ marginRight: "10px" }}
-                className="text-dark fs-3 cursor-pointer"
+                onClick={showDeleteConfirm}
+                icon={faTrashCan}
+                className="text-danger fs-3 cursor-pointer"
               />
-            </Link>
-            <FontAwesomeIcon
-              onClick={showDeleteConfirm}
-              icon={faTrashCan}
-              className="text-danger fs-3 cursor-pointer"
-            />
+            )}
           </div>
         );
       },
@@ -277,38 +302,42 @@ export default function Users(props) {
         id="kt_content"
       >
         <div className="container-fluid" id="kt_content_container">
-          <div className="row mb-4">
-            <div className="col-lg-12">
-              <div className="card card-flush h-xl-100">
-                <Input
-                  onChange={(e) => setSearchText(e.target.value)}
-                  onKeyPress={(ev) => {
-                    if (ev?.key === "Enter") {
-                      ev?.preventDefault();
-                      ev?.target?.blur();
-                    }
-                  }}
-                  onBlur={() => {
-                    search();
-                  }}
-                  value={searchText}
-                  className="w-200px py-2 my-4 mx-4"
-                  placeholder="search..."
-                />
+          {userRole === "Admin" && (
+            <div className="row mb-4">
+              <div className="col-lg-12">
+                <div className="card card-flush h-xl-100">
+                  <Input
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onKeyPress={(ev) => {
+                      if (ev?.key === "Enter") {
+                        ev?.preventDefault();
+                        ev?.target?.blur();
+                      }
+                    }}
+                    onBlur={() => {
+                      search();
+                    }}
+                    value={searchText}
+                    className="w-200px py-2 my-4 mx-4"
+                    placeholder="search..."
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="row">
             <div className="col-lg-12">
               <div className="card mb-7">
                 <div className="h-80px px-10 pt-4 d-flex flex-row justify-content-between align-items-center">
                   <h4 className="fw-bold">MANAGE BRANDS</h4>
-                  <p
-                    className="btn btn-dark"
-                    onClick={() => router.push("/brands/create")}
-                  >
-                    Add Brand
-                  </p>
+                  {userRole === "Admin" && (
+                    <p
+                      className="btn btn-dark"
+                      onClick={() => router.push("/brands/create")}
+                    >
+                      Add Brand
+                    </p>
+                  )}
                 </div>
                 <div className="card-body pt-2">
                   {loading ? (
@@ -332,14 +361,17 @@ export default function Users(props) {
                   ) : (
                     <NoData />
                   )}
-                  <Pagination
-                    loading={loading || list?.length === 0}
-                    pageSize={pageSize}
-                    page={page}
-                    totalPage={totalPage}
-                    onPerPage={onPerPage}
-                    onPageNo={onPageNo}
-                  />
+
+                  {userRole === "Admin" && (
+                    <Pagination
+                      loading={loading || list?.length === 0}
+                      pageSize={pageSize}
+                      page={page}
+                      totalPage={totalPage}
+                      onPerPage={onPerPage}
+                      onPageNo={onPageNo}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -116,7 +116,7 @@ export default function Header(props) {
                   className="btn btn-secondary ml-auto mr-10px"
                   onClick={backToAdmin}
                 >
-                  Back to admin
+                  Back to {JSON.parse(localStorage.getItem("user") || "{}")?.role}
                 </button>
               </div>
             )}

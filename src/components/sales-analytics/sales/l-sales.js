@@ -140,13 +140,13 @@ export default function LSales(reportData, loading) {
                     <td className={coloredTextClass(reportData?.UnitsChg)}>
                       {percentageFormat(reportData?.UnitsChg)}
                     </td>
-                    <td>{numberFormat(reportData?.vsUnitsLw)}</td>
-                    <td>{numberFormat(reportData?.vsUnitsL4wk)}</td>
-                    <td className={coloredTextClass(reportData?.vsUnitsDiff)}>
-                      {numberFormat(reportData?.vsUnitsDiff)}
+                    <td>{numberFormat(reportData?.unitsLw)}</td>
+                    <td>{numberFormat(reportData?.totalUnitsL4wk)}</td>
+                    <td className={coloredTextClass(reportData?.totalUnitsL4wkDiff)}>
+                      {numberFormat(reportData?.totalUnitsL4wkDiff)}
                     </td>
-                    <td className={coloredTextClass(reportData?.vsUnitsChg)}>
-                      {percentageFormat(reportData?.vsUnitsChg)}
+                    <td className={coloredTextClass(reportData?.totalUnitsL4wkChange)}>
+                      {percentageFormat(reportData?.totalUnitsL4wkChange)}
                     </td>
                   </tr>
                 )}

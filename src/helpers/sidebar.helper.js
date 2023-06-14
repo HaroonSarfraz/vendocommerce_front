@@ -23,6 +23,10 @@ export const adminMenus = [
   getItem("Manage Users", "users", <LockSvg />),
 ];
 
+export const managerMenus = [
+  getItem("Manage Brands", "brands", <UsersSvg />),
+];
+
 export const userMenus = [
   getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
     getItem(

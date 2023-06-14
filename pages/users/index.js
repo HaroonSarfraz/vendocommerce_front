@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
 import ASINTooltip from "@/src/components/tooltip";
-import { DefaultPerPage, timeSince } from "@/src/config";
+import { DefaultPerPage } from "@/src/config";
+import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +31,6 @@ export default function Users() {
   const [accountsModal, setAccountsModal] = useState(false);
   const [modulesModal, setModulesModal] = useState(false);
   const [clickedAccount, setClickedAccount] = useState({});
-  const [loadingBrands, setLoadingBrands] = useState(true);
 
   const handleAccountsModal = () => {
     setAccountsModal(!accountsModal);
@@ -41,7 +40,7 @@ export default function Users() {
     setModulesModal(!modulesModal);
   };
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
 
   const [page, setPage] = useState(1);
@@ -103,16 +102,6 @@ export default function Users() {
       getUserList({ page: page, perPage: pageSize, search_term: searchText })
     );
   };
-
-  useEffect(() => {
-    if (userList) {
-      setList(userList.items);
-      setLoading(false);
-      setTotalPage(userList.count);
-    } else if (userList?.status === false) {
-      // fakeActionUser()
-    }
-  }, [clickedAccount]);
 
   const changeUserStatus = (id, status) => {
     updateUserRequest(id, { user_status: status })
@@ -246,11 +235,7 @@ export default function Users() {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.created_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.created_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.created_at)})
@@ -266,11 +251,7 @@ export default function Users() {
       render: (text) => {
         return (
           <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MM/DD/YYYY hh:mm A"
-              )}
-            </span>
+            <span>{timeFormat(text.updated_at)}</span>
             <br />
             <span className="timeStampColor">
               ({timeSince(text.updated_at)})
@@ -396,12 +377,14 @@ export default function Users() {
           </div>
         </div>
       </div>
-      <AccountsModal
-        isOpen={accountsModal}
-        account={clickedAccount}
-        closeModal={handleAccountsModal}
-        brandList={brandList}
-      />
+      {accountsModal && (
+        <AccountsModal
+          isOpen={accountsModal}
+          account={clickedAccount}
+          closeModal={handleAccountsModal}
+          brandList={brandList}
+        />
+      )}
       {/* <ModulesModal
         isOpen={modulesModal}
         account={clickedAccount}

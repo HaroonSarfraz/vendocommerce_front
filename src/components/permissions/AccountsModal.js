@@ -13,7 +13,7 @@ export default function AccountsModal({
   account,
   brandList,
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function AccountsModal({
           if (res.status >= 200 && res.status <= 299) {
             const brandIds = res.data.brands.map((d) => d.brandId);
             setBrands(brandList.data.filter((b) => brandIds.includes(b.id)));
+            setLoading(false);
           } else {
             setLoading(false);
           }
@@ -46,7 +47,7 @@ export default function AccountsModal({
         </div>
         <div className="min-h-200px p-5">
           {loading ? (
-            <Loading />
+            <div>Loading...</div>
           ) : brands?.length != 0 ? (
             <div>
               {brands.map((brand) => {
