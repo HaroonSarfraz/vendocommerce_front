@@ -61,16 +61,18 @@ export default function CategoryPerformanceReport() {
     }
   }, [CategoryPerformanceListRes]);
 
-  const findWeeksCount = useMemo(
-    () =>
-      list.reduce((acc, item) => {
-        const count = item.weekly_report.length;
-        if (acc <= count) {
-          return count;
-        }
-      }, 0),
-    [list, filter]
-  );
+  const findWeeksCount = useMemo(() => {
+    const res = list.reduce((acc, item, key) => {
+      const count = (item.weekly_report || []).length;
+
+      if (acc < count) {
+        console.log(count, key);
+        return count;
+      }
+      return acc;
+    }, 0);
+    return res;
+  }, [list, filter]);
 
   const columns = useMemo(
     () => [
@@ -97,7 +99,7 @@ export default function CategoryPerformanceReport() {
       },
       {
         title: "% Change week over week",
-        width: 170,
+        width: 180,
         dataIndex: "cwow",
         key: "cwow",
       },

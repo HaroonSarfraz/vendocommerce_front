@@ -9,6 +9,7 @@ import {
   numberFormat,
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function SalesBySkuTable({ loading, list }) {
   const columns = [
@@ -76,7 +77,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_units_ordered_sum - b.astr_units_ordered_sum,
       render: (text) => {
-        return <span>{numberFormat(text?.astr_units_ordered_sum)}</span>;
+        return numberFormat(text?.astr_units_ordered_sum);
       },
     },
     {
@@ -87,7 +88,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.ordered_product_sales_sum - b.ordered_product_sales_sum,
       render: (text) => {
-        return <span>{currencyFormat(text?.ordered_product_sales_sum)}</span>;
+        return currencyFormat(text?.ordered_product_sales_sum);
       },
     },
     {
@@ -98,9 +99,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_buy_box_percentage_avg - b.astr_buy_box_percentage_avg,
       render: (text) => {
-        return (
-          <span>{percentageFormat(text?.astr_buy_box_percentage_avg)}</span>
-        );
+        return percentageFormat(text?.astr_buy_box_percentage_avg);
       },
     },
     {
@@ -111,9 +110,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.unit_session_percentage_avg - b.unit_session_percentage_avg,
       render: (text) => {
-        return (
-          <span>{percentageFormat(text?.unit_session_percentage_avg)}</span>
-        );
+        return percentageFormat(text?.unit_session_percentage_avg);
       },
     },
     {
@@ -123,7 +120,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_sessions_sum - b.astr_sessions_sum,
       render: (text) => {
-        return <span>{numberFormat(text?.astr_sessions_sum)}</span>;
+        return numberFormat(text?.astr_sessions_sum);
       },
     },
     {
@@ -133,7 +130,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.astr_page_views_sum - b.astr_page_views_sum,
       render: (text) => {
-        return <span>{numberFormat(text?.astr_page_views_sum)}</span>;
+        return numberFormat(text?.astr_page_views_sum);
       },
     },
     {
@@ -144,9 +141,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_session_percentage_avg - b.astr_session_percentage_avg,
       render: (text) => {
-        return (
-          <span>{percentageFormat(text?.astr_session_percentage_avg)}</span>
-        );
+        return percentageFormat(text?.astr_session_percentage_avg);
       },
     },
     {
@@ -156,7 +151,7 @@ export default function SalesBySkuTable({ loading, list }) {
       ellipsis: true,
       sorter: (a, b) => a.total_order_items_sum - b.total_order_items_sum,
       render: (text) => {
-        return <span>{numberFormat(text?.total_order_items_sum)}</span>;
+        return numberFormat(text?.total_order_items_sum);
       },
     },
     {
@@ -167,9 +162,7 @@ export default function SalesBySkuTable({ loading, list }) {
       sorter: (a, b) =>
         a.astr_page_view_percentage_avg - b.astr_page_view_percentage_avg,
       render: (text) => {
-        return (
-          <span>{percentageFormat(text?.astr_page_view_percentage_avg)}</span>
-        );
+        return percentageFormat(text?.astr_page_view_percentage_avg);
       },
     },
   ];
@@ -185,30 +178,70 @@ export default function SalesBySkuTable({ loading, list }) {
             </h3>
             <div className="card-toolbar">
               <div className="dropdown">
-                <button
-                  className="btn btn-light-danger fs-7 px-10 dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                <ExportToExcel
+                  columns={[
+                    "ASIN",
+                    "SKU",
+                    "Title",
+                    "Parent ASIN",
+                    "Sum Of Units Ordered",
+                    "Sum Of Ordered Product Sales",
+                    "Average Of Buy Box",
+                    "Sum Of Unit Session",
+                    "Sum Of Sessions",
+                    "Sum Of Page Views",
+                    "Sum Of Session Percentage",
+                    "Sum Of Total Order Items",
+                    "Sum Of Page Views Percentage",
+                  ]}
+                  rows={list.map((text) => {
+                    return {
+                      ["ASIN"]: text?.child_asin,
+                      ["SKU"]: text?.sku,
+                      ["Title"]: text?.title,
+                      ["Parent ASIN"]: text?.parent_asin,
+                      ["Sum Of Units Ordered"]: numberFormat(
+                        text?.astr_units_ordered_sum
+                      ),
+                      ["Sum Of Ordered Product Sales"]: currencyFormat(
+                        text?.ordered_product_sales_sum
+                      ),
+                      ["Average Of Buy Box"]: percentageFormat(
+                        text?.astr_buy_box_percentage_avg
+                      ),
+                      ["Sum Of Unit Session"]: percentageFormat(
+                        text?.unit_session_percentage_avg
+                      ),
+                      ["Sum Of Sessions"]: numberFormat(
+                        text?.astr_sessions_sum
+                      ),
+                      ["Sum Of Page Views"]: numberFormat(
+                        text?.astr_page_views_sum
+                      ),
+                      ["Sum Of Session Percentage"]: percentageFormat(
+                        text?.astr_session_percentage_avg
+                      ),
+                      ["Sum Of Total Order Items"]: numberFormat(
+                        text?.total_order_items_sum
+                      ),
+                      ["Sum Of Page Views Percentage"]: percentageFormat(
+                        text?.astr_page_view_percentage_avg
+                      ),
+                    };
+                  })}
+                  fileName={"sales-data-by-sku-"}
+                  loading={loading}
                 >
-                  Export
-                </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Export to csv
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Export to xlsx
-                    </a>
-                  </li>
-                </ul>
+                  <button
+                    className="btn btn-light-danger fs-7 px-10"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Export
+                  </button>
+                </ExportToExcel>
               </div>
             </div>
           </div>

@@ -85,7 +85,15 @@ export default function AdvertisingData() {
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
-          {TopBarFilter(filter, setFilter, "Week")}
+          {TopBarFilter(filter, setFilter, "Week", {
+            loading:
+              yearToDayKPIsLoading || lastWeekKPIsLoading || graphsLoading,
+            data: {
+              lastYearToDayKPIsData,
+              lastWeekKPIsData,
+              advertisementsData,
+            },
+          })}
 
           <div className="row gx-5 gx-xl-5">
             <div className="col-xl-6 h-550px h-md-100">
