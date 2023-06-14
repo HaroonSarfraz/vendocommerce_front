@@ -309,7 +309,10 @@ export default function TotalRevenueAcos() {
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
-          {TopBarFilter(filter, setFilter, "Week")}
+          {TopBarFilter(filter, setFilter, "Week", {
+            loading: false,
+            data: {},
+          })}
 
           <div className="mt-5 col-lg-12">
             <div className="card mb-7 pt-5">

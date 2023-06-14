@@ -27,6 +27,7 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -432,9 +433,56 @@ export default function SalesByWeek() {
                     </span>
                   </h3>
                   <div className="card-toolbar">
-                    <button className="btn btn-light-danger btn-sm fw-bolder ">
-                      Export Data
-                    </button>
+                    <ExportToExcel
+                      columns={[
+                        "Week",
+                        "Sum of Ordered Product Sales",
+                        "Sum of Sessions",
+                        "Sum of Session Percentage",
+                        "Sum of Page Views",
+                        "Sum of Page Views Percentage",
+                        "Average of Buy Box",
+                        "Sum of Units Ordered",
+                        "Sum of Unit Session Percentage",
+                        "Sum of Total Order Items",
+                      ]}
+                      rows={isDetails.map((d) => {
+                        return {
+                          ["Week"]: d?.week_name,
+                          ["Sum of Ordered Product Sales"]: currencyFormat(
+                            d?.totalOrderedProductSales
+                          ),
+                          ["Sum of Sessions"]: numberFormat(d?.totalSession),
+                          ["Sum of Session Percentage"]: percentageFormat(
+                            d?.totalSessionPercentage
+                          ),
+                          ["Sum of Page Views"]: numberFormat(
+                            d?.totalPageViews
+                          ),
+                          ["Sum of Page Views Percentage"]: percentageFormat(
+                            d?.avgPageViewPercentage
+                          ),
+                          ["Average of Buy Box"]: percentageFormat(
+                            d?.avgBuyBox
+                          ),
+                          ["Sum of Units Ordered"]: numberFormat(
+                            d?.totalUnitOrdered
+                          ),
+                          ["Sum of Unit Session Percentage"]: percentageFormat(
+                            d?.avgUnitSession
+                          ),
+                          ["Sum of Total Order Items"]: numberFormat(
+                            d?.totalOrderItems
+                          ),
+                        };
+                      })}
+                      fileName={"sales-data-by-week"}
+                      loading={detailsLoading}
+                    >
+                      <button className="btn btn-light-danger btn-sm fw-bolder ">
+                        Export Data
+                      </button>
+                    </ExportToExcel>
                   </div>
                 </div>
                 {/*end::Header*/}

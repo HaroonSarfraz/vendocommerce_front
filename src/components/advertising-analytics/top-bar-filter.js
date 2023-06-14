@@ -1,7 +1,13 @@
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 import { Input, Select } from "antd";
 import moment from "moment";
 
-export default function TopBarFilter(filter, setFilter, type) {
+export default function TopBarFilter(
+  filter,
+  setFilter,
+  type,
+  { loading, data }
+) {
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
       <div className="col-xl-12 mb-5 mb-xl-5">
@@ -60,6 +66,41 @@ export default function TopBarFilter(filter, setFilter, type) {
                   }
                   allowClear
                 />
+              </div>
+              <div style={{ marginLeft: "auto" }}>
+                <ExportToExcel
+                  columns={[
+                    "Week",
+                    "Revenue",
+                    "Spends",
+                    "CPO",
+                    "ACos",
+                    "Total Sales",
+                    "Total ACoS",
+                  ]}
+                  rows={
+                    loading
+                      ? []
+                      : data.advertisementsData?.map((r) => {
+                          console.log(r);
+                          return {
+                            Week: `WK${r?.week}`,
+                            Revenue: r?.revenue,
+                            Spends: r?.spend,
+                            CPO: r?.CPO,
+                            ACos: r?.ACoS,
+                            "Total Sales": r?.total_ordered_product_sales,
+                            "Total ACoS": r?.ACoS_percentage,
+                          };
+                        })
+                  }
+                  fileName={"advertising-data-by-week"}
+                  loading={loading}
+                >
+                  <button className="btn btn-light-danger btn-sm fw-bolder ">
+                    Export Data
+                  </button>
+                </ExportToExcel>
               </div>
             </div>
           </div>

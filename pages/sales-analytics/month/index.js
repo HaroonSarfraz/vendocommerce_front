@@ -418,22 +418,72 @@ export default function SalesByMonth() {
                     </span>
                   </h3>
                   <div className="card-toolbar">
-                    <button
-                      onClick={() => setToggleExport(true)}
-                      className="btn btn-light-danger btn-sm fw-bolder "
-                    >
-                      Export Data
-                    </button>
-                    {/* <ExportToExcel
-                      columns={[]}
-                      rows={[]}
-                      fileName={"sales-analytics-month"}
+                    <ExportToExcel
+                      columns={[
+                        "Month",
+                        "ASIN",
+                        "SKU",
+                        "Sum of Units Ordered",
+                        "Sum of Ordered Product Sales",
+                        "Average of Buy Box",
+                        "Sum of Unit Session",
+                        "Sum of Sessions",
+                        "Sum of Page Views",
+                        "Sum of Session Percentage",
+                        "Sum of Total Order Items",
+                        "Sum of Page Views Percentage",
+                      ]}
+                      rows={salesByMonthDetail
+                        .reduce((acc, item) => {
+                          acc = acc.concat(item.asin_data);
+                          return acc;
+                        }, [])
+                        .map((r, key) => {
+                          console.log(r);
+                          return {
+                            ["Month"]: `${r.year}-${r.month_name}`,
+                            ["ASIN"]: r?.child_asin,
+                            ["SKU"]: r?.sku,
+                            ["Sum of Units Ordered"]: numberFormat(
+                              r?.total_ordered_units
+                            ),
+                            ["Sum of Ordered Product Sales"]: currencyFormat(
+                              r?.total_ordered_product_sales
+                            ),
+                            ["Average of Buy Box"]: percentageFormat(
+                              r?.avg_buy_box_percentage
+                            ),
+                            ["Sum of Unit Session "]: numberFormat(
+                              r?.total_session
+                            ),
+                            ["Sum of Sessions Percentage"]: percentageFormat(
+                              r?.avg_unit_session_percentage
+                            ),
+                            ["Sum of Page Views"]: numberFormat(
+                              r?.total_page_views
+                            ),
+                            ["Sum of Session Percentage"]: percentageFormat(
+                              r?.avg_session_percentage
+                            ),
+                            ["Sum of Total Order Items"]: numberFormat(
+                              r?.total_order_items
+                            ),
+                            ["Sum of Page Views Percentage"]: percentageFormat(
+                              r?.avg_page_view_percentage
+                            ),
+                          };
+                        })}
+                      fileName={"sales-data-by-month"}
                       loading={salesByMonthDetailLoading}
                     >
-                      <button className="btn btn-light-danger btn-sm fw-bolder ">
+                      <button
+                        onClick={() => setToggleExport(true)}
+                        className="btn btn-light-danger btn-sm fw-bolder "
+                      >
                         Export Data
                       </button>
-                    </ExportToExcel> */}
+                    </ExportToExcel>
+
                     <Modal
                       closable
                       maskClosable

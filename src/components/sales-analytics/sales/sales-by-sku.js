@@ -5,6 +5,7 @@ import {
 } from "@/src/helpers/formatting.helpers";
 import { Empty, Skeleton } from "antd";
 import NoData from "../../no-data";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 export default function SalesBySKU(tableList, loading) {
   return (
@@ -19,30 +20,73 @@ export default function SalesBySKU(tableList, loading) {
             </h3>
             <div className="card-toolbar">
               <div className="dropdown">
-                <button
-                  className="btn btn-light-danger fs-7 px-10 dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                <ExportToExcel
+                  columns={[
+                    "WK",
+                    "Week Date Range",
+                    "TW Sales",
+                    "TW Sales Change",
+                    "TW Sales Change (%)",
+                    "TW Units",
+                    "TW Units Change",
+                    "TW Units Change (%)",
+                    "LY Sales",
+                    "LY Sales Change",
+                    "LY Sales Change (%)",
+                    "LY Units",
+                    "LY Units Change",
+                    "LY Units Change (%)",
+                  ]}
+                  rows={tableList.map((d) => {
+                    return {
+                      ["WK"]: `WK${d?.week}`,
+                      ["Week Date Range"]: `${d?.startdate || ""} to ${
+                        d?.enddate || ""
+                      }`,
+                      ["TW Sales"]: currencyFormat(d?.this_week_total_sales),
+                      ["TW Sales Change"]: currencyFormat(
+                        d?.this_week_sales_diff
+                      ),
+                      ["TW Sales Change (%)"]: percentageFormat(
+                        d?.this_week_sales_change
+                      ),
+                      ["TW Units"]: numberFormat(
+                        d?.this_week_total_units || "0"
+                      ),
+                      ["TW Units Change"]:
+                        numberFormat(d?.this_week_units_diff) || "0",
+                      ["TW Units Change (%)"]: percentageFormat(
+                        d?.this_week_units_change
+                      ),
+                      ["LY Sales"]: currencyFormat(d?.last_year_total_sales),
+                      ["LY Sales Change"]: currencyFormat(
+                        d?.last_year_sales_diff
+                      ),
+                      ["LY Sales Change (%)"]: percentageFormat(
+                        d?.last_year_sales_change
+                      ),
+                      ["LY Units"]: numberFormat(d?.last_year_total_units),
+                      ["LY Units Change"]: numberFormat(
+                        d?.last_year_units_diff
+                      ),
+                      ["LY Units Change (%)"]: percentageFormat(
+                        d?.last_year_units_change
+                      ),
+                    };
+                  })}
+                  fileName={"sales-data-by-week"}
+                  loading={loading}
                 >
-                  Export
-                </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton1"
-                >
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Export to csv
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Export to xlsx
-                    </a>
-                  </li>
-                </ul>
+                  <button
+                    className="btn btn-light-danger fs-7 px-10"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Export
+                  </button>
+                </ExportToExcel>
               </div>
             </div>
           </div>
@@ -163,13 +207,11 @@ export default function SalesBySKU(tableList, loading) {
                       <td>{title4Loading()}</td>
                     </tr>
                   ) : tableList.length === 0 ? (
-                    <>
-                      <tr>
-                        <td colSpan={14}>
-                          <NoData />
-                        </td>
-                      </tr>
-                    </>
+                    <tr>
+                      <td colSpan={14}>
+                        <NoData />
+                      </td>
+                    </tr>
                   ) : (
                     tableList?.map((d, i) => (
                       <tr key={i}>

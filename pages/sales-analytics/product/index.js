@@ -19,6 +19,7 @@ import {
 } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
 import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
+import { ExportToExcel } from "@/src/hooks/Excelexport";
 
 const { useToken } = theme;
 
@@ -197,7 +198,6 @@ export default function SalesByProducts() {
     if (field === "total_ordered_units") return numberFormat(value);
     return numberFormat(value);
   };
-
   return (
     <DashboardLayout>
       <div
@@ -268,9 +268,59 @@ export default function SalesByProducts() {
                       {" "}
                       Configuration{" "}
                     </button>
-                    <button className="btn btn-light-danger btn-sm fw-bolder ">
-                      Export Data
-                    </button>
+
+                    <ExportToExcel
+                      columns={[
+                        "Title",
+                        "Parent ASIN",
+                        "Child ASIN",
+                        "SKU",
+                      ].concat(
+                        ...tableColumns
+                          .slice(0, tableColumns.length - 1)
+                          .map((tc) =>
+                            columnsList.reduce((acc, cl) => {
+                              acc.push(`WK${tc}-${cl.label}`);
+                              return acc;
+                            }, [])
+                          )
+                      )}
+                      rows={Object.values(list || {})
+                       
+                        ?.map((text) => {
+                          const row = tableColumns.reduce((acc, week) => {
+                            const data = text[week];
+                            if (week !== "Grand Total") {
+                              const weekDetails = columnsList.reduce(
+                                (acc, cl) => {
+                                  acc[`WK${week}-${cl.label}`] = formatter(
+                                    cl.value,
+                                    data[cl.value]
+                                  );
+                                  return acc;
+                                },
+                                {}
+                              );
+                              acc = {
+                                Title: data.title,
+                                ...acc,
+                                "Parent ASIN": data.parent_asin,
+                                "Child ASIN": data.child_asin,
+                                SKU: data.sku,
+                                ...weekDetails,
+                              };
+                            }
+                            return acc;
+                          }, {});
+                          return row;
+                        })}
+                      fileName={"sales-by-product-data"}
+                      loading={tableLoading}
+                    >
+                      <button className="btn btn-light-danger btn-sm fw-bolder">
+                        Export Data
+                      </button>
+                    </ExportToExcel>
                   </div>
                 </div>
                 <div className="card-body pt-2 table-responsive">
