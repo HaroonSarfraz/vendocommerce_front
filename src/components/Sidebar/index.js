@@ -7,7 +7,11 @@ import { Menu, Tooltip } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { adminMenus, managerMenus, userMenus } from "@/src/helpers/sidebar.helper";
+import {
+  adminMenus,
+  managerMenus,
+  userMenus,
+} from "@/src/helpers/sidebar.helper";
 import { setSwitchUser } from "@/src/store/slice/users.slice";
 import Wrapper from "./style";
 import { deleteCookie } from "cookies-next";
@@ -46,15 +50,17 @@ export default function Sidebar(props) {
     Admin: adminMenus,
     Manager: managerMenus,
     User: userMenus,
-  }
+  };
 
   const menuItems = () => {
-    if(brand?.role === "User") {
-      return menus[userType].filter((i) => i.label !== "Brand Settings")
+    if (brand?.role === "User") {
+      return menus[userType].filter(
+        (i) => i.label !== "Brand Settings" && i.label !== "Central Log System"
+      );
     } else {
-      return menus[userType]
+      return menus[userType];
     }
-  }
+  };
 
   const checkMenu = () => {
     const menu = menus[userType];
@@ -174,10 +180,7 @@ export default function Sidebar(props) {
 
             {!collapsed && (
               <div className="text-center">
-                <Link
-                  href={"/users/edit?activeTab=general"}
-                  className="ml-2"
-                >
+                <Link href={"/users/edit?activeTab=general"} className="ml-2">
                   {isMount ? user?.u_name : "Loading.."}
                 </Link>
                 <span className="text-gray-600 fw-bold d-block fs-7 mb-1">

@@ -17,6 +17,7 @@ import CustomerAcquisition from "./slice/customerAcquisition.slice";
 import InventoryDashboard from "./slice/inventoryDashboard.slice";
 import PoTemplateSlice from "./slice/poTemplate.slice";
 import CustomerAcquisitionLTV from "./slice/customerAcquisitionLTV.slice";
+import ReportLogs from "./slice/reportLogs.slice";
 
 export const rootReducer = {
   users: UsersReducer,
@@ -38,4 +39,5 @@ export const rootReducer = {
   advertisingTotalRevenue: AdvertisingTotalRevenue,
   inventoryDashboard: InventoryDashboard,
   poTemplate: PoTemplateSlice,
+  reportLogs: ReportLogs,
 };

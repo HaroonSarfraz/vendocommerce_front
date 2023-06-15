@@ -4,6 +4,7 @@ import {
   DashboardSvg,
   GraphSvg,
   LockSvg,
+  PaperSvg,
   SettingsSvg,
   UserLgSvg,
   UsersSvg,
@@ -23,9 +24,7 @@ export const adminMenus = [
   getItem("Manage Users", "users", <LockSvg />),
 ];
 
-export const managerMenus = [
-  getItem("Manage Brands", "brands", <UsersSvg />),
-];
+export const managerMenus = [getItem("Manage Brands", "brands", <UsersSvg />)];
 
 export const userMenus = [
   getItem("Sales Analytics", "sales-analytics", <GraphSvg />, [
@@ -205,5 +204,6 @@ export const userMenus = [
   //     "inventory-management"
   //   ),
   // ]),
+  getItem("Central Log System", `central-log-system`, <PaperSvg />),
   getItem("Brand Settings", `brands/edit?activeTab=general`, <SettingsSvg />),
 ];
