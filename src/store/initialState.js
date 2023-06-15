@@ -151,6 +151,15 @@ const initialState = {
     data: [],
     status: false,
   },
+  reportLogs: {
+    reportLogsData: {
+      data: [],
+      count: 0,
+      page: 1,
+      limit: 10,
+      status: false,
+    },
+  },
 };
 
 export default initialState;
