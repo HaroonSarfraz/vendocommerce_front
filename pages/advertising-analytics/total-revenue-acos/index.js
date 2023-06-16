@@ -68,10 +68,8 @@ export default function TotalRevenueAcos() {
     };
   }, [filter]);
 
-  const showDSP = advertisementsData.reduce(
-    (acc, item) => acc + item.twDspRevenue,
-    0
-  );
+  const showDSP =
+    advertisementsData.reduce((acc, item) => acc + item.twDspRevenue, 0) > 0;
 
   const columns = [
     {
@@ -264,7 +262,7 @@ export default function TotalRevenueAcos() {
             align: "center",
             sorter: (a, b) => a.twDspSpend - b.twDspSpend,
             render: (text) => {
-              return <span>{numberFormat(text?.twDspSpend)}</span>;
+              return <span>{currencyFormat(text?.twDspSpend)}</span>;
             },
           },
           {
@@ -273,7 +271,13 @@ export default function TotalRevenueAcos() {
             align: "center",
             sorter: (a, b) => a.dspSpendChange - b.dspSpendChange,
             render: (text) => {
-              return <span>{numberFormat(text?.dspSpendChange)}</span>;
+              return (
+                <span
+                  style={{ color: text.dspSpendChange < 0 ? "red" : "green" }}
+                >
+                  {percentageFormat(text?.dspSpendChange)}
+                </span>
+              );
             },
           },
           {
@@ -282,7 +286,7 @@ export default function TotalRevenueAcos() {
             align: "center",
             sorter: (a, b) => a.twDspRevenue - b.twDspRevenue,
             render: (text) => {
-              return <span>{numberFormat(text?.twDspRevenue)}</span>;
+              return <span>{currencyFormat(text?.twDspRevenue)}</span>;
             },
           },
           {
@@ -291,7 +295,13 @@ export default function TotalRevenueAcos() {
             align: "center",
             sorter: (a, b) => a.dspRevenueChange - b.dspRevenueChange,
             render: (text) => {
-              return <span>{numberFormat(text?.dspRevenueChange)}</span>;
+              return (
+                <span
+                  style={{ color: text.dspRevenueChange < 0 ? "red" : "green" }}
+                >
+                  {percentageFormat(text?.dspRevenueChange)}
+                </span>
+              );
             },
           },
         ]
