@@ -4,7 +4,7 @@ export const fetchBrandList = (data, headers = {}) => {
   return request.get(
     `/brands/all?page=${data?.page || 1}&limit=${data?.perPage || 10}&orderBy=${
       data?.orderBy || "id"
-    }&order=${data?.order || "desc"}&search=${data?.search_term || ""}&status=${data?.status || ""}`,
+    }&order=${data?.order || "desc"}&search=${data?.search_term || ""}&status=${data?.status || "Created"}`,
     { headers }
   );
 };
