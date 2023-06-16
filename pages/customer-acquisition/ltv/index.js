@@ -28,17 +28,19 @@ export default function SalesByMonth() {
   const { year, month } = filter;
 
   useEffect(() => {
-    let time = setTimeout(() => {
-      dispatch(
-        getCustomerAcquisitionLTV({
-          search_year: year,
-          search_month: month?.join(","),
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    if (month.length > 0 && year) {
+      let time = setTimeout(() => {
+        dispatch(
+          getCustomerAcquisitionLTV({
+            search_year: year,
+            search_month: month?.join(","),
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [year, month]);
 
   useEffect(() => {

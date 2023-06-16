@@ -68,20 +68,22 @@ export default function ProductReportPage() {
   }, []);
 
   useEffect(() => {
-    const time = setTimeout(() => {
-      const { year, week, asin, category } = filter;
-      dispatch(
-        getProductReportList({
-          search_year: year,
-          search_week: week?.join(","),
-          asin,
-          category: category.join(","),
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    const { year, week, asin, category } = filter;
+    if (week.length > 0 && year) {
+      const time = setTimeout(() => {
+        dispatch(
+          getProductReportList({
+            search_year: year,
+            search_week: week?.join(","),
+            asin,
+            category: category.join(","),
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 

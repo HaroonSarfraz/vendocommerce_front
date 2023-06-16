@@ -70,32 +70,34 @@ export default function Sales() {
   }, [salesByWeekData]);
 
   useEffect(() => {
-    setSalesGraphLoading(true);
-    setReportCallOutLoading(true);
-    setSalesByWeekLoading(true);
-    const time = setTimeout(() => {
-      dispatch(
-        getSalesGraphData({
-          search_year: filter?.year,
-          search_week: filter?.week?.join(","),
-        })
-      );
-      dispatch(
-        getSalesReportCallOuts({
-          search_year: filter?.year,
-          search_week: filter?.week?.join(","),
-        })
-      );
-    }, 600);
-    // dispatch(
-    //   getSalesByWeekData({
-    //     search_year: filter?.year,
-    //     search_week: filter?.week?.join(","),
-    //   })
-    // );
-    return () => {
-      clearTimeout(time);
-    };
+    if (filter.week.length > 0 && filter.year) {
+      setSalesGraphLoading(true);
+      setReportCallOutLoading(true);
+      setSalesByWeekLoading(true);
+      const time = setTimeout(() => {
+        dispatch(
+          getSalesGraphData({
+            search_year: filter?.year,
+            search_week: filter?.week?.join(","),
+          })
+        );
+        dispatch(
+          getSalesReportCallOuts({
+            search_year: filter?.year,
+            search_week: filter?.week?.join(","),
+          })
+        );
+      }, 600);
+      // dispatch(
+      //   getSalesByWeekData({
+      //     search_year: filter?.year,
+      //     search_week: filter?.week?.join(","),
+      //   })
+      // );
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [filter]);
 
   return (
