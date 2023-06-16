@@ -322,6 +322,11 @@ export default function TotalRevenueAcos() {
 
   useEffect(() => {
     const list = columns.slice(0).map((d) => d.title);
+    setColumnsList(list);
+  }, [showDSP]);
+
+  useEffect(() => {
+    const list = columns.slice(0).map((d) => d.title);
 
     setColumnsList(list);
     setTableColumnConfig(["TOTAL SALES"]);
