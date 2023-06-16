@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import { updateUserRequest } from "@/src/api/users.api";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
-import { UserLgSvg, KeySvg } from "@/src/assets";
-import { General, BrandSettings } from "@/src/components/users";
+import { UserLgSvg, KeySvg, LockSvg } from "@/src/assets";
+import { General, BrandSettings, ChangePassword } from "@/src/components/users";
 import { Tabs } from "antd";
 import Loading from "@/src/components/loading";
 
@@ -64,6 +64,12 @@ export default function Users() {
       key: "brands",
       icon: <KeySvg />,
       tabComponent: BrandSettings,
+    },
+    {
+      tabHeading: "Change Password",
+      key: "chng_pass",
+      icon: <LockSvg />,
+      tabComponent: ChangePassword,
     },
   ];
 
