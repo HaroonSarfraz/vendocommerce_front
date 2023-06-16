@@ -81,7 +81,7 @@ export default function AdvertisingData() {
         clearTimeout(time);
       };
     }
-  }, [filter]);
+  }, [filter, dispatch]);
 
   return (
     <DashboardLayout>
