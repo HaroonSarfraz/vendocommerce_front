@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Input, message, Modal } from "antd";
+import { Input, message, Modal, Select } from "antd";
 import Loading from "@/src/components/loading";
 import ASINTable from "@/src/components/table";
 import Pagination from "@/src/components/pagination";
@@ -26,6 +26,21 @@ import useMount from "@/src/hooks/useMount";
 
 const { confirm } = Modal;
 
+const statusOptions = [
+  {
+    label: "Ready",
+    value: "Created",
+  },
+  {
+    label: "Pending",
+    value: "Pending",
+  },
+  {
+    label: "Deleted",
+    value: "Deleted",
+  },
+];
+
 export default function Users(props) {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -41,6 +56,7 @@ export default function Users(props) {
   const [order, setOrder] = useState("desc");
 
   const [searchText, setSearchText] = useState("");
+  const [status, setStatus] = useState("Created");
 
   const brandList = useSelector(selectBrandList);
   const userBrandList = useSelector(selectUserBrandList);
@@ -80,7 +96,12 @@ export default function Users(props) {
 
     if (userRole === "Admin") {
       dispatch(
-        getBrandList({ page: page, perPage: pageSize, search_term: searchText })
+        getBrandList({
+          page: page,
+          perPage: pageSize,
+          search_term: searchText,
+          status: status,
+        })
       );
     } else if (userRole === "Manager") {
       dispatch(getUserBrandList());
@@ -97,6 +118,7 @@ export default function Users(props) {
         search_term: searchText,
         orderBy: orderBy,
         order: order,
+        status: status,
       })
     );
     setPage(e);
@@ -115,6 +137,7 @@ export default function Users(props) {
         search_term: searchText,
         orderBy: orderBy,
         order: order,
+        status: status,
       })
     );
   };
@@ -129,6 +152,7 @@ export default function Users(props) {
         page: 1,
         perPage: pageSize,
         search_term: searchText,
+        status: status,
         orderBy: orderBy,
         order: order,
       })
@@ -141,11 +165,16 @@ export default function Users(props) {
         page: page,
         perPage: pageSize,
         search_term: searchText,
+        status: status,
         orderBy: sorter?.columnKey,
         order: sorter?.order?.slice(0, -3),
       })
     );
   };
+
+  useEffect(() => {
+    search();
+  }, [status]);
 
   const deleteBrand = (brandID) => {
     setLoading(true);
@@ -157,6 +186,7 @@ export default function Users(props) {
               page: page,
               perPage: pageSize,
               search_term: searchText,
+              status: status,
               orderBy: orderBy,
               order: order,
             })
@@ -293,7 +323,11 @@ export default function Users(props) {
         );
       },
     },
-  ];
+  ].filter(
+    (c) =>
+      status === "Created" ||
+      (c.title !== "Action" && c.title !== "Switch Brand")
+  );
 
   return (
     <DashboardLayout>
@@ -304,23 +338,39 @@ export default function Users(props) {
         <div className="container-fluid" id="kt_content_container">
           {userRole === "Admin" && (
             <div className="row mb-4">
-              <div className="col-lg-12">
-                <div className="card card-flush h-xl-100">
-                  <Input
-                    onChange={(e) => setSearchText(e.target.value)}
-                    onKeyPress={(ev) => {
-                      if (ev?.key === "Enter") {
-                        ev?.preventDefault();
-                        ev?.target?.blur();
-                      }
-                    }}
-                    onBlur={() => {
-                      search();
-                    }}
-                    value={searchText}
-                    className="w-200px py-2 my-4 mx-4"
-                    placeholder="search..."
-                  />
+              <div className="card card-flush h-xl-100">
+                <div className="card-body px-4 py-4">
+                  <div className="d-flex flex-wrap gap-3">
+                    <div>
+                      <Input
+                        size="large"
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyPress={(ev) => {
+                          if (ev?.key === "Enter") {
+                            ev?.preventDefault();
+                            ev?.target?.blur();
+                          }
+                        }}
+                        onBlur={() => {
+                          search();
+                        }}
+                        value={searchText}
+                        placeholder="search..."
+                      />
+                    </div>
+                    <div>
+                      <Select
+                        size="large"
+                        style={{ width: 200 }}
+                        value={status || null}
+                        placeholder="Select Brand Status"
+                        onChange={(e) => {
+                          setStatus(e);
+                        }}
+                        options={statusOptions}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -10,6 +10,7 @@ import { defaultWeek, defaultYear } from "@/src/config";
 import { getAdvertising } from "@/src/services/advertisingTotalRevenue.services";
 import { selectAdvertisingTotalRevenue } from "@/src/store/slice/advertisingTotalRevenue.slice";
 import _ from "lodash";
+import { message } from "antd";
 import {
   currencyFormat,
   numberFormat,
