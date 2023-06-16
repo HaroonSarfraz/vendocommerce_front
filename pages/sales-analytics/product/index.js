@@ -20,8 +20,15 @@ import {
 import NoData from "@/src/components/no-data";
 import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
+import {
+  fetchConfigurations,
+  updateConfigurations,
+} from "@/src/api/configurations.api";
 
 const { useToken } = theme;
+
+const configurationListKey = "sales-by-product-list";
+const configurationColumnKey = "sales-by-product-column";
 
 const columnsList = [
   {
@@ -105,12 +112,15 @@ export default function SalesByProducts() {
 
   const salesByProductList = useSelector(selectSalesByProductList);
 
-  const [selectedColumn, setSelectedColumn] = useState(null);
-
   const [tableLoading, setTableLoading] = useState(true);
   const [list, setList] = useState([]);
   const [tableColumns, setTableColumns] = useState([]);
+
   const [columnConfig, setColumnConfig] = useState([]);
+  const [columnConfigLoaded, setColumnConfigLoaded] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState(null);
+  const [selectedColumnLoaded, setSelectedColumnLoaded] = useState(null);
+
   const [expandedWeek, setExpendedWeek] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -119,15 +129,44 @@ export default function SalesByProducts() {
     year: defaultYear(),
   });
 
-  console.log(salesByProductList, tableLoading);
-
   useEffect(() => {
     setColumnConfig(columnsList);
     setSelectedColumn(columnsList[1].value);
 
-    return () => {};
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchConfigurations(configurationListKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setColumnConfig(res.data);
+          setColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
+
+    fetchConfigurations(configurationColumnKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setSelectedColumn(res.data[0]);
+          setSelectedColumnLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
   }, []);
+
+  useEffect(() => {
+    if (columnConfigLoaded && columnConfig.length > 0) {
+      updateConfigurations(configurationListKey, columnConfig);
+    }
+  }, [columnConfig]);
+
+  useEffect(() => {
+    if (selectedColumnLoaded && selectedColumn.length > 0) {
+      updateConfigurations(configurationColumnKey, [selectedColumn]);
+    }
+  }, [selectedColumn]);
 
   useEffect(() => {
     const time = setTimeout(() => {
@@ -286,34 +325,33 @@ export default function SalesByProducts() {
                           )
                       )}
                       rows={Object.values(list || {})
-                       
-                        ?.map((text) => {
-                          const row = tableColumns.reduce((acc, week) => {
-                            const data = text[week];
-                            if (week !== "Grand Total") {
-                              const weekDetails = columnsList.reduce(
-                                (acc, cl) => {
-                                  acc[`WK${week}-${cl.label}`] = formatter(
-                                    cl.value,
-                                    data[cl.value]
-                                  );
-                                  return acc;
-                                },
-                                {}
-                              );
-                              acc = {
-                                Title: data.title,
-                                ...acc,
-                                "Parent ASIN": data.parent_asin,
-                                "Child ASIN": data.child_asin,
-                                SKU: data.sku,
-                                ...weekDetails,
-                              };
-                            }
-                            return acc;
-                          }, {});
-                          return row;
-                        })}
+                      ?.map((text) => {
+                        const row = tableColumns.reduce((acc, week) => {
+                          const data = text[week];
+                          if (week !== "Grand Total") {
+                            const weekDetails = columnsList.reduce(
+                              (acc, cl) => {
+                                acc[`WK${week}-${cl.label}`] = formatter(
+                                  cl.value,
+                                  data[cl.value]
+                                );
+                                return acc;
+                              },
+                              {}
+                            );
+                            acc = {
+                              Title: data.title,
+                              ...acc,
+                              "Parent ASIN": data.parent_asin,
+                              "Child ASIN": data.child_asin,
+                              SKU: data.sku,
+                              ...weekDetails,
+                            };
+                          }
+                          return acc;
+                        }, {});
+                        return row;
+                      })}
                       fileName={"sales-by-product-data"}
                       loading={tableLoading}
                     >

@@ -16,6 +16,14 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 
+import {
+  fetchConfigurations,
+  updateConfigurations,
+} from "@/src/api/configurations.api";
+
+const configurationTableKey = "total-revenue-acos-table";
+const configurationGraphKey = "total-revenue-acos-graph";
+
 export default function TotalRevenueAcos() {
   const dispatch = useDispatch();
 
@@ -26,7 +34,9 @@ export default function TotalRevenueAcos() {
   const [graphConfigOpen, setGraphConfigOpen] = useState(false);
   const [columnsList, setColumnsList] = useState([]);
   const [tableColumnConfig, setTableColumnConfig] = useState([]);
+  const [tableColumnConfigLoaded, setTableColumnConfigLoaded] = useState(false);
   const [graphColumnConfig, setGraphColumnConfig] = useState([]);
+  const [graphColumnConfigLoaded, setGraphColumnConfigLoaded] = useState(false);
 
   const [filter, setFilter] = useState({
     week: _.range(1, defaultWeek() + 1),
@@ -303,7 +313,41 @@ export default function TotalRevenueAcos() {
     setColumnsList(list);
     setTableColumnConfig(["TOTAL SALES"]);
     setGraphColumnConfig(["TOTAL SALES"]);
+
+    fetchConfigurations(configurationTableKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setTableColumnConfig(res.data);
+          setTableColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
+
+    fetchConfigurations(configurationGraphKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setGraphColumnConfig(res.data);
+          setGraphColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
   }, []);
+
+  useEffect(() => {
+    if (tableColumnConfigLoaded && tableColumnConfig.length > 0) {
+      updateConfigurations(configurationTableKey, tableColumnConfig);
+    }
+  }, [tableColumnConfig]);
+
+  useEffect(() => {
+    if (graphColumnConfigLoaded && graphColumnConfig.length > 0) {
+      updateConfigurations(configurationGraphKey, graphColumnConfig);
+    }
+  }, [graphColumnConfig]);
 
   return (
     <DashboardLayout>
