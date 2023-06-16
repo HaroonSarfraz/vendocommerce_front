@@ -1,6 +1,8 @@
 import { Skeleton, Statistic } from "antd";
-import CountUp from "react-countup";
 import Tooltip from "../../components/tooltip";
+import dynamic from "next/dynamic";
+
+const CountUp = dynamic(() => import("react-countup"), { ssr: false });
 
 const checkFloor = (srt) => {
   if (srt > Math.floor(srt)) {

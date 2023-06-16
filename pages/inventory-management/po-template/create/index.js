@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { useRouter } from "next/router";
-import { postPoTemplate } from "@/src/services/poTemplate.services";
+import { createPoTemplate } from "@/src/services/poTemplate.services";
 
 export default function PoTemplate() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function PoTemplate() {
   const handleSubmit = () => {
     form.validateFields().then((values) => {
       // setSubmit(true); //on submit successfull response
-      postPoTemplate(values);
+      createPoTemplate(values);
       // setSubmit(false); //on submit successfull response
     });
     form.resetFields();
