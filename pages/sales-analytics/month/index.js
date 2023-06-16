@@ -101,53 +101,57 @@ export default function SalesByMonth() {
 
   useEffect(() => {
     const { month, year } = filter;
-    setSalesByMonthDataLoading(true);
-    setSalesByMonthGraphLoading(true);
-    setSalesByMonthDetailLoading(true);
-    setGraphSelected([]);
+    if (month.length > 0 && year) {
+      setSalesByMonthDataLoading(true);
+      setSalesByMonthGraphLoading(true);
+      setSalesByMonthDetailLoading(true);
+      setGraphSelected([]);
 
-    const time = setTimeout(() => {
-      dispatch(
-        getSalesByMonthData({
-          search_year: year,
-          search_month: month?.join(","),
-        })
-      );
-      dispatch(
-        getSalesByMonthDetail({
-          search_year: year,
-          search_month: month?.join(","),
-        })
-      );
-      dispatch(
-        getSalesByMonthGraph({
-          search_year: year,
-          search_month: month?.join(","),
-          graph_filter_type: graphFilter,
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+      const time = setTimeout(() => {
+        dispatch(
+          getSalesByMonthData({
+            search_year: year,
+            search_month: month?.join(","),
+          })
+        );
+        dispatch(
+          getSalesByMonthDetail({
+            search_year: year,
+            search_month: month?.join(","),
+          })
+        );
+        dispatch(
+          getSalesByMonthGraph({
+            search_year: year,
+            search_month: month?.join(","),
+            graph_filter_type: graphFilter,
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [filter]);
 
   useEffect(() => {
-    setSalesByMonthGraphLoading(true);
-    setGraphSelected([]);
+    if (filter.month.length > 0 && filter.year) {
+      setSalesByMonthGraphLoading(true);
+      setGraphSelected([]);
 
-    const time = setTimeout(() => {
-      dispatch(
-        getSalesByMonthGraph({
-          search_year: filter?.year,
-          search_month: filter?.month?.join(","),
-          graph_filter_type: graphFilter,
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+      const time = setTimeout(() => {
+        dispatch(
+          getSalesByMonthGraph({
+            search_year: filter?.year,
+            search_month: filter?.month?.join(","),
+            graph_filter_type: graphFilter,
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [graphFilter]);
 
   useEffect(() => {

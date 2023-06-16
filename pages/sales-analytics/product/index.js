@@ -169,23 +169,26 @@ export default function SalesByProducts() {
   }, [selectedColumn]);
 
   useEffect(() => {
-    const time = setTimeout(() => {
-      const { year, week } = filter;
-      if (week.length > 0) {
-        dispatch(
-          getSalesByProductList({
-            search_year: year,
-            search_week: week?.join(","),
-          })
-        );
-      } else {
-        dispatch(setSalesByProductList({ status: true, data: [] }));
-        message.warning("Please select at least one week");
-      }
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    const { year, week } = filter;
+    if (week.length > 0 && year) {
+      const time = setTimeout(() => {
+        if (week.length > 0) {
+          dispatch(
+            getSalesByProductList({
+              search_year: year,
+              search_week: week?.join(","),
+            })
+          );
+        } else {
+          dispatch(setSalesByProductList({ status: true, data: [] }));
+          message.warning("Please select at least one week");
+        }
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
@@ -324,8 +327,7 @@ export default function SalesByProducts() {
                             }, [])
                           )
                       )}
-                      rows={Object.values(list || {})
-                      ?.map((text) => {
+                      rows={Object.values(list || {})?.map((text) => {
                         const row = tableColumns.reduce((acc, week) => {
                           const data = text[week];
                           if (week !== "Grand Total") {

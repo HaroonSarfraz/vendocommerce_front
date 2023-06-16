@@ -40,19 +40,21 @@ export default function CustomerAcquisitionNewVSRepeat() {
   );
 
   useEffect(() => {
-    setLoading(true);
     const { year, month } = filter;
-    const time = setTimeout(() => {
-      dispatch(
-        getCustomerAcquisition({
-          search_year: year,
-          search_month: month?.join(","),
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    if (month.length > 0 && year) {
+      setLoading(true);
+      const time = setTimeout(() => {
+        dispatch(
+          getCustomerAcquisition({
+            search_year: year,
+            search_month: month?.join(","),
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [filter]);
 
   useEffect(() => {

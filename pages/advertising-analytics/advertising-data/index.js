@@ -65,20 +65,22 @@ export default function AdvertisingData() {
   }, [advertisements]);
 
   useEffect(() => {
-    setLastWeekKPIsLoading(true);
-    setYearToDayKPIsLoading(true);
-    setGraphsLoading(true);
-    const time = setTimeout(() => {
-      dispatch(
-        getAdvertising({
-          search_year: filter?.year,
-          search_week: filter?.week?.join(","),
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    if (filter?.week.length > 0 && filter?.year) {
+      setLastWeekKPIsLoading(true);
+      setYearToDayKPIsLoading(true);
+      setGraphsLoading(true);
+      const time = setTimeout(() => {
+        dispatch(
+          getAdvertising({
+            search_year: filter?.year,
+            search_week: filter?.week?.join(","),
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [filter]);
 
   return (

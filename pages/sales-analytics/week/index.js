@@ -80,56 +80,60 @@ export default function SalesByWeek() {
   });
 
   useEffect(() => {
-    setGraphLoading(true);
-    setTableLoading(true);
-    setDetailsLoading(true);
-    setGraphSelected([]);
+    const { week, year } = filter;
+    if (week.length > 0 && year) {
+      setGraphLoading(true);
+      setTableLoading(true);
+      setDetailsLoading(true);
+      setGraphSelected([]);
 
-    const time = setTimeout(() => {
-      const { week, year } = filter;
-      dispatch(
-        getSalesWeekDetailList({
-          search_year: year,
-          search_week: week?.sort()?.join(","),
-        })
-      );
-      dispatch(
-        getSalesWeekGraph({
-          search_year: year,
-          search_week: week?.sort()?.join(","),
-          graph_filter_type: graphFilter,
-        })
-      );
-      dispatch(
-        getSalesWeekData({
-          search_week: week?.join(","),
-          search_year: year,
-        })
-      );
-    }, 600);
+      const time = setTimeout(() => {
+        dispatch(
+          getSalesWeekDetailList({
+            search_year: year,
+            search_week: week?.sort()?.join(","),
+          })
+        );
+        dispatch(
+          getSalesWeekGraph({
+            search_year: year,
+            search_week: week?.sort()?.join(","),
+            graph_filter_type: graphFilter,
+          })
+        );
+        dispatch(
+          getSalesWeekData({
+            search_week: week?.join(","),
+            search_year: year,
+          })
+        );
+      }, 600);
 
-    return () => {
-      clearTimeout(time);
-    };
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [filter]);
 
   useEffect(() => {
     const { week, year } = filter;
-    setGraphLoading(true);
-    setGraphSelected([]);
+    if (week.length > 0 && year) {
+      setGraphLoading(true);
+      setGraphSelected([]);
 
-    const time = setTimeout(() => {
-      dispatch(
-        getSalesWeekGraph({
-          search_year: year,
-          search_week: week?.sort()?.join(","),
-          graph_filter_type: graphFilter,
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+      const time = setTimeout(() => {
+        dispatch(
+          getSalesWeekGraph({
+            search_year: year,
+            search_week: week?.sort()?.join(","),
+            graph_filter_type: graphFilter,
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
   }, [graphFilter]);
 
   useEffect(() => {

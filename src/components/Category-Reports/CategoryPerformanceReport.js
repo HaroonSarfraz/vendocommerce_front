@@ -37,18 +37,20 @@ export default function CategoryPerformanceReport() {
 
   useEffect(() => {
     const { year, week, category } = filter;
-    const time = setTimeout(() => {
-      dispatch(
-        getCategoryPerformanceList({
-          search_year: year,
-          search_week: week?.join(","),
-          category: category.join(","),
-        })
-      );
-    }, 600);
-    return () => {
-      clearTimeout(time);
-    };
+    if (week.length > 0 && year) {
+      const time = setTimeout(() => {
+        dispatch(
+          getCategoryPerformanceList({
+            search_year: year,
+            search_week: week?.join(","),
+            category: category.join(","),
+          })
+        );
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
