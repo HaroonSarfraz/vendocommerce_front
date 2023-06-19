@@ -5,7 +5,7 @@ import ASINTable from "@/src/components/table";
 import Loading from "@/src/components/loading";
 import NoData from "@/src/components/no-data";
 import Pagination from "@/src/components/pagination";
-import { timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
+import { timeInterval, timeFormat, timeSince } from "@/src/helpers/formatting.helpers";
 import { selectReportLogs } from "@/src/store/slice/reportLogs.slice";
 import { getReportLogs } from "@/src/services/reportLogs.services";
 import _ from "lodash";
@@ -273,18 +273,22 @@ export default function ProductReportPage() {
       },
     },
     {
-      title: "Data Fetching Time",
-      width: 130,
+      title: "Data Fetching Date",
+      width: 140,
       align: "left",
       render: (text) => {
         return (
           <div>
-            <span>{`${timeFormat(text.data_start_time)} to`}</span>
-            <br />
-            <span>{timeFormat(text.data_end_time)}</span>
+            {text.data_start_time !== text.data_end_time && (
+              <div>
+                <span>{`${moment(new Date(text.data_start_time)).format("MM/DD/YYYY")} to`}</span>
+                <br />
+              </div>
+            )}
+            <span>{moment(new Date(text.data_end_time)).format("MM/DD/YYYY")}</span>
             <br />
           </div>
-        );
+        )
       },
     },
     {
@@ -294,9 +298,7 @@ export default function ProductReportPage() {
       render: (text) => {
         return (
           <div>
-            <span>{`${timeFormat(text.processing_start_time)} to`}</span>
-            <br />
-            <span>{timeFormat(text.processing_end_time)}</span>
+            <span>{timeInterval(text.processing_start_time, text.processing_end_time)}</span>
           </div>
         );
       },
