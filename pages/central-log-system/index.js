@@ -147,7 +147,7 @@ export default function ProductReportPage() {
     },
     {
       title: "Final Status",
-      width: 120,
+      width: 150,
       align: "left",
       key: "overall_status",
       render: (text) => {
@@ -156,7 +156,7 @@ export default function ProductReportPage() {
     },
     {
       title: "Marketplace",
-      width: 100,
+      width: 110,
       align: "left",
       key: "marketplace",
       sorter: true,
@@ -183,6 +183,24 @@ export default function ProductReportPage() {
       },
     },
     {
+      title: "Last Amazon checked At",
+      width: 170,
+      align: "left",
+      key: "updated_at",
+      sorter: true,
+      render: (text) => {
+        return (
+          <div>
+            <span>{timeFormat(text.updated_at)}</span>
+            <br />
+            <span className="timeStampColor">
+              ({timeSince(text.updated_at)})
+            </span>
+          </div>
+        );
+      },
+    },
+    {
       title: "Data Fetching Date",
       width: 125,
       align: "left",
@@ -203,7 +221,7 @@ export default function ProductReportPage() {
     },
     {
       title: "Processing Time",
-      width: 110,
+      width: 120,
       align: "left",
       render: (text) => {
         return (
@@ -236,9 +254,7 @@ export default function ProductReportPage() {
                   <div className="mb-5 d-flex flex-row justify-content-between">
                     <h1>Central Log System</h1>
                   </div>
-                  {tableLoading ? (
-                    <Loading />
-                  ) : list?.length != 0 ? (
+                  {list?.length != 0 ? (
                     <ASINTable
                       columns={columns}
                       dataSource={list}
