@@ -64,35 +64,38 @@ export default function SalesByMonth() {
       ...months,
     };
   });
-  const columns = [
-    {
-      title: "CUSTOMER MADE FIRST ORDER AT",
-      width: 200,
-      align: "center",
-      render: (text) => {
-        return text?.row_label;
-      },
-    },
-    {
-      title: "NUMBER OF NEW CUSTOMERS",
-      width: 180,
-      align: "center",
-      render: (text) => {
-        return text?.customers;
-      },
-    },
-    ...month
-      .map((item) => ({
-        title: moment().month(item).format("MMMM"),
-        width: 60,
+
+  const columns = useMemo(() => {
+    return [
+      {
+        title: "CUSTOMER MADE FIRST ORDER AT",
+        width: 200,
         align: "center",
-        index: item,
         render: (text) => {
-          return text[`m-${item}`] ? currencyFormat(text[`m-${item}`]) : null;
+          return text?.row_label;
         },
-      }))
-      .sort((a, b) => b.index - a.index),
-  ];
+      },
+      {
+        title: "NUMBER OF NEW CUSTOMERS",
+        width: 180,
+        align: "center",
+        render: (text) => {
+          return text?.customers;
+        },
+      },
+      ...list.slice().reverse()
+        .map((item) => ({
+          title: item.month_name,
+          width: 60,
+          align: "center",
+          index: item,
+          render: (text) => {
+            return text[`m-${item.month + 1}`] ? currencyFormat(text[`m-${item.month + 1}`]) : null;
+          },
+        }))
+        .sort((a, b) => b.index - a.index),
+    ];
+  }, [list]);
 
   return (
     <DashboardLayout>
