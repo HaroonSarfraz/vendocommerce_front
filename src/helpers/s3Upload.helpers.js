@@ -10,13 +10,13 @@ const myBucket = new AWS.S3({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
 })
 
-export const uploadFile = (file, setProgress) => {
+export const uploadFile = (file, key, setProgress) => {
 
   const params = {
     ACL: 'public-read',
     Body: file,
     Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET,
-    Key: file.name
+    Key: key
   };
 
   myBucket.putObject(params)
