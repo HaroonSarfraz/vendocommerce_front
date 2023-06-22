@@ -43,7 +43,7 @@ export default function Users() {
         setLoading(false);
       }
     }
-  }, [userId]);
+  }, [userId, router.isReady]);
 
   const handleTabChange = (key) => {
     router.push({

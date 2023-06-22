@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Form, Input, message, Modal, Select, Upload } from "antd";
+import { Button, Form, Input, message, Modal, Select, Upload, Progress } from "antd";
 import { createUserRequest, updateUserRequest } from "@/src/api/users.api";
 import _ from "lodash";
 import { UserLgSvg } from "@/src/assets";
 import { selectFilter } from "@/src/helpers/selectFilter";
 import { PlusOutlined } from "@ant-design/icons";
+import { uploadFile } from "@/src/helpers/s3Upload.helpers"
 
 const formItemLayout = {
   labelCol: {
@@ -26,6 +27,8 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
+const BASE_IMAGE_URL = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/`
+
 export default function General({ user, userRole }) {
   const router = useRouter();
   const [editForm] = Form.useForm();
@@ -34,32 +37,27 @@ export default function General({ user, userRole }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-xxx",
-      percent: 50,
-      name: "image.png",
-      status: "uploading",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-    {
-      uid: "-5",
-      name: "image.png",
-      status: "error",
-    },
-  ]);
+  const [fileList, setFileList] = useState(
+    user.u_photo ? [
+      {
+        url: user.u_photo
+      }
+    ] : []
+  );
+  const [progress, setProgress] = useState(0);
 
   const onFinish = (values) => {
     setSubmit(true);
 
+    var u_photo = user.u_photo;
+    if (fileList.length === 0) {
+      u_photo = "";
+    } else if (progress === 100) {
+      u_photo = `${BASE_IMAGE_URL}${fileList[0].originFileObj.name}`
+    }
+
     if (user) {
-      updateUserRequest(user.id, values)
+      updateUserRequest(user.id, { ...values, u_photo: u_photo })
         .then((res) => {
           setSubmit(false);
           if (res.status === 200) {
@@ -71,6 +69,7 @@ export default function General({ user, userRole }) {
                 JSON.stringify({
                   ...localUser,
                   u_name: res.data.u_name,
+                  u_photo: res.data.u_photo,
                   u_email: res.data.u_email,
                   role: res.data.role,
                 })
@@ -120,20 +119,14 @@ export default function General({ user, userRole }) {
     );
   };
 
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    setProgress(0);
+    if (newFileList.length > 0 && newFileList[0].status === "done") {
+      setProgress(1);
+      uploadFile(newFileList[0].originFileObj, setProgress);
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -161,8 +154,19 @@ export default function General({ user, userRole }) {
                       fileList={fileList}
                       onPreview={handlePreview}
                       onChange={handleChange}
+                      maxCount={1}
                     >
-                      {fileList.length >= 8 ? null : uploadButton}
+                      <div>
+                        <PlusOutlined />
+                        <div
+                          style={{
+                            marginTop: 8,
+                          }}
+                        >
+                          Picture
+                        </div>
+                      </div>
+
                     </Upload>
                     <Modal
                       open={previewOpen}
@@ -178,6 +182,9 @@ export default function General({ user, userRole }) {
                         src={previewImage}
                       />
                     </Modal>
+                    {fileList.length > 0 && progress !== 0 && (
+                      <Progress percent={progress} size="small" />
+                    )}
                   </div>
                   <div style={{ width: "100%" }}>
                     <div className="row">
