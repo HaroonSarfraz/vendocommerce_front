@@ -75,9 +75,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
       sorter: (a, b) => a.month - b.month,
       render: (text) => {
         return (
-          moment()
-            .month(text.month - 1)
-            .format("MMM") +
+          text.month_name.substring(0, 3) +
           "-" +
           (text.year || filter.year)
         );
