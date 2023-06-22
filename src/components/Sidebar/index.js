@@ -180,7 +180,7 @@ export default function Sidebar(props) {
 
             {!collapsed && (
               <div className="text-center">
-                {user.u_photo && (
+                {isMount && user?.u_photo && (
                   <div className="mb-3 rounded-lg">
                     <img width="100" src={user.u_photo} ></img>
                   </div>
