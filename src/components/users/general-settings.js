@@ -38,7 +38,7 @@ export default function General({ user, userRole }) {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState(
-    user.u_photo ? [
+    user?.u_photo ? [
       {
         url: user.u_photo
       }
