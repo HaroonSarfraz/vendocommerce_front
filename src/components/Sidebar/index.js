@@ -180,6 +180,12 @@ export default function Sidebar(props) {
 
             {!collapsed && (
               <div className="text-center">
+                {user.u_photo && (
+                  <div className="mb-3 rounded-lg">
+                    <img width="100" src={user.u_photo} ></img>
+                  </div>
+                )
+                }
                 <Link href={"/users/edit?activeTab=general"} className="ml-2">
                   {isMount ? user?.u_name : "Loading.."}
                 </Link>
@@ -233,9 +239,8 @@ export default function Sidebar(props) {
             className="d-flex justify-content-center align-items-center"
           >
             <button
-              className={`btn btn-light-danger btn-icon-gray-600 btn-text-gray-600 w-200px ${
-                collapsed ? "mx-3" : "mx-0"
-              }`}
+              className={`btn btn-light-danger btn-icon-gray-600 btn-text-gray-600 w-200px ${collapsed ? "mx-3" : "mx-0"
+                }`}
               style={
                 {
                   // backgroundImage: "linear-gradient(45deg,#000000,#3e3e3e)",
@@ -251,11 +256,10 @@ export default function Sidebar(props) {
               }}
             >
               <LogoutOutlined
-                className={`${
-                  isMount && window.innerWidth >= 992 && !collapsed
-                    ? "me-2"
-                    : ""
-                }`}
+                className={`${isMount && window.innerWidth >= 992 && !collapsed
+                  ? "me-2"
+                  : ""
+                  }`}
                 style={{ transform: "rotate(-90deg)" }}
               />{" "}
               {!collapsed ? "Logout" : ""}
