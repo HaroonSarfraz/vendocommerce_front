@@ -37,6 +37,7 @@ export default function General({ user, userRole }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [fileKey, setFileKey] = useState("");
   const [fileList, setFileList] = useState(
     user?.u_photo ? [
       {
@@ -53,7 +54,7 @@ export default function General({ user, userRole }) {
     if (fileList.length === 0) {
       u_photo = "";
     } else if (progress === 100) {
-      u_photo = `${BASE_IMAGE_URL}${fileList[0].originFileObj.name}`
+      u_photo = `${BASE_IMAGE_URL}${fileKey}`
     }
 
     if (user) {
@@ -124,7 +125,9 @@ export default function General({ user, userRole }) {
     setProgress(0);
     if (newFileList.length > 0 && newFileList[0].status === "done") {
       setProgress(1);
-      uploadFile(newFileList[0].originFileObj, setProgress);
+      const key = `${new Date().getTime()}_${newFileList[0].originFileObj.name}`;
+      setFileKey(key);
+      uploadFile(newFileList[0].originFileObj, key, setProgress);
     }
   };
 
@@ -315,7 +318,7 @@ export default function General({ user, userRole }) {
                       <Form.Item className="d-flex">
                         <Button
                           htmlType="submit"
-                          disabled={submit}
+                          disabled={submit || (progress > 0 && progress < 100)}
                           className="btn btn-sm btn-primary"
                         >
                           {submit ? (
