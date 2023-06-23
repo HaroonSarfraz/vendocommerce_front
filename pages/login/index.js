@@ -9,7 +9,6 @@ import { isClient } from "@/src/helpers/isClient";
 import { setCookie } from "cookies-next";
 import { cookies } from "@/src/constants/cookies";
 import jwt_decode from "jwt-decode";
-import { NoDataSvg } from "@/src/assets";
 
 export default function Login() {
   const router = useRouter();
@@ -41,34 +40,34 @@ export default function Login() {
             ? res.data.user_status === 0
               ? router.push("/dashboard")
               : fetchUserBrandList().then((res) => {
-                  if (res.status >= 200 && res.status <= 299) {
-                    if (res.data.brands.length > 0) {
-                      if (res.data.brands?.length === 1) {
-                        localStorage.setItem(
-                          "brand",
-                          JSON.stringify({
-                            ...res.data.brands[0].brand,
-                            role: res.data.brands[0].role,
-                          })
-                        );
-                        router.push("/sales-analytics/sales");
-                      } else {
-                        localStorage.setItem(
-                          "user",
-                          JSON.stringify({
-                            ...user,
-                            role: user.role === "Admin" ? "Admin" : "Manager",
-                          })
-                        );
-                        router.push("/brands");
-                      }
+                if (res.status >= 200 && res.status <= 299) {
+                  if (res.data.brands.length > 0) {
+                    if (res.data.brands?.length === 1) {
+                      localStorage.setItem(
+                        "brand",
+                        JSON.stringify({
+                          ...res.data.brands[0].brand,
+                          role: res.data.brands[0].role,
+                        })
+                      );
+                      router.push("/sales-analytics/sales");
                     } else {
-                      router.push("/dashboard");
+                      localStorage.setItem(
+                        "user",
+                        JSON.stringify({
+                          ...user,
+                          role: user.role === "Admin" ? "Admin" : "Manager",
+                        })
+                      );
+                      router.push("/brands");
                     }
                   } else {
-                    setLoading(false);
+                    router.push("/dashboard");
                   }
-                })
+                } else {
+                  setLoading(false);
+                }
+              })
             : router.push(from || "/brands");
         } else {
           message.error(res.data.message);
@@ -107,7 +106,6 @@ export default function Login() {
                   className="fs-2qx pb-5 pb-md-4 fw-normal"
                   style={{ color: "#494951" }}
                 >
-                  <NoDataSvg />
                   Welcome to <b className="fw-boldest">Vendo!!</b>
                 </h1>
                 <p className="fw-normal fs-3" style={{ color: "#494951" }}>
@@ -156,9 +154,12 @@ export default function Login() {
                       <label className="form-label fw-bolder text-dark fs-6 mb-0">
                         Password
                       </label>
-                      <p className="link-primary fs-6 fw-bolder">
+                      <Link
+                        href="/forget-password"
+                        className="link-primary fs-6 fw-bolder"
+                      >
                         Forgot Password ?
-                      </p>
+                      </Link>
                     </div>
                     <Input
                       placeholder="Enter Password"
