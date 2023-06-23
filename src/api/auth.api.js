@@ -11,3 +11,7 @@ export const signUpRequest = (data) => {
 export const fetchMeRequest = () => {
   return request.get("/auth/me");
 };
+
+export const resetPasswordRequest = (email) => {
+  return request.get(`/auth/reset-password?email=${email}`);
+};
