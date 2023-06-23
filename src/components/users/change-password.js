@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import _ from "lodash";
 import { LockSvg } from "@/src/assets";
+import { updatePasswordRequest } from "@/src/api/users.api";
 
 const formItemLayout = {
   labelCol: {
@@ -18,7 +19,20 @@ export default function ChangePassword({ user, userRole }) {
   const [chngPasswForm] = Form.useForm();
   const [submit, setSubmit] = useState(false);
 
-  const onFinish = (values) => {};
+  const onFinish = (values) => {
+    setSubmit(true);
+    updatePasswordRequest(user.id, values)
+      .then((res) => {
+        setSubmit(false);
+        if (res.status === 200) {
+          message.success("Password Updated Successfully");
+        } else {
+          message.error("Unable to update password");
+        }
+      })
+      .catch((err) => message.error(err?.response?.message));
+
+  };
 
   return (
     <div className="container-fluid">
@@ -48,19 +62,23 @@ export default function ChangePassword({ user, userRole }) {
                       rules={[
                         {
                           required: true,
-                          message: "Current password is required",
+                          message: "Password is required",
+                        },
+                        {
+                          min: 8,
+                          message: "Password must be 8 characters long",
                         },
                       ]}
                       hasFeedback
                     >
-                      <Input size="large" autoFocus autoComplete="off" />
+                      <Input.Password size="large" autoFocus autoComplete="off" />
                     </Form.Item>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                     <Form.Item
-                      name="new_password"
+                      name="u_password"
                       label="New Password"
                       className="fw-bolder"
                       rules={[
@@ -71,23 +89,38 @@ export default function ChangePassword({ user, userRole }) {
                       ]}
                       hasFeedback
                     >
-                      <Input size="large" autoFocus autoComplete="off" />
+                      <Input.Password size="large" autoFocus autoComplete="off" />
                     </Form.Item>
                   </div>
                   <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                     <Form.Item
-                      name="repeat_password"
-                      label="Repeat Password"
+                      name="confirm_password"
+                      label="Confirm New Password"
                       className="fw-bolder"
                       rules={[
                         {
                           required: true,
-                          message: "Repeat password is required",
+                          message: "Confirm new password is required",
                         },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (
+                              !value ||
+                              getFieldValue("u_password") === value
+                            ) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(
+                              new Error(
+                                "The two passwords that you entered do not match!"
+                              )
+                            );
+                          },
+                        }),
                       ]}
                       hasFeedback
                     >
-                      <Input size="large" autoComplete="off" />
+                      <Input.Password size="large" autoComplete="off" />
                     </Form.Item>
                   </div>
                 </div>
