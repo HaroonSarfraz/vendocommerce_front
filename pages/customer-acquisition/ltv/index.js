@@ -12,6 +12,7 @@ import moment from "moment";
 import { currencyFormat } from "@/src/helpers/formatting.helpers";
 import { numberFormat } from "@/src/helpers/formatting.helpers";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
+import { Select } from "antd";
 
 export default function SalesByMonth() {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export default function SalesByMonth() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: _.range(0, defaultMonth()),
+    month: _.range(0, 12),
     year: defaultYear(),
   });
 
@@ -101,10 +102,45 @@ export default function SalesByMonth() {
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
-          {TopBarFilter(filter, setFilter, "Month", {
+          {/* {TopBarFilter(filter, setFilter, "Month", {
             month: false,
             year: false,
-          })}
+          })} */}
+
+          <div className="row gx-5 gx-xl-5 fadeInRight">
+            <div className="col-xl-12 mb-5 mb-xl-5">
+              <div className="card card-flush h-xl-100">
+                <div className="card-body px-4 py-4">
+                  <div className="d-flex flex-wrap gap-3">
+                    <div>
+                      <Select
+                        defaultValue="2022"
+                        size="large"
+                        style={{ width: 200 }}
+                        value={filter?.year || null}
+                        mode="multiple"
+                        onChange={(e) => {
+                          setFilter({
+                            ...filter,
+                            year: e,
+                          });
+                        }}
+                        options={[...Array(4)].map((_, i) => {
+                          const year =
+                            parseInt(moment(new Date()).format("YYYY")) +
+                            i -
+                            [...Array(4)]?.length +
+                            1;
+                          return { value: year, label: year };
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
 
           <div className="col-lg-12">
             <div className="card mb-7 pt-5">
