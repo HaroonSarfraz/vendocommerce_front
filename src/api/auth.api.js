@@ -11,3 +11,11 @@ export const signUpRequest = (data) => {
 export const fetchMeRequest = () => {
   return request.get("/auth/me");
 };
+
+export const resetPasswordEmailRequest = (email) => {
+  return request.get(`/auth/reset-password?email=${email}`);
+};
+
+export const resetPasswordRequest = (data) => {
+  return request.patch("/auth/reset-password", data);
+};

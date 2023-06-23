@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Input, message, Form } from "antd";
 import { useRouter } from "next/router";
-import { resetPasswordEmailRequest } from "@/src/api/auth.api";
+import { resetPasswordRequest } from "@/src/api/auth.api";
 
 const formItemLayout = {
   labelCol: {
@@ -15,22 +15,24 @@ const formItemLayout = {
   },
 };
 
-export default function ForgetPassword() {
+export default function ResetPassword() {
   const router = useRouter();
   const [editForm] = Form.useForm();
   const [sending, setSending] = useState(false);
 
-  const onForgetPassword = (values) => {
+  const { token } = router?.query ?? {};
+
+  const onResetPassword = (values) => {
     setSending(true);
 
-    resetPasswordEmailRequest(values.u_email)
+    resetPasswordRequest({ ...values, token: token })
       .then((res) => {
         setSending(false);
         if (res.status == 200 && res.data.success) {
           router.push("/login");
-          message.success("we have sent you an email, please check your inbox.", 4);
+          message.success("Password has been changed successfully", 4);
         } else {
-          message.error("Account does not exist with this email. Please provide a correct email or signup.", 5);
+          message.error("Token not valid. Please generate a new token", 5);
         }
       })
       .catch((error) => console.log(error));
@@ -89,37 +91,64 @@ export default function ForgetPassword() {
                         layout="vertical"
                         form={editForm}
                         name="register"
-                        onFinish={onForgetPassword}
+                        onFinish={onResetPassword}
                       >
                         <div className="mb-10">
                           <h1 className="text-dark fw-bold mb-3">
-                            Forget Password
+                            Reset Password
                           </h1>
 
                           <h4 className="text-gray-400 fw-bold fs-4">
-                            Enter the email address associated with your account
-                            and we'll send you a link to reset your password.
+                            Choose your new password.
                           </h4>
                         </div>
                         <div className="fv-row mb-10 text-start">
                           <Form.Item
-                            name="u_email"
-                            label="E-mail"
-                            className="fw-bolder"
+                            name="u_password"
+                            label="Password"
                             rules={[
                               {
-                                type: "email",
-                                message: "The input is not valid E-mail!",
+                                required: true,
+                                message: "Password is required",
                               },
                               {
-                                required: true,
-                                message: "E-mail is required",
+                                min: 8,
+                                message: "Password must be 8 characters long",
                               },
                             ]}
-                            initialValue=""
                             hasFeedback
                           >
-                            <Input size="large" autoComplete="off" />
+                            <Input.Password size="large" autoComplete="off" />
+                          </Form.Item>
+
+                          <Form.Item
+                            name="confirm_password"
+                            label="Confirm Password"
+                            dependencies={["u_password"]}
+                            hasFeedback
+                            rules={[
+                              {
+                                required: true,
+                                message: "Confirm password is required",
+                              },
+                              ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                  if (
+                                    !value ||
+                                    getFieldValue("u_password") === value
+                                  ) {
+                                    return Promise.resolve();
+                                  }
+                                  return Promise.reject(
+                                    new Error(
+                                      "The two passwords that you entered do not match!"
+                                    )
+                                  );
+                                },
+                              }),
+                            ]}
+                          >
+                            <Input.Password autoComplete="off" size="large" />
                           </Form.Item>
                         </div>
                         <div className="text-center">
@@ -134,7 +163,7 @@ export default function ForgetPassword() {
                                 <span className="spinner-border spinner-border-sm align-middle ms-2" />
                               </span>
                             ) : (
-                              <span className="indicator-label">Send Email</span>
+                              <span className="indicator-label">Submit</span>
                             )}
                           </button>
                         </div>
