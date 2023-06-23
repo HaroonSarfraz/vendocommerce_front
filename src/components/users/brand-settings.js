@@ -52,7 +52,7 @@ export default function BrandSettings({ user, userRole }) {
   }, []);
 
   useEffect(() => {
-    if(brandList.data.length > 0 && userBrands.length > 0) {
+    if (brandList.data.length > 0 && userBrands.length > 0) {
       setBrands(userBrands.map((ub, index) => {
         const b = brandList.data.find((b) => b.id === ub.brandId);
         return {
@@ -163,7 +163,7 @@ export default function BrandSettings({ user, userRole }) {
             onOk() {
               deleteBrand(text.id);
             },
-            onCancel() {},
+            onCancel() { },
           });
         };
         return (
@@ -199,6 +199,14 @@ export default function BrandSettings({ user, userRole }) {
                     <h4 className="mx-5 mt-1">Brands Access</h4>
                   </div>
                 </div>
+
+                {user.role === "Admin" && (
+                  <div className="row my-3">
+                    <h6 className="text-warning border border-warning rounded col-auto p-1 px-3">
+                      This user is an Admin and already have access to all brands.
+                    </h6>
+                  </div>
+                )}
 
                 <div className="row">
                   <div className="col-12 col-sm-4 col-md-4 col-lg-6">
