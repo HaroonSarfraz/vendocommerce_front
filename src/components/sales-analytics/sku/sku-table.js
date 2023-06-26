@@ -16,39 +16,39 @@ export default function SkuTable({ loading, details }) {
                 loading={loading}
                 data={[
                   {
-                    title: "Sum of Units Ordered",
+                    title: "Units Ordered",
                     value: numberFormat(details?.totalUnitOrdered),
                   },
                   {
-                    title: "Sum of Ordered Product Sales",
+                    title: "Ordered Revenue",
                     value: currencyFormat(details?.totalOrderedProductSales),
                   },
                   {
-                    title: "Average of Buy Box",
+                    title: "Buy Box % (avg)",
                     value: percentageFormat(details?.avgBuyBox),
                   },
                   {
-                    title: "Sum of Unit Session",
+                    title: "Conversion Rate",
                     value: percentageFormat(details?.avgUnitSession),
                   },
                   {
-                    title: "Sum of Sessions",
+                    title: "Total Sessions",
                     value: numberFormat(details?.totalSession),
                   },
                   {
-                    title: "Sum of Page Views",
+                    title: "Total Page Views",
                     value: numberFormat(details?.totalPageViews),
                   },
                   {
-                    title: "Sum of Session Percentage",
+                    title: "Session Percentage",
                     value: percentageFormat(details?.totalSessionPercentage),
                   },
                   {
-                    title: "Sum of Total Order Items",
+                    title: "Total Orders",
                     value: numberFormat(details?.totalOrderItems),
                   },
                   {
-                    title: "Sum of Page Views Percentage",
+                    title: "Page View %",
                     value: percentageFormat(details?.avgPageViewPercentage),
                   },
                 ]}
