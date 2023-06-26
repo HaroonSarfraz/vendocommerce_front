@@ -68,21 +68,13 @@ export default function SalesBySku() {
   }, [dateFilter]);
 
   useEffect(() => {
-    if (salesBySKUDetails?.status) {
-      setDetails(salesBySKUDetails?.data);
-      setDetailsLoading(false);
-    } else if (salesBySKUDetails?.status === false) {
-      setDetailsLoading(false);
-    }
+    setDetails(salesBySKUDetails?.data);
+    setDetailsLoading(false);
   }, [salesBySKUDetails]);
 
   useEffect(() => {
-    if (salesSKUDetailsList?.status) {
-      setList(salesSKUDetailsList?.data || []);
-      setLoading(false);
-    } else if (salesSKUDetailsList?.status === false) {
-      setLoading(false);
-    }
+    setList(salesSKUDetailsList?.data || []);
+    setLoading(false);
   }, [salesSKUDetailsList]);
 
   return (

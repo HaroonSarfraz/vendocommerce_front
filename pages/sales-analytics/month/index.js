@@ -123,7 +123,7 @@ export default function SalesByMonth() {
         dispatch(
           getSalesByMonthGraph({
             search_year: year,
-            search_month: month?.join(","),
+            search_month: month?.map((m) => m + 1)?.join(","),
             graph_filter_type: graphFilter,
           })
         );
@@ -143,7 +143,7 @@ export default function SalesByMonth() {
         dispatch(
           getSalesByMonthGraph({
             search_year: filter?.year,
-            search_month: filter?.month?.join(","),
+            search_month: filter?.month?.map((m) => m + 1)?.join(","),
             graph_filter_type: graphFilter,
           })
         );
@@ -443,7 +443,6 @@ export default function SalesByMonth() {
                           return acc;
                         }, [])
                         .map((r, key) => {
-                          console.log(r);
                           return {
                             ["Month"]: `${r.year}-${r.month_name}`,
                             ["ASIN"]: r?.child_asin,

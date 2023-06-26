@@ -9,7 +9,7 @@ export const getUserList = (data) => {
         if (res.status == 200 && res.data) {
           dispatch(setUserList(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -22,11 +22,10 @@ export const getSwitchUser = (data) => {
   return (dispatch) => {
     fetchSwitchUser(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(setSwitchUser(res.data));
-
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

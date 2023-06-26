@@ -22,7 +22,7 @@ export const getCategoryProductList = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

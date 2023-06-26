@@ -4,7 +4,8 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import Details from "./Details";
-import NoData from "@/src/components/no-data";
+import { DotChartOutlined } from "@ant-design/icons";
+import { Skeleton } from "antd";
 
 export default function KPITable({ heading, loading, data }) {
   return (
@@ -15,7 +16,26 @@ export default function KPITable({ heading, loading, data }) {
             <div className="row g-3 h-100">
               <p className="fs-4 fw-boldest">{heading}</p>
               {loading ? (
-                <NoData />
+                <div className="h-200px">
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      margin: "auto",
+                      width: "fit-content",
+                      height: "fit-content",
+                    }}
+                  >
+                    <Skeleton.Node active>
+                      <DotChartOutlined
+                        style={{
+                          fontSize: 40,
+                          color: "#bfbfbf",
+                        }}
+                      />
+                    </Skeleton.Node>
+                  </div>
+                </div>
               ) : (
                 <Details
                   loading={false}

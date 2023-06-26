@@ -14,10 +14,10 @@ export const getInventoryPlanningData = (data) => {
   return (dispatch) => {
     fetchInventoryPlanningData(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.status === 200 && res.data) {
           dispatch(setInventoryPlaning(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -30,10 +30,10 @@ export const getInventoryPlanningColumnsList = () => {
   return (dispatch) => {
     fetchInventoryPlanningColumnsList()
       .then((res) => {
-        if (res.data.status) {
+        if (res.status === 200 && res.data) {
           dispatch(setInventoryPlaningColumnsList(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -46,10 +46,10 @@ export const getInventoryPlanningColumnsSave = (data) => {
   return (dispatch) => {
     fetchInventoryPlanningColumnsSave(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.status === 200 && res.data) {
           dispatch(setInventoryPlaningColumnsSave(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

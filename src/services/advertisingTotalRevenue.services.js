@@ -7,6 +7,7 @@ export const getAdvertising = (data) => {
   return (dispatch) => {
     fetchAdvertisingTotalRevenue(data)
       .then((res) => {
+        console.log(res)
         if (res.status == 200 && res.data) {
           dispatch(
             setAdvertisingTotalRevenue({
@@ -21,7 +22,7 @@ export const getAdvertising = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

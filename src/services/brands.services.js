@@ -11,10 +11,10 @@ export const getBrandList = (data) => {
   return (dispatch) => {
     fetchBrandList(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status == 200 && res.data) {
           dispatch(setBrandList(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -30,7 +30,7 @@ export const getUserBrandList = (data) => {
         if (res.data) {
           dispatch(setUserBrandList({data: res.data.brands, status: true}));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -50,7 +50,7 @@ export const getAmazonSpApiCredentialsList = (data) => {
           );
         } else {
           dispatch(setAmazonSpApiCredentialsList({ data: [], status: true }));
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -70,7 +70,7 @@ export const getAmazonAdvertisingCredentialsList = (data) => {
           );
         } else {
           dispatch(setAmazonAdvertisingCredentialsList({ data: [], status: true }));
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

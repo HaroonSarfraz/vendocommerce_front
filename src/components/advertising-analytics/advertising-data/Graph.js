@@ -1,6 +1,8 @@
 import { DotChartOutlined } from "@ant-design/icons";
 import { Skeleton } from "antd";
 import dynamic from "next/dynamic";
+import NoData from "@/src/components/no-data";
+import Loading from "@/src/components/loading";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -86,14 +88,8 @@ export default function Graph({
             height={300}
           />
         ) : (
-          <h4 className="text-center">Graph data not found</h4>
+          <NoData height={120} />
         )}
-        <div className="resize-triggers">
-          <div className="expand-trigger">
-            <div style={{ width: "535px", height: "327px" }} />
-          </div>
-          <div className="contract-trigger" />
-        </div>
       </div>
     </div>
   );
