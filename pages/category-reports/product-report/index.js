@@ -88,12 +88,8 @@ export default function ProductReportPage() {
   }, [filter]);
 
   useEffect(() => {
-    if (ProductReportListRes.status) {
-      setList(ProductReportListRes.data);
-      setTableLoading(false);
-    } else if (ProductReportListRes.status === false) {
-      setTableLoading(false);
-    }
+    setList(ProductReportListRes.data);
+    setTableLoading(false);
   }, [ProductReportListRes]);
 
   console.log(ProductReportListRes);

@@ -43,30 +43,18 @@ export default function Sales() {
   const [salesByWeekLoading, setSalesByWeekLoading] = useState(true);
 
   useEffect(() => {
-    if (salesGraphData?.status === true) {
-      setChartData(salesGraphData?.data);
-      setSalesGraphLoading(false);
-    } else if (salesGraphData?.status === false) {
-      setSalesGraphLoading(false);
-    }
+    setChartData(salesGraphData?.data);
+    setSalesGraphLoading(false);
   }, [salesGraphData]);
 
   useEffect(() => {
-    if (salesReportCallOuts?.status === true) {
-      setReportData(salesReportCallOuts?.data || {});
-      setReportCallOutLoading(false);
-    } else if (salesReportCallOuts?.status === false) {
-      setReportCallOutLoading(false);
-    }
+    setReportData(salesReportCallOuts?.data || {});
+    setReportCallOutLoading(false);
   }, [salesReportCallOuts]);
 
   useEffect(() => {
-    if (salesByWeekData?.status === true) {
-      setTableList(Object.values(salesByWeekData?.data || []));
-      setSalesByWeekLoading(false);
-    } else if (salesByWeekData?.status === false) {
-      setSalesByWeekLoading(false);
-    }
+    setTableList(Object.values(salesByWeekData?.data || []));
+    setSalesByWeekLoading(false);
   }, [salesByWeekData]);
 
   useEffect(() => {

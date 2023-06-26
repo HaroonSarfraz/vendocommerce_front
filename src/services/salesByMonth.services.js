@@ -15,10 +15,11 @@ export const getSalesByMonthData = (data) => {
   return (dispatch) => {
     fetchSalesByMonthData(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(setSalesByMonthData({ status: true, data: res.data }));
         } else {
-          message.error(res.message);
+          message.error("No Sales data available yet.");
+          dispatch(setSalesByMonthData({ status: true, ...initialState.salesByMonth.salesByMonthData }));
         }
       })
       .catch((err) => {
@@ -31,7 +32,7 @@ export const getSalesByMonthDetail = (data) => {
   return (dispatch) => {
     fetchSalesByMonthDetail(data)
       .then((res) => {
-        if (res.status == 200 && res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(
             setSalesByMonthDetail({
               status: true,
@@ -46,7 +47,7 @@ export const getSalesByMonthDetail = (data) => {
             })
           );
 
-          message.error(res.data.message);
+          message.error("No Summary data available yet.");
         }
       })
       .catch((err) => {
@@ -59,7 +60,7 @@ export const getSalesByMonthGraph = (data) => {
   return (dispatch) => {
     fetchSalesByMonthGraph(data)
       .then((res) => {
-        if (res.status == 200 && res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(setSalesByMonthGraph({ status: true, data: res.data }));
         } else {
           dispatch(
@@ -68,7 +69,7 @@ export const getSalesByMonthGraph = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No Graph data available yet.");
         }
       })
       .catch((err) => {

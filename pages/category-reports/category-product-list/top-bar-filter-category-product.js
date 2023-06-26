@@ -43,9 +43,6 @@ export default function TopBarFilter(filter, setFilter) {
                   onChange={(e) =>
                     setFilter({ ...filter, ["search[asin]"]: e.target.value })
                   }
-                  onPressEnter={() => {
-                    getList();
-                  }}
                   size="large"
                 />
               </div>
@@ -59,9 +56,6 @@ export default function TopBarFilter(filter, setFilter) {
                   onChange={(e) =>
                     setFilter({ ...filter, ["search[sku]"]: e.target.value })
                   }
-                  onPressEnter={() => {
-                    getList();
-                  }}
                   size="large"
                 />
               </div>
@@ -78,9 +72,6 @@ export default function TopBarFilter(filter, setFilter) {
                       ["search[product_title]"]: e.target.value,
                     })
                   }
-                  onPressEnter={() => {
-                    getList();
-                  }}
                   size="large"
                 />
               </div>

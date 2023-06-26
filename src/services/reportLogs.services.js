@@ -6,10 +6,10 @@ export const getReportLogs = (data) => {
   return (dispatch) => {
     fetchReportLogs(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(setReportLogs({ ...res.data, status: true }));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

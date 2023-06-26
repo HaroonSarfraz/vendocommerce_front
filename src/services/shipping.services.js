@@ -6,10 +6,10 @@ export const getShippingList = (data) => {
   return (dispatch) => {
     fetchShippingList(data)
       .then((res) => {
-        if (res) {
+        if (res.status === 200 && res.data) {
           dispatch(setShippingList(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

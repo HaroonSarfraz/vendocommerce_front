@@ -50,7 +50,7 @@ export default function ManageCategory() {
 
   useEffect(() => {
     let time = setTimeout(() => {
-      message.loading({ content: "Loading...", duration: 0 });
+      message.loading({ content: "Loading...", key: "loading", duration: 0 });
       dispatch(getCategoryList(filter));
     }, 600);
     return () => {
@@ -61,13 +61,14 @@ export default function ManageCategory() {
 
   useEffect(() => {
     if (CategoryListRes?.status === true) {
-      message.destroy();
       setTableLoading(false);
       const isValidData = Array.isArray(CategoryListRes.data);
       isValidData && setList(CategoryListRes.data);
     } else if (CategoryListRes.status === false) {
       setTableLoading(false);
+      setList([])
     }
+    message.destroy("loading");
   }, [CategoryListRes]);
 
   const handleChange = (_pagination, _filters, sorter) => {

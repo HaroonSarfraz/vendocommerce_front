@@ -9,15 +9,17 @@ import {
   setSalesGraphData,
   setSalesReportCallOuts,
 } from "../store/slice/sales.slice";
+import initialState from "../store/initialState";
 
 export const getSalesGraphData = (data) => {
   return (dispatch) => {
     fetchSalesGraphData(data)
       .then((res) => {
-        if (res.data) {
-          dispatch(setSalesGraphData({status: true, data: res.data}));
+        if (res.status == 200 && res.data) {
+          dispatch(setSalesGraphData({ status: true, data: res.data }));
         } else {
-          message.error(res.data.message);
+          dispatch(setSalesGraphData({ status: false, ...initialState.sales.salesGraphData }));
+          message.error("No Graph data available yet.");
         }
       })
       .catch((err) => {
@@ -30,12 +32,14 @@ export const getSalesReportCallOuts = (data) => {
   return (dispatch) => {
     fetchSalesReportCallOuts(data)
       .then((res) => {
-        if (res.data) {
-          const {weekDetail, ...reportCallout} = res.data;
-          dispatch(setSalesReportCallOuts({status: true, data: reportCallout}));
-          dispatch(setSalesByWeekData({status: true, data: weekDetail}));
+        if (res.status == 200 && res.data) {
+          const { weekDetail, ...reportCallout } = res.data;
+          dispatch(setSalesReportCallOuts({ status: true, data: reportCallout }));
+          dispatch(setSalesByWeekData({ status: true, data: weekDetail }));
         } else {
-          message.error(res.data.message);
+          dispatch(setSalesReportCallOuts({ status: false, ...initialState.sales.salesReportCallOuts }));
+          dispatch(setSalesByWeekData({ status: false, ...initialState.sales.salesByWeekData }));
+          message.error("No Report Call Outs data available yet.");
         }
       })
       .catch((err) => {
@@ -48,10 +52,10 @@ export const getSalesByWeekData = (data) => {
   return (dispatch) => {
     fetchSalesByWeekData(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.status == 200 && res.data.status) {
           dispatch(setSalesByWeekData(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No Weekly data available yet.");
         }
       })
       .catch((err) => {

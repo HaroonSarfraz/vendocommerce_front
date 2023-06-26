@@ -6,7 +6,7 @@ import initialState from "../store/initialState";
 export const getCategoryPerformanceList = (data) => {
   return (dispatch) => {
     message.destroy();
-    message.loading({ content: "Loading...", duration: 0 });
+    message.loading({ content: "Loading...", key: "loading", duration: 0 });
     fetchCategoryPerformanceList(data)
       .then((res) => {
         if (res.status === 200) {
@@ -17,7 +17,7 @@ export const getCategoryPerformanceList = (data) => {
             })
           );
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
           dispatch(
             setCategoryPerformanceList({
               ...initialState.categoryPerformanceReport.categoryPerformanceList,
@@ -30,7 +30,7 @@ export const getCategoryPerformanceList = (data) => {
         message.error(err?.response?.message || "Something Went Wrong.");
       })
       .finally(() => {
-        message.destroy();
+        message.destroy("loading");
       });
   };
 };

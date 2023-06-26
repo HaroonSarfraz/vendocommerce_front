@@ -8,23 +8,11 @@ export const salesByProductSlice = createSlice({
     setSalesByProductList: (state, action) => {
       state.salesByProductList = action.payload;
     },
-    setSaveColumnConfiguration: (state, action) => {
-      state.saveColumnConfiguration = action.payload;
-    },
-    setSalesByProductColumnList: (state, action) => {
-      state.salesByProductColumnList = action.payload;
-    },
-    setSaveTableConfiguration: (state, action) => {
-      state.saveTableConfiguration = action.payload;
-    },
   },
 });
 
 export const {
   setSalesByProductList,
-  setSaveColumnConfiguration,
-  setSalesByProductColumnList,
-  setSaveTableConfiguration,
 } = salesByProductSlice.actions;
 
 export default salesByProductSlice.reducer;

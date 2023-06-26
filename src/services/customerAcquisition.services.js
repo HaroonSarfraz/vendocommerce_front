@@ -20,11 +20,11 @@ export const getCustomerAcquisition = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
-        message.error(err?.response?.message || "Something Went Wrong.");
+        message.error("Something Went Wrong.");
       });
   };
 };
@@ -32,7 +32,7 @@ export const getCustomerAcquisition = (data) => {
 export const getCustomerAcquisitionLTV = (data) => {
   return (dispatch) => {
     message.destroy();
-    message.loading({ content: "loading...", duration: 0 });
+    message.loading({ content: "loading...", key: "loading", duration: 0 });
     fetchCustomerAcquisitionLTV(data)
       .then((res) => {
         if (res.status === 200) {
@@ -44,14 +44,14 @@ export const getCustomerAcquisitionLTV = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
         message.error(err?.response?.message || "Something Went Wrong.");
       })
       .finally(() => {
-        message.destroy();
+        message.destroy("loading");
       });
   };
 };

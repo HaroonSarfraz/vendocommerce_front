@@ -82,7 +82,6 @@ export default function TopBarFilter(
                     loading
                       ? []
                       : data.advertisementsData?.map((r) => {
-                          console.log(r);
                           return {
                             Week: `WK${r?.week}`,
                             Revenue: r?.revenue,

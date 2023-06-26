@@ -5,7 +5,6 @@ import {
 import { Skeleton } from "antd";
 
 export default function ReportCallOuts(reportData, reportCallOutLoading) {
-  console.log(reportData);
   return (
     <div className="card card-flush h-xl-100 fadeInRight">
       <div className="card-header min-h-55px ">
