@@ -31,7 +31,7 @@ export default function AdvertisingData() {
 
   const [lastWeekKPIsData, setLastWeekKPIsData] = useState({});
   const [lastYearToDayKPIsData, setYearToDayKPIsData] = useState({});
-  const [advertisementsData, setAdvertisementsData] = useState({});
+  const [advertisementsData, setAdvertisementsData] = useState([]);
 
   const [lastWeekKPIsLoading, setLastWeekKPIsLoading] = useState(true);
   const [yearToDayKPIsLoading, setYearToDayKPIsLoading] = useState(true);

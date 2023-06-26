@@ -15,7 +15,7 @@ export const getSalesWeekDetailList = (data) => {
   return (dispatch) => {
     fetchSalesWeekDetailList(data)
       .then((res) => {
-        if (res.status == 200 && res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(
             setSalesWeekDetailList({
               status: true,
@@ -29,7 +29,7 @@ export const getSalesWeekDetailList = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No Summary data available yet.");
         }
       })
       .catch((err) => {
@@ -56,7 +56,7 @@ export const getSalesWeekGraph = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No Graph data available yet.");
         }
       })
       .catch((err) => {
@@ -69,7 +69,7 @@ export const getSalesWeekData = (data) => {
   return (dispatch) => {
     fetchSalesWeekData(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status === 200 && res.data) {
           dispatch(setSalesWeekData({ status: true, data: res.data }));
         } else {
           dispatch(
@@ -78,7 +78,7 @@ export const getSalesWeekData = (data) => {
               status: false,
             })
           );
-          message.error(res.data.message);
+          message.error("No Sales data available yet.");
         }
       })
       .catch((err) => {

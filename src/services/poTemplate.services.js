@@ -9,7 +9,7 @@ export const getPoTemplateList = (data) => {
         if (res.status === 200) {
           dispatch(setPoTemplateList({ status: true, data: res.data }));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {
@@ -24,7 +24,7 @@ export const createPoTemplate = (data) => {
         if (res.status === 200 || res.status === 201) {
           console.log("Successfully Created");
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

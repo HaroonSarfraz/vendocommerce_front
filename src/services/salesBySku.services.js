@@ -13,7 +13,7 @@ export const getSalesBySkuDetails = (data) => {
   return (dispatch) => {
     fetchSalesBySkuDetails(data)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res.data) {
           dispatch(
             setSalesBySkuDetails({ status: true, data: res.data.items.summary })
           );
@@ -24,7 +24,7 @@ export const getSalesBySkuDetails = (data) => {
             })
           );
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
           dispatch(
             setSalesBySkuDetails({
               ...initialState.salesBySku.salesBySkuDetails,
@@ -49,10 +49,10 @@ export const getSalesBySkuDetailsList = (data) => {
   return (dispatch) => {
     fetchSalesSkuDetailList(data)
       .then((res) => {
-        if (res.data.status) {
+        if (res.status === 200 && res.data) {
           dispatch(setSalesSkuDetailsList(res.data));
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
         }
       })
       .catch((err) => {

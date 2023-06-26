@@ -68,7 +68,6 @@ export default function CategoryPerformanceReport() {
       const count = (item.weekly_report || []).length;
 
       if (acc < count) {
-        console.log(count, key);
         return count;
       }
       return acc;

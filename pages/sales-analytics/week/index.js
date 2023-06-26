@@ -139,7 +139,6 @@ export default function SalesByWeek() {
   useEffect(() => {
     if (SalesWeekGraphRes?.status === true) {
       const series_ = [];
-      console.log(SalesWeekGraphRes);
       let labels_ = [];
       if (SalesWeekGraphRes?.data?.length !== 0) {
         labels_ = SalesWeekGraphRes?.data?.map((d) => d?.label);

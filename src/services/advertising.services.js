@@ -5,12 +5,13 @@ import {
   setYearToDayKPIsData,
   setAdvertisementsData,
 } from "../store/slice/advertising.slice";
+import initialState from "../store/initialState";
 
 export const getAdvertising = (data) => {
   return (dispatch) => {
     fetchAdvertising(data)
       .then((res) => {
-        if (res.data) {
+        if (res.status == 200 && res.data) {
           dispatch(
             setLastWeekKPIsData({ status: true, data: res.data.lastWeekKPIs })
           );
@@ -24,10 +25,26 @@ export const getAdvertising = (data) => {
             })
           );
         } else {
-          message.error(res.data.message);
+          message.error("No data available yet.");
+          dispatch(
+            setLastWeekKPIsData({
+              ...initialState.advertising.lastWeekKPIs, status: false,
+            })
+          );
+          dispatch(
+            setYearToDayKPIsData({
+              ...initialState.advertising.yearToDayKPIs, status: false,
+            })
+          );
+          dispatch(
+            setAdvertisementsData({
+              ...initialState.advertising.advertisements, status: false,
+            })
+          );
         }
       })
       .catch((err) => {
+        console.log(err)
         message.error(err?.response?.message || "Something Went Wrong.");
       });
   };
