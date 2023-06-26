@@ -50,7 +50,7 @@ export default function General({ user, userRole }) {
   const onFinish = (values) => {
     setSubmit(true);
 
-    var u_photo = user.u_photo;
+    var u_photo = user?.u_photo;
     if (fileList.length === 0) {
       u_photo = "";
     } else if (progress === 100) {

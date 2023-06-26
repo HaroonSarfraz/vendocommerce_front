@@ -13,6 +13,9 @@ import { DefaultPerPage } from "@/src/config";
 import TopBarFilter from "@/src/components/central-log-system/top-bar-filter";
 import dayjs from "dayjs";
 import moment from "moment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftRotate } from "@fortawesome/free-solid-svg-icons";
+import { message, Tooltip } from "antd";
 
 export default function ProductReportPage() {
   const [tableLoading, setTableLoading] = useState(true);
@@ -119,6 +122,12 @@ export default function ProductReportPage() {
     }
   };
 
+  const retry = (reportId) => {
+    const reportLog = list.find((r) => r.id === reportId);
+    const reportType = report_types.find((r) => r.value === reportLog?.report_type)?.label || text?.report_type;
+    message.info(`Retrying Import of ${reportType}.`)
+  }
+
   const columns = [
     {
       title: "#",
@@ -147,11 +156,25 @@ export default function ProductReportPage() {
     },
     {
       title: "Final Status",
-      width: 150,
+      width: 175,
       align: "left",
       key: "overall_status",
       render: (text) => {
-        return <b>{reportStatus(text) || "N/A"}</b>;
+        const status = reportStatus(text);
+        return <b>{status || "N/A"}{
+          status === "Error while processing" && (
+            <Tooltip title="Retry">
+            <FontAwesomeIcon
+            onClick={() => {
+              retry(text.id);
+            }}
+            icon={faArrowLeftRotate}
+            style={{ marginRight: "10px", marginBottom: "-2px" }}
+            className="text-info fs-3 cursor-pointer ms-3"
+          />
+          </Tooltip>
+          )
+        }</b>;
       },
     },
     {
