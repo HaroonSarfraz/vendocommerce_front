@@ -266,7 +266,7 @@ export default function ReportCallOuts(reportData, reportCallOutLoading) {
                   </div>
                   <div className="">
                     <h6 className="mb-0 fw-bolder">
-                      {percentageFormat(reportData?.advertisementData?.ROAS)}
+                      {currencyFormat(reportData?.advertisementData?.twRevenue / reportData?.advertisementData?.twSpend)}
                     </h6>
                   </div>
                 </>

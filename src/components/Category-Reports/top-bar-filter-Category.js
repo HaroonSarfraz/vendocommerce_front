@@ -3,11 +3,20 @@ import { Input, Select } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import _ from "lodash";
+import { defaultWeek, defaultYear } from "@/src/config";
 
 export default function TopBarFilter(filter, setFilter, type) {
   const [searchText, setSearchText] = useState("");
 
   const CategoryListRes = useSelector(selectCategoryList);
+
+  const selectAllWeeks = () => {
+    setFilter({
+      ...filter,
+      week: _.range(1, defaultYear() === filter.year ? defaultWeek() + 1 : 54),
+    });
+  }
 
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
@@ -54,20 +63,31 @@ export default function TopBarFilter(filter, setFilter, type) {
                   options={
                     type === "Week"
                       ? [...Array(53)].map((_, i) => {
-                          return {
-                            value: i + 1,
-                            label: `WK${
-                              i.toString()?.length === 1 ? 0 + i + 1 : i + 1
+                        return {
+                          value: i + 1,
+                          label: `WK${i.toString()?.length === 1 ? 0 + i + 1 : i + 1
                             }`,
-                          };
-                        })
+                        };
+                      })
                       : moment.months()?.map((d, i) => {
-                          return { label: d, value: i };
-                        })
+                        return { label: d, value: i };
+                      })
                   }
                   allowClear
                 />
               </div>
+
+              {type === "Week" && (
+                <div>
+                  <button
+                    className="btn btn-secondary ml-auto mr-10px"
+                    onClick={selectAllWeeks}
+                  >
+                    Select All Weeks
+                  </button>
+                </div>
+              )}
+
               <div className="position-relative">
                 <Select
                   mode="multiple"
