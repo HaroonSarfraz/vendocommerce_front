@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Form, Input, message } from "antd";
 import _ from "lodash";
 import { LockSvg } from "@/src/assets";
-import { updatePasswordRequest } from "@/src/api/users.api";
+import { updateUserRequest } from "@/src/api/users.api";
 
 const formItemLayout = {
   labelCol: {
@@ -21,7 +21,7 @@ export default function ChangePassword({ user, userRole }) {
 
   const onFinish = (values) => {
     setSubmit(true);
-    updatePasswordRequest(user.id, values)
+    updateUserRequest(user.id, { u_password: values.u_password })
       .then((res) => {
         setSubmit(false);
         if (res.status === 200) {
@@ -51,28 +51,6 @@ export default function ChangePassword({ user, userRole }) {
                   <div className="col-12 d-flex flex-row mb-5">
                     <LockSvg />
                     <h4 className="mx-5 mt-1">Change Password</h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 col-sm-4 col-md-4 col-lg-8">
-                    <Form.Item
-                      name="current_password"
-                      label="Current Password"
-                      className="fw-bolder"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Password is required",
-                        },
-                        {
-                          min: 8,
-                          message: "Password must be 8 characters long",
-                        },
-                      ]}
-                      hasFeedback
-                    >
-                      <Input.Password size="large" autoFocus autoComplete="off" />
-                    </Form.Item>
                   </div>
                 </div>
                 <div className="row">

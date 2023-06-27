@@ -121,9 +121,8 @@ export default function CustomerAcquisitionNewVSRepeat() {
       title: "CAC",
       width: "100px",
       align: "center",
-      sorter: (a, b) => (a.CPC || 0) - (b.CPC || 0),
       render: (text) => {
-        return currencyFormat(text?.CPC);
+        return currencyFormat(text?.spend / text?.new_customer_count);
       },
     },
   ];
