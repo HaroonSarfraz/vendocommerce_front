@@ -20,10 +20,6 @@ export const updateUserRequest = (id, data) => {
   return request.patch(`/users/${id}`, data);
 };
 
-export const updatePasswordRequest = (id, data) => {
-  return request.patch(`/users/${id}/password`, data);
-};
-
 export const fetchUserBrands = (id) => {
   return request.get(`/users/${id}/brands`);
 };

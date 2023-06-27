@@ -19,8 +19,8 @@ export default function SalesByMonth() {
   const [list, setList] = useState([]);
 
   const [filter, setFilter] = useState({
-    month: _.range(0, defaultMonth()),
-    year: defaultYear(),
+    month: _.range(0, 12),
+    year: _.range(2020, 2026),
   });
 
   const CustomerAcquisitionLTVRes = useSelector(selectCustomerAcquisitionLTV);
@@ -32,7 +32,7 @@ export default function SalesByMonth() {
       let time = setTimeout(() => {
         dispatch(
           getCustomerAcquisitionLTV({
-            search_year: year,
+            search_year: year?.join(","),
             search_month: month?.join(","),
           })
         );
@@ -55,15 +55,18 @@ export default function SalesByMonth() {
 
   const listContent = list.map((item) => {
     const months = item.otherMonths.reduce((acc, item) => {
-      acc[`m-${item.month}`] = item.newCustomerSalesTotal;
+      acc[`m-${item.year * 12 + item.month}`] = item.newCustomerSalesTotal;
       return acc;
     }, {});
     return {
+      row_id: item.year * 12 + item.month,
       row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
       customers: numberFormat(item.newCustomerCount),
       ...months,
     };
-  });
+  })
+    .sort((a, b) => a.row_id - b.row_id)
+    ;
 
   const columns = useMemo(() => {
     return [
@@ -83,28 +86,29 @@ export default function SalesByMonth() {
           return text?.customers;
         },
       },
-      ...list.slice().reverse()
+      ...list.slice()
         .map((item) => ({
-          title: item.month_name,
+          title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
           width: 60,
           align: "center",
-          index: item,
+          index: item.year * 12 + item.month,
           render: (text) => {
-            return text[`m-${item.month + 1}`] ? currencyFormat(text[`m-${item.month + 1}`]) : null;
+            return text[`m-${item.year * 12 + item.month + 1}`] ? currencyFormat(text[`m-${item.year * 12 + item.month + 1}`]) : null;
           },
         }))
         .sort((a, b) => b.index - a.index),
     ];
   }, [list]);
 
+  console.log(list?.slice()?.reverse())
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
         <div className="container-fluid">
-          {TopBarFilter(filter, setFilter, "Month", {
+          {/* {TopBarFilter(filter, setFilter, "Month", {
             month: false,
             year: false,
-          })}
+          })} */}
 
           <div className="col-lg-12">
             <div className="card mb-7 pt-5">

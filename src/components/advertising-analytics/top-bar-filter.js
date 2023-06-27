@@ -1,6 +1,8 @@
 import { ExportToExcel } from "@/src/hooks/Excelexport";
 import { Input, Select } from "antd";
 import moment from "moment";
+import _ from "lodash";
+import { defaultWeek, defaultYear } from "@/src/config";
 
 export default function TopBarFilter(
   filter,
@@ -8,6 +10,14 @@ export default function TopBarFilter(
   type,
   { loading, data }
 ) {
+
+  const selectAllWeeks = () => {
+    setFilter({
+      ...filter,
+      week: _.range(1, defaultYear() === filter.year ? defaultWeek() : 54),
+    });
+  }
+
   return (
     <div className="row gx-5 gx-xl-5 fadeInRight">
       <div className="col-xl-12 mb-5 mb-xl-5">
@@ -53,20 +63,29 @@ export default function TopBarFilter(
                   options={
                     type === "Week"
                       ? [...Array(53)].map((_, i) => {
-                          return {
-                            value: i + 1,
-                            label: `WK${
-                              i.toString()?.length === 1 ? 0 + i + 1 : i + 1
+                        return {
+                          value: i + 1,
+                          label: `WK${i.toString()?.length === 1 ? 0 + i + 1 : i + 1
                             }`,
-                          };
-                        })
+                        };
+                      })
                       : moment.months()?.map((d, i) => {
-                          return { label: d, value: i + 1 };
-                        })
+                        return { label: d, value: i + 1 };
+                      })
                   }
                   allowClear
                 />
               </div>
+              {type === "Week" && (
+                <div>
+                  <button
+                    className="btn btn-secondary ml-auto mr-10px"
+                    onClick={selectAllWeeks}
+                  >
+                    Select All Weeks
+                  </button>
+                </div>
+              )}
               <div style={{ marginLeft: "auto" }}>
                 <ExportToExcel
                   columns={[
@@ -82,16 +101,16 @@ export default function TopBarFilter(
                     loading
                       ? []
                       : data.advertisementsData?.map((r) => {
-                          return {
-                            Week: `WK${r?.week}`,
-                            Revenue: r?.revenue,
-                            Spends: r?.spend,
-                            CPO: r?.CPO,
-                            ACos: r?.ACoS,
-                            "Total Sales": r?.total_ordered_product_sales,
-                            "Total ACoS": r?.ACoS_percentage,
-                          };
-                        })
+                        return {
+                          Week: `WK${r?.week}`,
+                          Revenue: r?.revenue,
+                          Spends: r?.spend,
+                          CPO: r?.CPO,
+                          ACos: r?.ACoS,
+                          "Total Sales": r?.total_ordered_product_sales,
+                          "Total ACoS": r?.ACoS_percentage,
+                        };
+                      })
                   }
                   fileName={"advertising-data-by-week"}
                   loading={loading}
