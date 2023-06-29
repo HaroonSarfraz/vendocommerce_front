@@ -14,7 +14,11 @@ import {
   getSalesWeekGraph,
 } from "@/src/services/salesByWeek.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faFileExcel,
+} from "@fortawesome/free-solid-svg-icons";
 import DashboardLayout from "@/src/layouts/DashboardLayout";
 import {
   selectSalesWeekData,
@@ -27,7 +31,7 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
-import { ExportToExcel } from "@/src/hooks/Excelexport";
+import { ExportToExcel, exportToExcel } from "@/src/hooks/Excelexport";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -437,48 +441,111 @@ export default function SalesByWeek() {
                   </h3>
                   <div className="card-toolbar">
                     <ExportToExcel
-                      columns={[
-                        "Week",
-                        "Sum of Ordered Product Sales",
-                        "Sum of Sessions",
-                        "Sum of Session Percentage",
-                        "Sum of Page Views",
-                        "Sum of Page Views Percentage",
-                        "Average of Buy Box",
-                        "Sum of Units Ordered",
-                        "Sum of Unit Session Percentage",
-                        "Sum of Total Order Items",
+                      sheets={[
+                        {
+                          title: "main",
+                          columns: [
+                            "Week",
+                            "Sum of Ordered Product Sales",
+                            "Sum of Sessions",
+                            "Sum of Session Percentage",
+                            "Sum of Page Views",
+                            "Sum of Page Views Percentage",
+                            "Average of Buy Box",
+                            "Sum of Units Ordered",
+                            "Sum of Unit Session Percentage",
+                            "Sum of Total Order Items",
+                          ],
+                          rows: isDetails.map((d) => {
+                            return {
+                              ["Week"]: d?.week_name,
+                              ["Sum of Ordered Product Sales"]: currencyFormat(
+                                d?.totalOrderedProductSales
+                              ),
+                              ["Sum of Sessions"]: numberFormat(
+                                d?.totalSession
+                              ),
+                              ["Sum of Session Percentage"]: percentageFormat(
+                                d?.totalSessionPercentage
+                              ),
+                              ["Sum of Page Views"]: numberFormat(
+                                d?.totalPageViews
+                              ),
+                              ["Sum of Page Views Percentage"]:
+                                percentageFormat(d?.avgPageViewPercentage),
+                              ["Average of Buy Box"]: percentageFormat(
+                                d?.avgBuyBox
+                              ),
+                              ["Sum of Units Ordered"]: numberFormat(
+                                d?.totalUnitOrdered
+                              ),
+                              ["Sum of Unit Session Percentage"]:
+                                percentageFormat(d?.avgUnitSession),
+                              ["Sum of Total Order Items"]: numberFormat(
+                                d?.totalOrderItems
+                              ),
+                            };
+                          }),
+                        },
+                        ...isDetails.map((d) => {
+                          return {
+                            title: d?.week_name,
+                            columns: [
+                              "Title",
+                              "Parent ASIN",
+                              "Child ASIN",
+                              "SKU",
+                              "Sum of Ordered Product Sales",
+                              "Sum of Sessions",
+                              "Sum of Session Percentage",
+                              "Sum of Page Views",
+                              "Sum of Page Views Percentage",
+                              "Average of Buy Box",
+                              "Sum of Units Ordered",
+                              "Sum of Unit Session Percentage",
+                              "Sum of Total Order Items",
+                            ],
+                            fileName: `sales-by-week{${d?.start_date}}__{${d?.end_date}}`,
+                            loading: detailsLoading,
+                            rows: d?.asin_data.map((item) => {
+                              return {
+                                Title: item.title,
+                                "Parent ASIN": item.parent_asin,
+                                "Child ASIN": item.child_asin,
+                                SKU: item.sku,
+                                ["Sum of Ordered Product Sales"]:
+                                  currencyFormat(
+                                    item?.total_ordered_product_sales
+                                  ),
+                                ["Sum of Sessions"]: numberFormat(
+                                  item?.total_session
+                                ),
+                                ["Sum of Session Percentage"]: percentageFormat(
+                                  item?.total_session_percentage
+                                ),
+                                ["Sum of Page Views"]: numberFormat(
+                                  item?.total_page_views
+                                ),
+                                ["Sum of Page Views Percentage"]:
+                                  percentageFormat(
+                                    item?.avg_page_view_percentage
+                                  ),
+                                ["Average of Buy Box"]: percentageFormat(
+                                  item?.avg_buy_box
+                                ),
+                                ["Sum of Units Ordered"]: numberFormat(
+                                  item?.total_unit_ordered
+                                ),
+                                ["Sum of Unit Session Percentage"]:
+                                  percentageFormat(item?.avg_unit_session),
+                                ["Sum of Total Order Items"]: numberFormat(
+                                  item?.total_order_items
+                                ),
+                              };
+                            }),
+                          };
+                        }),
                       ]}
-                      rows={isDetails.map((d) => {
-                        return {
-                          ["Week"]: d?.week_name,
-                          ["Sum of Ordered Product Sales"]: currencyFormat(
-                            d?.totalOrderedProductSales
-                          ),
-                          ["Sum of Sessions"]: numberFormat(d?.totalSession),
-                          ["Sum of Session Percentage"]: percentageFormat(
-                            d?.totalSessionPercentage
-                          ),
-                          ["Sum of Page Views"]: numberFormat(
-                            d?.totalPageViews
-                          ),
-                          ["Sum of Page Views Percentage"]: percentageFormat(
-                            d?.avgPageViewPercentage
-                          ),
-                          ["Average of Buy Box"]: percentageFormat(
-                            d?.avgBuyBox
-                          ),
-                          ["Sum of Units Ordered"]: numberFormat(
-                            d?.totalUnitOrdered
-                          ),
-                          ["Sum of Unit Session Percentage"]: percentageFormat(
-                            d?.avgUnitSession
-                          ),
-                          ["Sum of Total Order Items"]: numberFormat(
-                            d?.totalOrderItems
-                          ),
-                        };
-                      })}
                       fileName={"sales-data-by-week"}
                       loading={detailsLoading}
                     >
@@ -539,8 +606,12 @@ export default function SalesByWeek() {
                             isDetails?.map((d, i) => (
                               <>
                                 <tr className>
-                                  <td className>
+                                  <td
+                                    className={"d-flex"}
+                                    style={{ border: "none" }}
+                                  >
                                     <FontAwesomeIcon
+                                      style={{ marginRight: "10px" }}
                                       icon={
                                         expand === i ? faAngleUp : faAngleDown
                                       }
@@ -549,6 +620,76 @@ export default function SalesByWeek() {
                                         setExpand((prev) =>
                                           prev === i ? setExpand(null) : i
                                         );
+                                      }}
+                                    />
+                                    <FontAwesomeIcon
+                                      icon={faFileExcel}
+                                      color="#181C32"
+                                      onClick={() => {
+                                        exportToExcel({
+                                          columns: [
+                                            "Week",
+                                            "Title",
+                                            "Parent ASIN",
+                                            "Child ASIN",
+                                            "SKU",
+                                            "Sum of Ordered Product Sales",
+                                            "Sum of Sessions",
+                                            "Sum of Session Percentage",
+                                            "Sum of Page Views",
+                                            "Sum of Page Views Percentage",
+                                            "Average of Buy Box",
+                                            "Sum of Units Ordered",
+                                            "Sum of Unit Session Percentage",
+                                            "Sum of Total Order Items",
+                                          ],
+                                          fileName: `sales-by-week{${d?.start_date}}__{${d?.end_date}}`,
+                                          loading: detailsLoading,
+                                          rows: d?.asin_data.map((item) => {
+                                            return {
+                                              Week: item.week,
+                                              Title: item.title,
+                                              "Parent ASIN": item.parent_asin,
+                                              "Child ASIN": item.child_asin,
+                                              SKU: item.sku,
+                                              ["Sum of Ordered Product Sales"]:
+                                                currencyFormat(
+                                                  item?.total_ordered_product_sales
+                                                ),
+                                              ["Sum of Sessions"]: numberFormat(
+                                                item?.total_session
+                                              ),
+                                              ["Sum of Session Percentage"]:
+                                                percentageFormat(
+                                                  item?.total_session_percentage
+                                                ),
+                                              ["Sum of Page Views"]:
+                                                numberFormat(
+                                                  item?.total_page_views
+                                                ),
+                                              ["Sum of Page Views Percentage"]:
+                                                percentageFormat(
+                                                  item?.avg_page_view_percentage
+                                                ),
+                                              ["Average of Buy Box"]:
+                                                percentageFormat(
+                                                  item?.avg_buy_box
+                                                ),
+                                              ["Sum of Units Ordered"]:
+                                                numberFormat(
+                                                  item?.total_unit_ordered
+                                                ),
+                                              ["Sum of Unit Session Percentage"]:
+                                                percentageFormat(
+                                                  item?.avg_unit_session
+                                                ),
+                                              ["Sum of Total Order Items"]:
+                                                numberFormat(
+                                                  item?.total_order_items
+                                                ),
+                                            };
+                                          }),
+                                        });
                                       }}
                                     />
                                   </td>

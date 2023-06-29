@@ -53,21 +53,20 @@ export default function SalesByMonth() {
     }
   }, [CustomerAcquisitionLTVRes]);
 
-  const listContent = list.map((item) => {
-    const months = item.otherMonths.reduce((acc, item) => {
-      acc[`m-${item.year * 12 + item.month}`] = item.newCustomerSalesTotal;
-      return acc;
-    }, {});
-    return {
-      row_id: item.year * 12 + item.month,
-      row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
-      customers: numberFormat(item.newCustomerCount),
-      ...months,
-    };
-  })
-    .sort((a, b) => a.row_id - b.row_id)
-    ;
-
+  const listContent = list
+    .map((item) => {
+      const months = item.otherMonths.reduce((acc, item) => {
+        acc[`m-${item.year * 12 + item.month}`] = item.newCustomerSalesTotal;
+        return acc;
+      }, {});
+      return {
+        row_id: item.year * 12 + item.month,
+        row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
+        customers: numberFormat(item.newCustomerCount),
+        ...months,
+      };
+    })
+    .sort((a, b) => a.row_id - b.row_id);
   const columns = useMemo(() => {
     return [
       {
@@ -86,21 +85,24 @@ export default function SalesByMonth() {
           return text?.customers;
         },
       },
-      ...list.slice()
+      ...list
+        .slice()
         .map((item) => ({
           title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
           width: 60,
           align: "center",
           index: item.year * 12 + item.month,
           render: (text) => {
-            return text[`m-${item.year * 12 + item.month + 1}`] ? currencyFormat(text[`m-${item.year * 12 + item.month + 1}`]) : null;
+            return text[`m-${item.year * 12 + item.month + 1}`]
+              ? currencyFormat(text[`m-${item.year * 12 + item.month + 1}`])
+              : null;
           },
         }))
         .sort((a, b) => b.index - a.index),
     ];
   }, [list]);
 
-  console.log(list?.slice()?.reverse())
+  console.log(list?.slice()?.reverse());
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">

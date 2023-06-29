@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSalesByProductList } from "@/src/services/salesByProduct.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import Loading from "@/src/components/loading";
 import VendoTooltip from "@/src/components/tooltip";
 import Drawer from "@/src/components/sales-analytics/product/drawer";
@@ -19,7 +19,7 @@ import {
 } from "@/src/helpers/formatting.helpers";
 import NoData from "@/src/components/no-data";
 import { setSalesByProductList } from "@/src/store/slice/salesByProduct.slice";
-import { ExportToExcel } from "@/src/hooks/Excelexport";
+import { ExportToExcel, exportToExcel } from "@/src/hooks/Excelexport";
 import {
   fetchConfigurations,
   updateConfigurations,
@@ -240,6 +240,37 @@ export default function SalesByProducts() {
     if (field === "total_ordered_units") return numberFormat(value);
     return numberFormat(value);
   };
+  const exportColumns = (week = undefined) =>
+    ["Title", "Parent ASIN", "Child ASIN", "SKU"].concat(
+      ...tableColumns.slice(0, tableColumns.length - 1).map((tc) =>
+        columnsList.reduce((acc, cl) => {
+          acc.push(`WK${tc}-${cl.label}`);
+          return acc;
+        }, [])
+      )
+    );
+  const exportRows = (week = undefined) =>
+    Object.values(list || {})?.map((text) => {
+      const row = tableColumns.reduce((acc, week) => {
+        const data = text[week];
+        if (week !== "Grand Total") {
+          const weekDetails = columnsList.reduce((acc, cl) => {
+            acc[`WK${week}-${cl.label}`] = formatter(cl.value, data[cl.value]);
+            return acc;
+          }, {});
+          acc = {
+            Title: data.title,
+            ...acc,
+            "Parent ASIN": data.parent_asin,
+            "Child ASIN": data.child_asin,
+            SKU: data.sku,
+            ...weekDetails,
+          };
+        }
+        return acc;
+      }, {});
+      return row;
+    });
   return (
     <DashboardLayout>
       <div
@@ -312,48 +343,8 @@ export default function SalesByProducts() {
                     </button>
 
                     <ExportToExcel
-                      columns={[
-                        "Title",
-                        "Parent ASIN",
-                        "Child ASIN",
-                        "SKU",
-                      ].concat(
-                        ...tableColumns
-                          .slice(0, tableColumns.length - 1)
-                          .map((tc) =>
-                            columnsList.reduce((acc, cl) => {
-                              acc.push(`WK${tc}-${cl.label}`);
-                              return acc;
-                            }, [])
-                          )
-                      )}
-                      rows={Object.values(list || {})?.map((text) => {
-                        const row = tableColumns.reduce((acc, week) => {
-                          const data = text[week];
-                          if (week !== "Grand Total") {
-                            const weekDetails = columnsList.reduce(
-                              (acc, cl) => {
-                                acc[`WK${week}-${cl.label}`] = formatter(
-                                  cl.value,
-                                  data[cl.value]
-                                );
-                                return acc;
-                              },
-                              {}
-                            );
-                            acc = {
-                              Title: data.title,
-                              ...acc,
-                              "Parent ASIN": data.parent_asin,
-                              "Child ASIN": data.child_asin,
-                              SKU: data.sku,
-                              ...weekDetails,
-                            };
-                          }
-                          return acc;
-                        }, {});
-                        return row;
-                      })}
+                      columns={exportColumns()}
+                      rows={exportRows()}
                       fileName={"sales-by-product-data"}
                       loading={tableLoading}
                     >
@@ -403,6 +394,66 @@ export default function SalesByProducts() {
                                     >
                                       <FontAwesomeIcon
                                         icon={faPlus}
+                                        color="black"
+                                      />
+                                    </div>
+                                    <div
+                                      data-bs-toggle="collapse"
+                                      data-bs-target={`#kt_accordion_1_body_${
+                                        i + 1
+                                      }`}
+                                      aria-expanded="false"
+                                      aria-controls={`kt_accordion_1_body_${
+                                        i + 1
+                                      }`}
+                                      onClick={() => {
+                                        const cols = columnsList.reduce(
+                                          (acc, cl) => {
+                                            acc.push(cl.label);
+                                            return acc;
+                                          },
+                                          []
+                                        );
+                                        const rows = Object.values(
+                                          list || {}
+                                        )?.map((text) => {
+                                          const data = text[d];
+                                          const weekDetails =
+                                            columnsList.reduce((acc, cl) => {
+                                              acc[cl.label] = formatter(
+                                                cl.value,
+                                                data[cl.value]
+                                              );
+                                              return acc;
+                                            }, {});
+                                          return {
+                                            [`Week-${d}`]: `Week-${d}`,
+                                            Title: data.title,
+                                            "Parent ASIN": data.parent_asin,
+                                            "Child ASIN": data.child_asin,
+                                            SKU: data.sku,
+                                            ...weekDetails,
+                                          };
+                                        });
+
+                                        exportToExcel({
+                                          columns: [
+                                            `Week-${d}`,
+                                            "Title",
+                                            "Parent ASIN",
+                                            "Child ASIN",
+                                            "SKU",
+                                            ...cols,
+                                          ],
+                                          fileName: `sales-by-product-WK${d}`,
+                                          loading: tableLoading,
+                                          rows: rows,
+                                        });
+                                      }}
+                                      className="open-arrow rounded-sm w-20px h-20px d-inline-flex justify-content-center align-items-center bg-light cursor-pointer"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faFileExcel}
                                         color="black"
                                       />
                                     </div>
