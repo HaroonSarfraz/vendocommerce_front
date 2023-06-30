@@ -150,7 +150,7 @@ export default function SalesByMonth() {
                   <Loading months={month} />
                 ) : (
                   <>
-                    <ASINTable
+                    {/* <ASINTable
                       columns={[
                         {
                           title: "",
@@ -182,7 +182,7 @@ export default function SalesByMonth() {
                             ?.map((d) => d.width)
                             .reduce((a, b) => a + b, 0) + 100,
                       }}
-                    />
+                    /> */}
                     <ASINTable
                       columns={columns}
                       dataSource={listContent}
