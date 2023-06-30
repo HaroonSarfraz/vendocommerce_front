@@ -63,6 +63,8 @@ export default function SalesByMonth() {
         row_id: item.year * 12 + item.month,
         row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
         customers: numberFormat(item.newCustomerCount),
+        month_name: item.month_name,
+        year: item.year,
         ...months,
       };
     })
@@ -73,13 +75,14 @@ export default function SalesByMonth() {
         title: "CUSTOMER MADE FIRST ORDER AT",
         width: 200,
         align: "center",
+        fixed: true,
         render: (text) => {
-          return text?.row_label;
+          return <b>{text?.row_label}</b>;
         },
       },
       {
         title: "NUMBER OF NEW CUSTOMERS",
-        width: 180,
+        width: 110,
         align: "center",
         render: (text) => {
           return text?.customers;
@@ -87,22 +90,32 @@ export default function SalesByMonth() {
       },
       ...list
         .slice()
-        .map((item) => ({
-          title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
-          width: 60,
-          align: "center",
-          index: item.year * 12 + item.month,
-          render: (text) => {
-            return text[`m-${item.year * 12 + item.month + 1}`]
-              ? currencyFormat(text[`m-${item.year * 12 + item.month + 1}`])
-              : null;
-          },
-        }))
+        .map((item) => {
+          const title = `${item.month_name.slice(0, 3)}-${item.year}`;
+          return {
+            title,
+            width: 100,
+            align: "center",
+            index: item.year * 12 + item.month,
+            render: (text) => {
+              console.log(text, item);
+              const res = text[`m-${item.year * 12 + item.month}`]
+                ? currencyFormat(text[`m-${item.year * 12 + item.month}`])
+                : null;
+              console.log(text, item);
+              return text.year === item.year &&
+                text.month_name === item.month_name ? (
+                <b>{res}</b>
+              ) : (
+                res
+              );
+            },
+          };
+        })
         .sort((a, b) => b.index - a.index),
     ];
   }, [list]);
 
-  console.log(list?.slice()?.reverse());
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
@@ -140,10 +153,14 @@ export default function SalesByMonth() {
                     loading={loading}
                     pagination={false}
                     scroll={{
+                      y:
+                        typeof window !== "undefined"
+                          ? window.innerHeight - 310
+                          : undefined,
                       x:
                         columns
                           ?.map((d) => d.width)
-                          .reduce((a, b) => a + b, 0) + 300,
+                          .reduce((a, b) => a + b, 0) + 900,
                     }}
                   />
                 )}
