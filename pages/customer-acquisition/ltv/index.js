@@ -63,8 +63,6 @@ export default function SalesByMonth() {
         row_id: item.year * 12 + item.month,
         row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
         customers: numberFormat(item.newCustomerCount),
-        month_name: item.month_name,
-        year: item.year,
         ...months,
       };
     })
@@ -90,32 +88,22 @@ export default function SalesByMonth() {
       },
       ...list
         .slice()
-        .map((item) => {
-          const title = `${item.month_name.slice(0, 3)}-${item.year}`;
-          return {
-            title,
-            width: 100,
-            align: "center",
-            index: item.year * 12 + item.month,
-            render: (text) => {
-              console.log(text, item);
-              const res = text[`m-${item.year * 12 + item.month}`]
-                ? currencyFormat(text[`m-${item.year * 12 + item.month}`])
-                : null;
-              console.log(text, item);
-              return text.year === item.year &&
-                text.month_name === item.month_name ? (
-                <b>{res}</b>
-              ) : (
-                res
-              );
-            },
-          };
-        })
-        .sort((a, b) => b.index - a.index),
+        .map((item) => ({
+          title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
+          width: 100,
+          align: "center",
+          index: item.year * 12 + item.month,
+          render: (text) => {
+            return text[`m-${item.year * 12 + item.month}`]
+              ? currencyFormat(text[`m-${item.year * 12 + item.month}`])
+              : null;
+          },
+        }))
+        .sort((a, b) => a.index - b.index),
     ];
   }, [list]);
 
+  console.log(list?.slice()?.reverse());
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
