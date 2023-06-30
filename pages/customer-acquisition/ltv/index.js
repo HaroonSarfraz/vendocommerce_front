@@ -88,22 +88,24 @@ export default function SalesByMonth() {
       },
       ...list
         .slice()
-        .map((item) => ({
-          title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
-          width: 100,
-          align: "center",
-          index: item.year * 12 + item.month,
-          render: (text) => {
-            return text[`m-${item.year * 12 + item.month}`]
-              ? currencyFormat(text[`m-${item.year * 12 + item.month}`])
-              : null;
-          },
-        }))
+        .map((item,key) => {
+          console.log(item);
+          return {
+            title: `Month ${key}`,
+            width: 100,
+            align: "center",
+            index: item.year * 12 + item.month,
+            render: (text) => {
+              return text[`m-${item.year * 12 + item.month}`]
+                ? currencyFormat(text[`m-${item.year * 12 + item.month}`])
+                : null;
+            },
+          };
+        })
         .sort((a, b) => a.index - b.index),
     ];
   }, [list]);
 
-  console.log(list?.slice()?.reverse());
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
