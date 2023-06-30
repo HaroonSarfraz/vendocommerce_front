@@ -53,20 +53,37 @@ export default function SalesByMonth() {
     }
   }, [CustomerAcquisitionLTVRes]);
 
-  const listContent = list.map((item) => {
-    const months = item.otherMonths.reduce((acc, item) => {
-      acc[`m-${item.year * 12 + item.month}`] = item.newCustomerSalesTotal;
-      return acc;
-    }, {});
-    return {
-      row_id: item.year * 12 + item.month,
-      row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
-      customers: numberFormat(item.newCustomerCount),
-      ...months,
-    };
-  })
-    .sort((a, b) => a.row_id - b.row_id)
-    ;
+  const totals = list.reduce((acc, item, key) => {
+    const finded = list
+      .map((item) => item.otherMonths)
+      .reduce((acc, otherMonths) => {
+        const item = otherMonths.filter((fid) => fid.month === key);
+        const da = item.reduce(
+          (accT, mon) => (accT += parseFloat(mon.newCustomerSalesTotal)),
+          0
+        );
+        acc.push(da);
+        return acc;
+      }, []);
+
+    acc[key] = finded.reduce((accS, sum) => (accS += sum), 0);
+    return acc;
+  }, {});
+
+  const listContent = list
+    .map((item) => {
+      const months = item.otherMonths.reduce((acc, item) => {
+        acc[`m-${item.index}`] = item.newCustomerSalesTotal;
+        return acc;
+      }, {});
+      return {
+        row_id: item.index,
+        row_label: `${moment().month(item.month).format("MMM")}-${item.year}`,
+        customers: numberFormat(item.newCustomerCount),
+        ...months,
+      };
+    })
+    .sort((a, b) => a.row_id - b.row_id);
 
   const columns = useMemo(() => {
     return [
@@ -74,33 +91,35 @@ export default function SalesByMonth() {
         title: "CUSTOMER MADE FIRST ORDER AT",
         width: 200,
         align: "center",
+        fixed: true,
         render: (text) => {
-          return text?.row_label;
+          return <b>{text?.row_label}</b>;
         },
       },
       {
         title: "NUMBER OF NEW CUSTOMERS",
-        width: 180,
+        width: 110,
         align: "center",
         render: (text) => {
           return text?.customers;
         },
       },
-      ...list.slice()
-        .map((item) => ({
-          title: `${item.month_name.slice(0, 3)} ${item.year % 100}`,
-          width: 60,
+      ...list.slice().map((item, key) => {
+        return {
+          title: `Month ${key}`,
+          width: 100,
           align: "center",
-          index: item.year * 12 + item.month,
+          index: item.index,
           render: (text) => {
-            return text[`m-${item.year * 12 + item.month + 1}`] ? currencyFormat(text[`m-${item.year * 12 + item.month + 1}`]) : null;
+            console.log(text);
+            return text[`m-${item.index}`]
+              ? currencyFormat(text[`m-${item.index}`])
+              : null;
           },
-        }))
-        .sort((a, b) => b.index - a.index),
+        };
+      }),
     ];
   }, [list]);
-
-  console.log(list?.slice()?.reverse())
   return (
     <DashboardLayout>
       <div className="content d-flex flex-column flex-column-fluid">
@@ -130,20 +149,59 @@ export default function SalesByMonth() {
                 {loading ? (
                   <Loading months={month} />
                 ) : (
-                  <ASINTable
-                    columns={columns}
-                    dataSource={listContent}
-                    // ellipsis
-                    rowKey="key"
-                    loading={loading}
-                    pagination={false}
-                    scroll={{
-                      x:
-                        columns
-                          ?.map((d) => d.width)
-                          .reduce((a, b) => a + b, 0) + 300,
-                    }}
-                  />
+                  <>
+                    <ASINTable
+                      columns={[
+                        {
+                          title: "",
+                          width: 50,
+                          align: "center",
+
+                          render: (text) => {
+                            return "Totals";
+                          },
+                        },
+                        ...Object.keys(totals).map((item) => ({
+                          title: `Month ${item}`,
+                          width: 100,
+                          align: "center",
+                          index: item,
+                          render: (text) => {
+                            return currencyFormat(text[item]);
+                          },
+                        })),
+                      ]}
+                      dataSource={[totals]}
+                      // ellipsis
+                      rowKey="key"
+                      loading={loading}
+                      pagination={false}
+                      scroll={{
+                        x:
+                          columns
+                            ?.map((d) => d.width)
+                            .reduce((a, b) => a + b, 0) + 100,
+                      }}
+                    />
+                    <ASINTable
+                      columns={columns}
+                      dataSource={listContent}
+                      // ellipsis
+                      rowKey="key"
+                      loading={loading}
+                      pagination={false}
+                      scroll={{
+                        y:
+                          typeof window !== "undefined"
+                            ? window.innerHeight - 310
+                            : undefined,
+                        x:
+                          columns
+                            ?.map((d) => d.width)
+                            .reduce((a, b) => a + b, 0) + 900,
+                      }}
+                    />
+                  </>
                 )}
               </div>
             </div>
