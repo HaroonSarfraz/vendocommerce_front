@@ -1,4 +1,4 @@
-// import Image from 'next/image';
+import { useState, useEffect } from "react";
 import { Tooltip } from "antd";
 import Loading from "../../loading";
 import ASINTable from "../../table";
@@ -10,8 +10,40 @@ import {
   percentageFormat,
 } from "@/src/helpers/formatting.helpers";
 import { ExportToExcel } from "@/src/hooks/Excelexport";
+import Drawer from "@/src/components/drawer";
+import {
+  fetchConfigurations,
+  updateConfigurations,
+} from "@/src/api/configurations.api";
+
+const configurationTableKey = "sales-by-sku-table";
 
 export default function SalesBySkuTable({ loading, list }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [columnConfig, setColumnConfig] = useState([]);
+  const [columnConfigLoaded, setColumnConfigLoaded] = useState(false);
+
+  useEffect(() => {
+    setColumnConfig(columns.slice(1).map((d) => d.title));
+
+    fetchConfigurations(configurationTableKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setColumnConfig(res.data);
+          setColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (columnConfigLoaded && columnConfig.length > 0) {
+      updateConfigurations(configurationTableKey, columnConfig);
+    }
+  }, [columnConfig]);
+
   const columns = [
     {
       title: "Row Labels",
@@ -166,6 +198,7 @@ export default function SalesBySkuTable({ loading, list }) {
       },
     },
   ];
+
   return (
     <div className="row">
       <div className="col-lg-12">
@@ -176,7 +209,16 @@ export default function SalesBySkuTable({ loading, list }) {
                 Sales by SKU
               </span>
             </h3>
+
             <div className="card-toolbar">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
+                id="kt_drawer_example_basic_button"
+              >
+                {" "}
+                Configuration{" "}
+              </button>
               <div className="dropdown">
                 <ExportToExcel
                   columns={[
@@ -250,7 +292,10 @@ export default function SalesBySkuTable({ loading, list }) {
               <Loading />
             ) : list?.length != 0 ? (
               <ASINTable
-                columns={columns}
+                columns={columns.filter(
+                  (c) =>
+                    c.title == "Row Labels" || columnConfig.includes(c.title)
+                )}
                 dataSource={list}
                 rowKey="key"
                 loading={loading}
@@ -267,6 +312,18 @@ export default function SalesBySkuTable({ loading, list }) {
           </div>
         </div>
       </div>
+      {isOpen && (
+        <Drawer
+          columnsList={columns.slice(1).map((d) => d.title)}
+          columnConfig={columnConfig}
+          setColumnConfig={setColumnConfig}
+          defaultConfig={columns.slice(1).map((d) => d.title)}
+          open={isOpen}
+          onHide={() => {
+            setIsOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }
