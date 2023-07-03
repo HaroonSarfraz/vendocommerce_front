@@ -1,5 +1,5 @@
 import { Dropdown, Select, message, theme } from "antd";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getSalesByProductList } from "@/src/services/salesByProduct.services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

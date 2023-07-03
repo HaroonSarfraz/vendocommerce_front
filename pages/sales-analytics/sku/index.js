@@ -1,9 +1,8 @@
-import dynamic from "next/dynamic";
+import DashboardLayout from "@/src/layouts/DashboardLayout";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import { defaultDateRange } from "@/src/config";
-import dayjs from "dayjs";
 import {
   getSalesBySkuDetails,
   getSalesBySkuDetailsList,
@@ -17,10 +16,6 @@ import {
   selectSalesBySkuDetails,
   selectSalesBySkuDetailsList,
 } from "@/src/store/slice/salesBySku.slice";
-
-const DashboardLayout = dynamic(() => import("@/src/layouts/DashboardLayout"), {
-  ssr: false,
-});
 
 export default function SalesBySku() {
   const dispatch = useDispatch();

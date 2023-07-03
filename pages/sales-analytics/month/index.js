@@ -2,7 +2,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useState } from "react";
-import { Empty, Modal, Select, Skeleton } from "antd";
+import { Empty, Modal, Select, Skeleton, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { DotChartOutlined } from "@ant-design/icons";
 import Loading from "@/src/components/loading";
@@ -33,10 +33,30 @@ import {
 } from "@/src/helpers/formatting.helpers";
 import { ExportToExcel, exportToExcel } from "@/src/hooks/Excelexport";
 import NoData from "@/src/components/no-data";
+import Drawer from "@/src/components/drawer";
+import {
+  fetchConfigurations,
+  updateConfigurations,
+} from "@/src/api/configurations.api";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
+
+const configurationTableKey = "sales-by-month-table";
+const configurationGraphKey = "sales-by-month-graph";
+
+const columns = [
+  "Sum of Ordered Product Sales",
+  "Sum of Sessions",
+  "Sum of Session Percentage",
+  "Sum of Page Views",
+  "Sum of Page Views Percentage",
+  "Average of Buy Box",
+  "Sum of Units Ordered",
+  "Sum of Unit Session Percentage",
+  "Sum of Total Order Items",
+];
 
 export default function SalesByMonth() {
   const dispatch = useDispatch();
@@ -74,6 +94,13 @@ export default function SalesByMonth() {
   const SalesByMonthDetailRes = useSelector(selectSalesByMonthDetail);
   const SalesByMonthGraphRes = useSelector(selectSalesByMonthGraph);
 
+  const [tableConfigOpen, setTableConfigOpen] = useState(false);
+  const [graphConfigOpen, setGraphConfigOpen] = useState(false);
+  const [columnConfig, setColumnConfig] = useState([]);
+  const [columnConfigLoaded, setColumnConfigLoaded] = useState(false);
+  const [graphColumnConfig, setGraphColumnConfig] = useState([]);
+  const [graphColumnConfigLoaded, setGraphColumnConfigLoaded] = useState(false);
+
   const graphOptions = salesByMonthGraph?.label.map((name, index) => {
     return { label: name, value: index };
   });
@@ -98,6 +125,45 @@ export default function SalesByMonth() {
       return data;
     }
   );
+
+  useEffect(() => {
+    setColumnConfig(columns);
+    setGraphColumnConfig(columns);
+
+    fetchConfigurations(configurationTableKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setColumnConfig(res.data);
+          setColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
+
+    fetchConfigurations(configurationGraphKey)
+      .then((res) => {
+        if (res.status >= 200 && res.status <= 299) {
+          res.data?.length > 0 && setGraphColumnConfig(res.data);
+          setGraphColumnConfigLoaded(true);
+        }
+      })
+      .catch((_err) => {
+        message.error("Something went wrong");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (columnConfigLoaded && columnConfig.length > 0) {
+      updateConfigurations(configurationTableKey, columnConfig);
+    }
+  }, [columnConfig]);
+
+  useEffect(() => {
+    if (graphColumnConfigLoaded && graphColumnConfig.length > 0) {
+      updateConfigurations(configurationGraphKey, graphColumnConfig);
+    }
+  }, [graphColumnConfig]);
 
   useEffect(() => {
     const { month, year } = filter;
@@ -208,6 +274,10 @@ export default function SalesByMonth() {
     }
   }, [SalesByMonthGraphRes]);
 
+  const visibilityClass = (columnName) => {
+    return columnConfig.includes(columnName) ? "" : "d-none";
+  };
+
   return (
     <DashboardLayout>
       <div
@@ -247,7 +317,7 @@ export default function SalesByMonth() {
                           ]}
                         />
                       </div>
-                      <div className="col-10">
+                      <div className="col-8">
                         {graphFilter !== "month" &&
                           !salesByMonthGraphLoading && (
                             <Select
@@ -262,6 +332,14 @@ export default function SalesByMonth() {
                               onChange={(e) => setGraphSelected(e)}
                             />
                           )}
+                      </div>
+                      <div className="col-2">
+                        <button
+                          onClick={() => setGraphConfigOpen(true)}
+                          className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
+                        >
+                          Configuration
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -340,7 +418,9 @@ export default function SalesByMonth() {
                           "#000",
                         ],
                       }}
-                      series={graphSelectedSeries}
+                      series={graphSelectedSeries.filter((c) =>
+                        graphColumnConfig.includes(c.name)
+                      )}
                       type="area"
                       height={300}
                     />
@@ -422,21 +502,17 @@ export default function SalesByMonth() {
                     </span>
                   </h3>
                   <div className="card-toolbar">
+                    <button
+                      onClick={() => setTableConfigOpen(true)}
+                      className="btn btn-light btn-active-light-dark btn-sm fw-bolder me-3"
+                      id="kt_drawer_example_basic_button"
+                    >
+                      {" "}
+                      Configuration{" "}
+                    </button>
+
                     <ExportToExcel
-                      columns={[
-                        "Month",
-                        "ASIN",
-                        "SKU",
-                        "Sum of Units Ordered",
-                        "Sum of Ordered Product Sales",
-                        "Average of Buy Box",
-                        "Sum of Unit Session",
-                        "Sum of Sessions",
-                        "Sum of Page Views",
-                        "Sum of Session Percentage",
-                        "Sum of Total Order Items",
-                        "Sum of Page Views Percentage",
-                      ]}
+                      columns={["Month", "ASIN", "SKU"].concat(columns)}
                       rows={salesByMonthDetail
                         .reduce((acc, item) => {
                           acc = acc.concat(item.asin_data);
@@ -540,28 +616,68 @@ export default function SalesByMonth() {
                         <thead>
                           <tr className="fw-bolder text-gray-800">
                             <th className="min-w-50px" />
-                            <th className="min-w-250px">Row Labels</th>
-                            <th className="min-w-225px">
+                            <th className="min-w-275px">Row Labels</th>
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Ordered Product Sales"
+                              )} min-w-225px`}
+                            >
                               Sum of Ordered Product Sales{" "}
                             </th>
-                            <th className="min-w-150px">Sum of Sessions</th>
-                            <th className="min-w-225px">
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Sessions"
+                              )} min-w-150px`}
+                            >
+                              Sum of Sessions
+                            </th>
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Session Percentage"
+                              )} min-w-225px`}
+                            >
                               Sum of Session Percentage{" "}
                             </th>
-                            <th className="min-w-175px">Sum of Page Views </th>
-                            <th className="min-w-250px">
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Page Views"
+                              )} min-w-175px`}
+                            >
+                              Sum of Page Views{" "}
+                            </th>
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Page Views Percentage"
+                              )} min-w-250px`}
+                            >
                               Sum of Page Views Percentage{" "}
                             </th>
-                            <th className="min-w-250px">
-                              Average of Buy Box Percentage{" "}
+                            <th
+                              className={`${visibilityClass(
+                                "Average of Buy Box"
+                              )} min-w-150px`}
+                            >
+                              Average of Buy Box{" "}
                             </th>
-                            <th className="min-w-200px">
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Units Ordered"
+                              )} min-w-200px`}
+                            >
                               Sum of Units Ordered{" "}
                             </th>
-                            <th className="min-w-250px">
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Unit Session Percentage"
+                              )} min-w-250px`}
+                            >
                               Sum of Unit Session Percentage{" "}
                             </th>
-                            <th className="min-w-225px">
+                            <th
+                              className={`${visibilityClass(
+                                "Sum of Total Order Items"
+                              )} min-w-225px`}
+                            >
                               Sum of Total Order Items
                             </th>
                           </tr>
@@ -599,29 +715,72 @@ export default function SalesByMonth() {
                                         {d?.month_name}
                                       </a>
                                     </td>
-                                    <td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Ordered Product Sales"
+                                      )}
+                                    >
                                       {currencyFormat(
                                         d?.totalOrderedProductSales
                                       )}
                                     </td>
-                                    <td>{numberFormat(d?.totalSession)}</td>
-                                    <td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Sessions"
+                                      )}
+                                    >
+                                      {numberFormat(d?.totalSession)}
+                                    </td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Session Percentage"
+                                      )}
+                                    >
                                       {percentageFormat(
                                         d?.totalSessionPercentage
                                       )}
                                     </td>
-                                    <td>{numberFormat(d?.totalPageViews)}</td>
-                                    <td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Page Views"
+                                      )}
+                                    >
+                                      {numberFormat(d?.totalPageViews)}</td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Page Views Percentage"
+                                      )}
+                                    >
                                       {percentageFormat(
                                         d?.avgPageViewPercentage
                                       )}
                                     </td>
-                                    <td>{percentageFormat(d?.avgBuyBox)}</td>
-                                    <td>{numberFormat(d?.totalUnitOrdered)}</td>
-                                    <td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Average of Buy Box"
+                                      )}
+                                    >
+                                      {percentageFormat(d?.avgBuyBox)}</td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Units Ordered"
+                                      )}
+                                    >
+                                      {numberFormat(d?.totalUnitOrdered)}</td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Unit Session Percentage"
+                                      )}
+                                    >
+
                                       {percentageFormat(d?.avgUnitSession)}
                                     </td>
-                                    <td>{numberFormat(d?.totalOrderItems)}</td>
+                                    <td
+                                      className={visibilityClass(
+                                        "Sum of Total Order Items"
+                                      )}
+                                    >
+                                      {numberFormat(d?.totalOrderItems)}</td>
                                   </tr>
                                   <tr>
                                     <td
@@ -639,15 +798,51 @@ export default function SalesByMonth() {
                                                 <tr className="fw-bolder text-gray-800">
                                                   <th className="min-w-50px p-0" />
                                                   <th className="min-w-250px p-0" />
-                                                  <th className="min-w-225px p-0" />
-                                                  <th className="min-w-150px p-0" />
-                                                  <th className="min-w-225px p-0" />
-                                                  <th className="min-w-175px p-0" />
-                                                  <th className="min-w-250px p-0" />
-                                                  <th className="min-w-250px p-0" />
-                                                  <th className="min-w-200px p-0" />
-                                                  <th className="min-w-250px p-0" />
-                                                  <th className="min-w-225px p-0" />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Ordered Product Sales"
+                                                    )} min-w-225px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Sessions"
+                                                    )} min-w-150px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Session Percentage"
+                                                    )} min-w-225px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Page Views"
+                                                    )} min-w-175px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Page Views Percentage"
+                                                    )} min-w-250px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Average of Buy Box"
+                                                    )} min-w-150px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Units Ordered"
+                                                    )} min-w-200px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Unit Session Percentage"
+                                                    )} min-w-250px p-0`}
+                                                  />
+                                                  <th
+                                                    className={`${visibilityClass(
+                                                      "Sum of Total Order Items"
+                                                    )} min-w-225px p-0`}
+                                                  />
                                                 </tr>
                                               </thead>
                                               <tbody className="text-gray-700 fw-bold">
@@ -692,47 +887,83 @@ export default function SalesByMonth() {
                                                           </span>
                                                         </div>
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Ordered Product Sales"
+                                                        )}
+                                                      >
                                                         {currencyFormat(
                                                           r?.total_ordered_product_sales
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Sessions"
+                                                        )}
+                                                      >
                                                         {numberFormat(
                                                           r?.total_session
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Session Percentage"
+                                                        )}
+                                                      >
                                                         {percentageFormat(
                                                           r?.avg_session_percentage
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Page Views"
+                                                        )}
+                                                      >
                                                         {numberFormat(
                                                           r?.total_page_views
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Page Views Percentage"
+                                                        )}
+                                                      >
                                                         {percentageFormat(
                                                           r?.avg_page_view_percentage
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Average of Buy Box"
+                                                        )}
+                                                      >
                                                         {percentageFormat(
                                                           r?.avg_buy_box_percentage
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Units Ordered"
+                                                        )}
+                                                      >
                                                         {numberFormat(
                                                           r?.total_ordered_units
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Unit Session Percentage"
+                                                        )}
+                                                      >
                                                         {percentageFormat(
                                                           r?.avg_unit_session_percentage
                                                         )}
                                                       </td>
-                                                      <td>
+                                                      <td
+                                                        className={visibilityClass(
+                                                          "Sum of Total Order Items"
+                                                        )}
+                                                      >
                                                         {numberFormat(
                                                           r?.total_order_items
                                                         )}
@@ -760,6 +991,32 @@ export default function SalesByMonth() {
             </div>
           </div>
         </div>
+
+        {tableConfigOpen && (
+          <Drawer
+            columnsList={columns}
+            columnConfig={columnConfig}
+            setColumnConfig={setColumnConfig}
+            defaultConfig={columns}
+            open={tableConfigOpen}
+            onHide={() => {
+              setTableConfigOpen(false);
+            }}
+          />
+        )}
+
+        {graphConfigOpen && (
+          <Drawer
+            columnsList={columns}
+            columnConfig={graphColumnConfig}
+            setColumnConfig={setGraphColumnConfig}
+            defaultConfig={columns}
+            open={graphConfigOpen}
+            onHide={() => {
+              setGraphConfigOpen(false);
+            }}
+          />
+        )}
       </div>
     </DashboardLayout>
   );
