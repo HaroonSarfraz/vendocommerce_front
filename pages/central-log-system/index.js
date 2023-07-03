@@ -92,11 +92,11 @@ export default function ProductReportPage() {
       value: "CampaignBrandReport",
     },
     {
-      label: "Campaign brand report T20",
+      label: "Campaign display report T20",
       value: "CampaignDisplayReportT20",
     },
     {
-      label: "Campaign brand report T30",
+      label: "Campaign display report T30",
       value: "CampaignDisplayReportT30",
     },
     {
