@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import cloneDeep from "lodash/cloneDeep";
-import { Empty, Select, Skeleton } from "antd";
+import { Empty, Select, Skeleton, Tooltip } from "antd";
 import { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -622,76 +622,82 @@ export default function SalesByWeek() {
                                         );
                                       }}
                                     />
-                                    <FontAwesomeIcon
-                                      icon={faFileExcel}
-                                      color="#181C32"
-                                      onClick={() => {
-                                        exportToExcel({
-                                          columns: [
-                                            "Week",
-                                            "Title",
-                                            "Parent ASIN",
-                                            "Child ASIN",
-                                            "SKU",
-                                            "Sum of Ordered Product Sales",
-                                            "Sum of Sessions",
-                                            "Sum of Session Percentage",
-                                            "Sum of Page Views",
-                                            "Sum of Page Views Percentage",
-                                            "Average of Buy Box",
-                                            "Sum of Units Ordered",
-                                            "Sum of Unit Session Percentage",
-                                            "Sum of Total Order Items",
-                                          ],
-                                          fileName: `sales-by-week{${d?.start_date}}__{${d?.end_date}}`,
-                                          loading: detailsLoading,
-                                          rows: d?.asin_data.map((item) => {
-                                            return {
-                                              Week: item.week,
-                                              Title: item.title,
-                                              "Parent ASIN": item.parent_asin,
-                                              "Child ASIN": item.child_asin,
-                                              SKU: item.sku,
-                                              ["Sum of Ordered Product Sales"]:
-                                                currencyFormat(
-                                                  item?.total_ordered_product_sales
-                                                ),
-                                              ["Sum of Sessions"]: numberFormat(
-                                                item?.total_session
-                                              ),
-                                              ["Sum of Session Percentage"]:
-                                                percentageFormat(
-                                                  item?.total_session_percentage
-                                                ),
-                                              ["Sum of Page Views"]:
-                                                numberFormat(
-                                                  item?.total_page_views
-                                                ),
-                                              ["Sum of Page Views Percentage"]:
-                                                percentageFormat(
-                                                  item?.avg_page_view_percentage
-                                                ),
-                                              ["Average of Buy Box"]:
-                                                percentageFormat(
-                                                  item?.avg_buy_box
-                                                ),
-                                              ["Sum of Units Ordered"]:
-                                                numberFormat(
-                                                  item?.total_unit_ordered
-                                                ),
-                                              ["Sum of Unit Session Percentage"]:
-                                                percentageFormat(
-                                                  item?.avg_unit_session
-                                                ),
-                                              ["Sum of Total Order Items"]:
-                                                numberFormat(
-                                                  item?.total_order_items
-                                                ),
-                                            };
-                                          }),
-                                        });
-                                      }}
-                                    />
+                                    <Tooltip
+                                      title={`Export`}
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faFileExcel}
+                                        color="#181C32"
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          exportToExcel({
+                                            columns: [
+                                              "Week",
+                                              "Title",
+                                              "Parent ASIN",
+                                              "Child ASIN",
+                                              "SKU",
+                                              "Sum of Ordered Product Sales",
+                                              "Sum of Sessions",
+                                              "Sum of Session Percentage",
+                                              "Sum of Page Views",
+                                              "Sum of Page Views Percentage",
+                                              "Average of Buy Box",
+                                              "Sum of Units Ordered",
+                                              "Sum of Unit Session Percentage",
+                                              "Sum of Total Order Items",
+                                            ],
+                                            fileName: `sales-by-week{${d?.start_date}}__{${d?.end_date}}`,
+                                            loading: detailsLoading,
+                                            rows: d?.asin_data.map((item) => {
+                                              return {
+                                                Week: item.week,
+                                                Title: item.title,
+                                                "Parent ASIN": item.parent_asin,
+                                                "Child ASIN": item.child_asin,
+                                                SKU: item.sku,
+                                                ["Sum of Ordered Product Sales"]:
+                                                  currencyFormat(
+                                                    item?.total_ordered_product_sales
+                                                  ),
+                                                ["Sum of Sessions"]:
+                                                  numberFormat(
+                                                    item?.total_session
+                                                  ),
+                                                ["Sum of Session Percentage"]:
+                                                  percentageFormat(
+                                                    item?.total_session_percentage
+                                                  ),
+                                                ["Sum of Page Views"]:
+                                                  numberFormat(
+                                                    item?.total_page_views
+                                                  ),
+                                                ["Sum of Page Views Percentage"]:
+                                                  percentageFormat(
+                                                    item?.avg_page_view_percentage
+                                                  ),
+                                                ["Average of Buy Box"]:
+                                                  percentageFormat(
+                                                    item?.avg_buy_box
+                                                  ),
+                                                ["Sum of Units Ordered"]:
+                                                  numberFormat(
+                                                    item?.total_unit_ordered
+                                                  ),
+                                                ["Sum of Unit Session Percentage"]:
+                                                  percentageFormat(
+                                                    item?.avg_unit_session
+                                                  ),
+                                                ["Sum of Total Order Items"]:
+                                                  numberFormat(
+                                                    item?.total_order_items
+                                                  ),
+                                              };
+                                            }),
+                                          });
+                                        }}
+                                      />
+                                    </Tooltip>
                                   </td>
                                   <td>
                                     {d?.start_date}&nbsp;to&nbsp;{d?.end_date}
