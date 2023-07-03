@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import _ from "lodash";
 import cloneDeep from "lodash/cloneDeep";
 import { message, Select, Skeleton, Tooltip } from "antd";
 import { useState, useEffect } from "react";
@@ -61,7 +62,7 @@ export default function SalesByWeek() {
   const dispatch = useDispatch();
   const [expand, setExpand] = useState(null);
   const [filter, setFilter] = useState({
-    week: [defaultWeek()],
+    week: _.range(1, defaultWeek()),
     year: defaultYear(),
   });
 

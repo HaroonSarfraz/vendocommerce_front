@@ -1,5 +1,6 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import _ from "lodash";
 import cloneDeep from "lodash/cloneDeep";
 import { useEffect, useState } from "react";
 import { Empty, Modal, Select, Skeleton, message } from "antd";
@@ -7,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DotChartOutlined } from "@ant-design/icons";
 import Loading from "@/src/components/loading";
 import Details from "@/src/components/Details";
+import { defaultYear, defaultMonth } from "@/src/config";
 import {
   getSalesByMonthData,
   getSalesByMonthDetail,
@@ -63,8 +65,8 @@ export default function SalesByMonth() {
   const [exportBy, setExportBy] = useState("sku");
 
   const [filter, setFilter] = useState({
-    month: [0],
-    year: 2023,
+    month: _.range(0, defaultMonth() + 1),
+    year: defaultYear(),
   });
 
   const handleChangeExport = (value) => {

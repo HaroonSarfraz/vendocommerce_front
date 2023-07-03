@@ -21,7 +21,7 @@ export default function CustomerAcquisitionNewVSRepeat() {
 
   const [filter, setFilter] = useState({
     month: _.range(0, defaultMonth() + 1),
-    year: [defaultYear()],
+    year: defaultYear(),
   });
 
   const CustomerAcquisitionRes = useSelector(selectCustomerAcquisition);

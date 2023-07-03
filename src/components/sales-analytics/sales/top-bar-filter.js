@@ -1,7 +1,7 @@
 import { Select } from "antd";
 import moment from "moment";
 import _ from "lodash";
-import { defaultWeek, defaultYear } from "@/src/config";
+import { defaultWeek, defaultMonth, defaultYear } from "@/src/config";
 
 export default function TopBarFilter(
   filter,
@@ -10,10 +10,12 @@ export default function TopBarFilter(
   disabled = { year: false, month: false }
 ) {
 
-  const selectAllWeeks = () => {
+  const selectAll = () => {
+    const range = type === "Week" ? _.range(1, defaultYear() === filter.year ? defaultWeek() : 54) : _.range(0, defaultYear() === filter.year ? defaultMonth() + 1 : 12);
+
     setFilter({
       ...filter,
-      week: _.range(1, defaultYear() === filter.year ? defaultWeek() : 54),
+      [type.toLowerCase()]: range,
     });
   }
 
@@ -77,16 +79,14 @@ export default function TopBarFilter(
                   allowClear
                 />
               </div>
-              {type === "Week" && (
-                <div>
-                  <button
-                    className="btn btn-secondary ml-auto mr-10px"
-                    onClick={selectAllWeeks}
-                  >
-                    Select All Weeks
-                  </button>
-                </div>
-              )}
+              <div>
+                <button
+                  className="btn btn-secondary ml-auto mr-10px"
+                  onClick={selectAll}
+                >
+                  Select All {type}s
+                </button>
+              </div>
             </div>
           </div>
         </div>
