@@ -92,6 +92,14 @@ export default function ProductReportPage() {
       value: "CampaignBrandReport",
     },
     {
+      label: "Campaign brand report T20",
+      value: "CampaignDisplayReportT20",
+    },
+    {
+      label: "Campaign brand report T30",
+      value: "CampaignDisplayReportT30",
+    },
+    {
       label: "Campaign display report",
       value: "CampaignDisplayReport",
     },
@@ -164,15 +172,15 @@ export default function ProductReportPage() {
         return <b>{status || "N/A"}{
           status === "Error while processing" && (
             <Tooltip title="Retry">
-            <FontAwesomeIcon
-            onClick={() => {
-              retry(text.id);
-            }}
-            icon={faArrowLeftRotate}
-            style={{ marginRight: "10px", marginBottom: "-2px" }}
-            className="text-info fs-3 cursor-pointer ms-3"
-          />
-          </Tooltip>
+              <FontAwesomeIcon
+                onClick={() => {
+                  retry(text.id);
+                }}
+                icon={faArrowLeftRotate}
+                style={{ marginRight: "10px", marginBottom: "-2px" }}
+                className="text-info fs-3 cursor-pointer ms-3"
+              />
+            </Tooltip>
           )
         }</b>;
       },
