@@ -228,6 +228,7 @@ export default function BrandSettings({ user, userRole }) {
                         }}
                         size="large"
                         placeholder="Select Brand"
+                        showSearch
                         options={options}
                         filterOption={selectFilter}
                         disabled={options.length === 0}

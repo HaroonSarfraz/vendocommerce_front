@@ -209,6 +209,7 @@ export default function UserSettings({ brand, userRole }) {
                           size="large"
                           placeholder="Select User"
                           options={options}
+                          showSearch
                           filterOption={selectFilter}
                           disabled={options.length === 0}
                         />
